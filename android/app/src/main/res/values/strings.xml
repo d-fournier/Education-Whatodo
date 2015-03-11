@@ -9,5 +9,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
+    <string name="profile_view_places_header">Lieux favoris</string>
+    <string name="profile_view_interests_header">Centres d'intérêt</string>
+    <string name="profile_view_your_events_header">Vos évènements</string>
 
 </resources>
