@@ -6,6 +6,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.models.Evenement;
 
@@ -14,9 +16,9 @@ import fr.insa.whatodo.models.Evenement;
  */
 public class EventAdapter<T> extends ArrayAdapter {
 
-    public EventAdapter(Context context, int resource, int textViewResourceId, T[] objects)
+    public EventAdapter(Context context, int resource, List<T> objects)
     {
-        super(context, resource, textViewResourceId, objects);
+        super(context, resource, objects);
     }
 
     @Override
