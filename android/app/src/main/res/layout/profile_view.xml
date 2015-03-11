@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/profile_view">
@@ -91,6 +92,11 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/profile_view_your_events_header"/>
+
+        <fragment
+            android:name="fr.insa.whatodo.ui.fragments.EventListFragment"
+            android:layout_width="100%"
+            android:layout_height="100%" />
 
     </LinearLayout>
 
