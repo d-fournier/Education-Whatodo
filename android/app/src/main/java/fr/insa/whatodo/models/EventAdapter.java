@@ -9,7 +9,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import fr.insa.whatodo.R;
-import fr.insa.whatodo.models.Evenement;
 
 /**
  * Created by Benjamin on 11/03/2015.
@@ -25,7 +24,7 @@ public class EventAdapter<T> extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         // Get the data item for this position
-        Evenement event = (Evenement) getItem(position);
+        Event event = (Event) getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.event_list_item, parent, false);

@@ -2,14 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/event_list_item">
+    android:id="@+id/event_list_item"
+    android:padding="15dp">
 
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_gravity="center_horizontal"
-        android:id="@+id/event_list_item_picture" />
+        android:id="@+id/event_list_item_picture"
+        android:maxWidth="200dp"/>
 
     <TextView
         android:layout_width="wrap_content"

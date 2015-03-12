@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by Benjamin on 11/03/2015.
  */
-public class Evenement {
+public class Event {
 
     protected Drawable image;
     protected Date date;
@@ -16,7 +16,7 @@ public class Evenement {
     protected String place;
     protected String summary;
 
-    public Evenement(Drawable image, Date date, String title, String price, String place, String summary) {
+    public Event(Drawable image, Date date, String title, String price, String place, String summary) {
         this.image = image;
         this.date = date;
         this.title = title;
