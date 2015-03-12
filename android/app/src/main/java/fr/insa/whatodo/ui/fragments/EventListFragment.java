@@ -20,8 +20,15 @@ import fr.insa.whatodo.models.EventAdapter;
  */
 public class EventListFragment extends Fragment {
 
+    ArrayList<Event> eventList;
+    EventAdapter<Event> adapter;
+    ListView eventListView;
+
+
+
     public EventListFragment()
     {
+        eventList = new ArrayList<>(); //TODO Il faudra la mettre dans une classe statique !
     }
 
     @Nullable
@@ -30,22 +37,33 @@ public class EventListFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
 
-        ArrayList<Event> eventList = new ArrayList<>(); //TODO Il faudra la mettre dans une classe statique !
-
-      for(int i=1; i<20; i++)
-      {
-          eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher),new Date(), "Evenement "+i, 10+i+" euros", "Campus", "C'est cool venez"));
-      }
-
+        for(int i=1; i<20; i++)
+        {
+            eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher),new Date(), "Evenement "+i, 10+i+" euros", "Campus", "C'est cool venez"));
+        }
         //Initialiser l'adapter
-        EventAdapter<Event> adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, eventList);
-
-
-        ListView eventListView = (ListView) rootView.findViewById(R.id.event_list);
-
+        adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, eventList);
+        eventListView = (ListView) rootView.findViewById(R.id.event_list);
         //L'appliquer sur la listView
         eventListView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    public void updateListView(ArrayList<Event> listEvent)
+    {
+        if(listEvent==null)
+        {
+            adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, eventList);
+        }else
+        {
+            adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, listEvent);
+
+        }
+        eventListView.setAdapter(adapter);
+    }
+
+    public ArrayList<Event> getEventList() {
+        return eventList;
     }
 }
