@@ -1,4 +1,4 @@
 from django.db import models
 
-class Tag(models.Model):
+class City(models.Model):
 	pass
