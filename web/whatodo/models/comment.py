@@ -5,3 +5,4 @@ from .event import Event
 class Comment(models.Model):
 	user = models.ForeignKey(User)
 	event = models.ForeignKey(Event)
+	
