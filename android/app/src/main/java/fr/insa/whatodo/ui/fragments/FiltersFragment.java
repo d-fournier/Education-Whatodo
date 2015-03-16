@@ -1,5 +1,7 @@
 package fr.insa.whatodo.ui.fragments;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.database.DataSetObserver;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -19,14 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ExpandableListAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
+import java.util.Calendar;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.ui.adapters.FiltersListAdapter;
@@ -36,7 +36,7 @@ import fr.insa.whatodo.ui.adapters.FiltersListAdapter;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class FiltersFragment extends Fragment {
+public class FiltersFragment extends Fragment implements View.OnClickListener {
 
     /**
      * Remember the position of the selected item.
@@ -62,6 +62,13 @@ public class FiltersFragment extends Fragment {
     private DrawerLayout mDrawerLayout;
     private ExpandableListView mDrawerListView;
     private View mFragmentContainerView;
+
+    private Calendar cal;
+    private int day;
+    private int month;
+    private int year;
+    private EditText firstDate;
+    private EditText lastDate;
 
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
@@ -106,8 +113,18 @@ public class FiltersFragment extends Fragment {
                 selectItem(position);
             }
         });
-        mDrawerListView.setAdapter(new FiltersListAdapter());
+        mDrawerListView.setAdapter(new FiltersListAdapter(this.getActivity()));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+
+        firstDate=(EditText)mDrawerListView.findViewById(R.id.firstDateText);
+        lastDate=(EditText)mDrawerListView.findViewById(R.id.lastDateText);
+        cal = Calendar.getInstance();
+        day = cal.get(Calendar.DAY_OF_MONTH);
+        month = cal.get(Calendar.MONTH);
+        year = cal.get(Calendar.YEAR);
+//        firstDate.setOnClickListener(this);
+//        lastDate.setOnClickListener(this);
+
         return mDrawerListView;
     }
 
@@ -270,6 +287,30 @@ public class FiltersFragment extends Fragment {
     private ActionBar getActionBar() {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
+
+    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int selectedYear,
+                              int selectedMonth, int selectedDay) {
+            if(view.getId()==R.id.firstDateText)
+            {
+                firstDate.setText(selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear);
+            }else if(view.getId()==R.id.lastDateText)
+            {
+                lastDate.setText(selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear);
+            }
+        }
+    };
+
+
+    @Override
+    public void onClick(View v) {
+        new DatePickerDialog(this.getActivity(), datePickerListener, year, month, day).show();
+    }
+
+//    protected Dialog onCreateDialog(int id) {
+//        return new DatePickerDialog(this.getActivity(), datePickerListener, year, month, day).show();
+//    }
+
 
     /**
      * Callbacks interface that all activities using this fragment must implement.
