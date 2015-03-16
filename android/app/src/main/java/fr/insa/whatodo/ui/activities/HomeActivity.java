@@ -16,7 +16,6 @@ import fr.insa.whatodo.ui.fragments.PlaceholderFragment;
 import fr.insa.whatodo.utils.Search;
 
 
-
 public class HomeActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -40,6 +39,7 @@ public class HomeActivity extends ActionBarActivity
 
         eventListFragment = (EventListFragment) getFragmentManager().findFragmentById(R.id.event_list_fragment);
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
+
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -49,8 +49,7 @@ public class HomeActivity extends ActionBarActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.equals(""))
-                {
+                if (newText.equals("")) {
                     eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), newText));
                 }
                 return false;
@@ -126,7 +125,6 @@ public class HomeActivity extends ActionBarActivity
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }
