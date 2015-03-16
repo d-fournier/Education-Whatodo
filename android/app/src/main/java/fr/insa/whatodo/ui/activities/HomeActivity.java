@@ -1,6 +1,5 @@
 package fr.insa.whatodo.ui.activities;
 
-//----------------------------IMPORTS ANDROID----------------------------
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -8,12 +7,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
-//---------------------------IMPORTS PERSOS-----------------------------
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.ui.fragments.FiltersFragment;
+import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.PlaceholderFragment;
+import fr.insa.whatodo.utils.Search;
 
 
 public class HomeActivity extends ActionBarActivity
@@ -32,16 +33,40 @@ public class HomeActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+    private SearchView searchBar;
+    private EventListFragment eventListFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-
       mFiltersFragment = (FiltersFragment)
                 getSupportFragmentManager().findFragmentById(R.id.filters_drawer);
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
+				
+	 mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+				
+        eventListFragment = (EventListFragment) getFragmentManager().findFragmentById(R.id.event_list_fragment);
+        searchBar = (SearchView) findViewById(R.id.home_search_bar);
+
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), query));
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.equals("")) {
+                    eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), newText));
+                }
+                return false;
+            }
+        });
+
+       
         mTitle = getTitle();
 
         // Set up the drawer.
@@ -114,12 +139,12 @@ public class HomeActivity extends ActionBarActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //TODO Il faut mettre les settings ici !
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }
