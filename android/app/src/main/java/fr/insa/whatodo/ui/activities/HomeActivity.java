@@ -17,14 +17,15 @@ import fr.insa.whatodo.ui.fragments.PlaceholderFragment;
 
 
 public class HomeActivity extends ActionBarActivity
-        implements FiltersFragment.NavigationDrawerCallbacks {
+        implements FiltersFragment.NavigationDrawerCallbacks, NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-   // private NavigationDrawerFragment mNavigationDrawerFragment;
-
     private FiltersFragment mFiltersFragment;
+   private NavigationDrawerFragment mNavigationDrawerFragment;
+
+
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -36,18 +37,20 @@ public class HomeActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-    /*    mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);*/
+
       mFiltersFragment = (FiltersFragment)
                 getSupportFragmentManager().findFragmentById(R.id.filters_drawer);
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
         // Set up the drawer.
-       /* mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));*/
+
         mFiltersFragment.setUp(
                 R.id.filters_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
@@ -84,20 +87,20 @@ public class HomeActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /*if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.home, menu);
-            restoreActionBar();
-            return true;*/
-        if (!mFiltersFragment.isDrawerOpen()) {
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.home, menu);
             restoreActionBar();
             return true;
+//        if (!mFiltersFragment.isDrawerOpen()) {
+//            // Only show items in the action bar relevant to this screen
+//            // if the drawer is not showing. Otherwise, let the drawer
+//            // decide what to show in the action bar.
+//            getMenuInflater().inflate(R.menu.home, menu);
+//            restoreActionBar();
+//            return true;
         }
         return super.onCreateOptionsMenu(menu);
     }
