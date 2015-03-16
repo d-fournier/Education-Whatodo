@@ -1,6 +1,7 @@
 package fr.insa.whatodo.ui.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -11,6 +12,7 @@ import android.widget.SearchView;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
+import fr.insa.whatodo.ui.fragments.MapFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.PlaceholderFragment;
 import fr.insa.whatodo.utils.Search;
@@ -31,13 +33,19 @@ public class HomeActivity extends ActionBarActivity
 
     private SearchView searchBar;
     private EventListFragment eventListFragment;
+    private MapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        eventListFragment = (EventListFragment) getFragmentManager().findFragmentById(R.id.event_list_fragment);
+        eventListFragment = new EventListFragment();
+        mapFragment = new MapFragment();
+
+        // Add the fragment to the 'fragment_container' FrameLayout
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_home_container, eventListFragment).commit();
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
 
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -71,7 +79,7 @@ public class HomeActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.fragment_home_container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
     }
 
@@ -93,7 +101,7 @@ public class HomeActivity extends ActionBarActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle("Whatodo");
     }
 
 
@@ -117,10 +125,23 @@ public class HomeActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            //TODO Il faut mettre les settings ici !
-            return true;
+        switch(id)
+        {
+            case(R.id.action_settings) :
+                //TODO Il faut mettre les settings ici !
+                break;
+            case(R.id.action_earth_list) :
+                // update the main content by replacing fragments
+                if(item.getTitle().equals(getApplicationContext().getString(R.string.action_earth))) //Go to the map view
+                {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, mapFragment).commit();
+                    item.setTitle(R.string.action_list);
+                }else if(item.getTitle().equals(getApplicationContext().getString(R.string.action_list))) //Go to the list view
+                {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+                    item.setTitle(R.string.action_earth);
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
