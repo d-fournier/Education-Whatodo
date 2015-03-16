@@ -1,7 +1,5 @@
 package fr.insa.whatodo.ui.activities;
 
-//----------------------------IMPORTS ANDROID----------------------------
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,7 +15,6 @@ import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.PlaceholderFragment;
 import fr.insa.whatodo.utils.Search;
 
-//---------------------------IMPORTS PERSOS-----------------------------
 
 
 public class HomeActivity extends ActionBarActivity
@@ -47,12 +44,15 @@ public class HomeActivity extends ActionBarActivity
             @Override
             public boolean onQueryTextSubmit(String query) {
                 eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), query));
-                return false; //Il faut retourner false pour que le clavier s'en aille quand on a submit
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), newText));
+                if(newText.equals(""))
+                {
+                    eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), newText));
+                }
                 return false;
             }
         });
@@ -120,6 +120,7 @@ public class HomeActivity extends ActionBarActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //TODO Il faut mettre les settings ici !
             return true;
         }
 

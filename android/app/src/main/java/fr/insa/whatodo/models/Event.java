@@ -2,6 +2,8 @@ package fr.insa.whatodo.models;
 
 import android.graphics.drawable.Drawable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -16,6 +18,8 @@ public class Event {
     protected String place;
     protected String summary;
 
+    protected DateFormat df;
+
     public Event(Drawable image, Date date, String title, String price, String place, String summary) {
         this.image = image;
         this.date = date;
@@ -23,6 +27,7 @@ public class Event {
         this.price = price;
         this.place = place;
         this.summary = summary;
+        df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     }
 
     public Drawable getImage() {
@@ -30,7 +35,7 @@ public class Event {
     }
 
     public String getDateAsString() {
-        return date.toString();
+        return df.format(date);
     }
 
     public String getTitle() {

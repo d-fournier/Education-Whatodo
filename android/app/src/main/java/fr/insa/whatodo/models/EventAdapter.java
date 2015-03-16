@@ -1,7 +1,9 @@
 package fr.insa.whatodo.models;
 
 import android.content.Context;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +16,8 @@ import fr.insa.whatodo.R;
  * Created by Benjamin on 11/03/2015.
  */
 public class EventAdapter<T> extends ArrayAdapter {
+
+
 
     public EventAdapter(Context context, int resource, List<T> objects)
     {
