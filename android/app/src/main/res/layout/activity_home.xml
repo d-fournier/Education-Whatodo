@@ -22,6 +22,13 @@
             android:name="fr.insa.whatodo.ui.fragments.EventListFragment"
             tools:layout="@layout/fragment_event_list" />
 
+        <!--<fragment android:id="@+id/profile_view_fragment"-->
+            <!--android:layout_width="match_parent" android:layout_height="match_parent"-->
+            <!--android:name="fr.insa.whatodo.ui.fragments.ProfileViewFragment"-->
+            <!--tools:layout="@layout/fragment_profile_view" />-->
+
+
+
     </LinearLayout>
 
 

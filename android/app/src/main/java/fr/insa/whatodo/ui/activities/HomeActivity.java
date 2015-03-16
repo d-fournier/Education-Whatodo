@@ -13,6 +13,7 @@ import fr.insa.whatodo.R;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.PlaceholderFragment;
+import fr.insa.whatodo.ui.fragments.ProfileViewFragment;
 import fr.insa.whatodo.utils.Search;
 
 
@@ -32,6 +33,7 @@ public class HomeActivity extends ActionBarActivity
 
     private SearchView searchBar;
     private EventListFragment eventListFragment;
+    private ProfileViewFragment profileViewFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

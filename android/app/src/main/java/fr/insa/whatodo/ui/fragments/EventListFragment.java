@@ -20,9 +20,9 @@ import fr.insa.whatodo.models.EventAdapter;
  */
 public class EventListFragment extends Fragment {
 
-    ArrayList<Event> eventList;
-    EventAdapter<Event> adapter;
-    ListView eventListView;
+    protected ArrayList<Event> eventList;
+    protected EventAdapter<Event> adapter;
+    protected ListView eventListView;
 
 
 
