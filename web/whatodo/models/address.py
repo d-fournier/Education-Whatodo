@@ -2,4 +2,5 @@ from django.db import models
 from.city import City
 
 class Address(models.Model):
-	city = models.ForeignKey(City)
+	localisation = models.CharField(max_length = 255)
+'''	city = models.ForeignKey(City) '''

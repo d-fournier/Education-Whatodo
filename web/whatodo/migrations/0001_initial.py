@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
             name='Address',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
+                ('localisation', models.CharField(max_length=255)),
             ],
             options={
             },
@@ -22,7 +23,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
+                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('name', models.CharField(unique=True, max_length=255)),
             ],
             options={
             },
@@ -49,7 +51,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Event',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
+                ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=30)),
                 ('description', models.CharField(max_length=200)),
                 ('url', models.URLField()),
@@ -69,7 +71,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Tag',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
+                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('name', models.CharField(unique=True, max_length=255)),
             ],
             options={
             },
@@ -105,12 +108,6 @@ class Migration(migrations.Migration):
             model_name='comment',
             name='user',
             field=models.ForeignKey(to='whatodo.User'),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='address',
-            name='city',
-            field=models.ForeignKey(to='whatodo.City'),
             preserve_default=True,
         ),
     ]
