@@ -4,6 +4,8 @@ from .views import *
 
 router = routers.DefaultRouter()
 router.register(r'event', EventViewSet)
+router.register(r'category', CategoryViewSet)
+router.register(r'tag', TagViewSet)
 
 
 # Wire up our API using automatic URL routing.
