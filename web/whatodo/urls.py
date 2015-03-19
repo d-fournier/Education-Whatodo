@@ -1,11 +1,17 @@
-from django.conf.urls import patterns, include, url
-from django.contrib import admin
+from django.conf.urls import url, include
+from rest_framework import routers
+from .views import *
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'web.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
+router = routers.DefaultRouter()
+router.register(r'event', EventViewSet)
+router.register(r'category', CategoryViewSet)
+router.register(r'tag', TagViewSet)
 
-    url(r'^$', 'whatodo.views.home', name='home'),
-)
 
+# Wire up our API using automatic URL routing.
+# Additionally, we include login URLs for the browsable API.
+urlpatterns = [
+	url(r'^api/', include(router.urls)),
+	url(r'^api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+	url(r'^$', 'whatodo.views.home', name='home'),
+]
