@@ -1,4 +1,4 @@
 from django.db import models
 
 class Tag(models.Model):
-	pass
+	name = models.CharField(max_length = 255)

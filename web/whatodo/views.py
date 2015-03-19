@@ -1,6 +1,8 @@
+from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers.eventSerializer import EventSerializer
 from .models.event import Event
+
 
 class EventViewSet(viewsets.ModelViewSet):
     """
