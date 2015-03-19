@@ -1,7 +1,6 @@
 package fr.insa.whatodo.ui.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -10,9 +9,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.models.Event;
+import fr.insa.whatodo.ui.fragments.CustomMapFragment;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
-import fr.insa.whatodo.ui.fragments.MapFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.PlaceholderFragment;
 import fr.insa.whatodo.utils.Search;
@@ -33,15 +36,18 @@ public class HomeActivity extends ActionBarActivity
 
     private SearchView searchBar;
     private EventListFragment eventListFragment;
-    private MapFragment mapFragment;
+    private CustomMapFragment mapFragment;
+    private ArrayList<Event> eventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        eventListFragment = new EventListFragment();
-        mapFragment = new MapFragment();
+        fillEventList();
+
+        eventListFragment = EventListFragment.newInstance(eventList);
+        mapFragment = CustomMapFragment.newInstance(eventList);
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
@@ -125,18 +131,17 @@ public class HomeActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch(id)
-        {
-            case(R.id.action_settings) :
+        switch (id) {
+            case (R.id.action_settings):
                 //TODO Il faut mettre les settings ici !
                 break;
-            case(R.id.action_earth_list) :
+            case (R.id.action_earth_list):
                 // update the main content by replacing fragments
-                if(item.getTitle().equals(getApplicationContext().getString(R.string.action_earth))) //Go to the map view
+                if (item.getTitle().equals(getApplicationContext().getString(R.string.action_earth))) //Go to the map view
                 {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, mapFragment).commit();
                     item.setTitle(R.string.action_list);
-                }else if(item.getTitle().equals(getApplicationContext().getString(R.string.action_list))) //Go to the list view
+                } else if (item.getTitle().equals(getApplicationContext().getString(R.string.action_list))) //Go to the list view
                 {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
                     item.setTitle(R.string.action_earth);
@@ -147,5 +152,11 @@ public class HomeActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void fillEventList() {
+        eventList = new ArrayList<>();
+        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), "Pas chez moi", "10 euros", "19 Rue Marcel Dutarte 69100 Villeurbanne", "C'est cool venez"));
+        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), "Chez moi", "10 euros", "3 Rue du Château d'Eau 70100 Beaujeu", "C'est cool venez"));
+
+    }
 
 }

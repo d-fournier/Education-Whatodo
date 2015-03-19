@@ -28,7 +28,15 @@ public class EventListFragment extends Fragment {
 
     public EventListFragment()
     {
-        eventList = new ArrayList<>(); //TODO Il faudra la mettre dans une classe statique !
+    }
+
+    public static EventListFragment newInstance(ArrayList<Event> list)
+    {
+        EventListFragment eventFragment = new EventListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("EventList", list);
+        eventFragment.setArguments(args);
+        return eventFragment;
     }
 
     @Nullable
@@ -37,10 +45,8 @@ public class EventListFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
 
-        for(int i=1; i<20; i++)
-        {
-            eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher),new Date(), "Evenement "+i, 10+i+" euros", "Campus", "C'est cool venez"));
-        }
+        eventList = (ArrayList<Event>) getArguments().getSerializable("EventList");
+
         //Initialiser l'adapter
         adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, eventList);
         eventListView = (ListView) rootView.findViewById(R.id.event_list);

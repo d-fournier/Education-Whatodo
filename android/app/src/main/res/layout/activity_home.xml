@@ -25,12 +25,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/fragment_home_container"/>
-        <!--<fragment-->
-            <!--android:id="@+id/event_list_fragment"-->
-            <!--android:name="fr.insa.whatodo.ui.fragments.EventListFragment"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--tools:layout="@layout/fragment_event_list" />-->
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            class="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/map_fragment_2"/>
+
 
     </LinearLayout>
 
