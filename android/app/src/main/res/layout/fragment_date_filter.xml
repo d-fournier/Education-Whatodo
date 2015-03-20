@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".FiltersFragment">
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -17,33 +19,44 @@
         android:id="@+id/checkBoxWeekEnd"
         android:layout_below="@id/checkBoxSemaine"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Du : "
-        android:id="@+id/textDu"
-        android:layout_below="@+id/checkBoxWeekEnd" />
-
-    <EditText
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/firstDateText"
-        android:layout_toRightOf="@id/textDu"/>
+        android:rowCount="2" android:columnCount="2">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Du : "
+            android:id="@+id/textDu"
+            android:layout_below="@+id/checkBoxWeekEnd" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Au : "
-        android:id="@+id/textAu"
-        android:layout_below="@+id/textDu" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/firstDateText"
+            android:layout_toRightOf="@id/textDu"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="onDateButtonClicked"
+            android:text=""/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/lastDateText"
-        android:layout_toRightOf="@id/textAu"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Au : "
+            android:id="@+id/textAu"
+            android:layout_below="@+id/textDu" />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lastDateText"
+            android:layout_toRightOf="@id/textAu"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text=""/>
 
-</RelativeLayout>
+    </GridLayout>
+</LinearLayout>

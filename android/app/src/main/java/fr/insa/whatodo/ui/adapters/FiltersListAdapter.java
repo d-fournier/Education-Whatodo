@@ -6,14 +6,18 @@ import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.TextView;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.ui.fragments.FiltersFragment;
+import fr.insa.whatodo.ui.model.AgeFilter;
 import fr.insa.whatodo.ui.model.CategoryFilter;
 import fr.insa.whatodo.ui.model.DateFilter;
 import fr.insa.whatodo.ui.model.DistanceFilter;
 import fr.insa.whatodo.ui.model.Filter;
+import fr.insa.whatodo.ui.model.HourFilter;
 import fr.insa.whatodo.ui.model.PlaceFilter;
 import fr.insa.whatodo.ui.model.PriceFilter;
 import fr.insa.whatodo.ui.model.TagFilter;
@@ -23,19 +27,23 @@ public class FiltersListAdapter implements ExpandableListAdapter {
 
     //context variable
     private Context context;
+    private FiltersFragment fragment;
 
     public LayoutInflater inflater;
 
     //Filtres
-    CategoryFilter categoryFilter;
-    TagFilter tagFilter;
-    PlaceFilter placeFilter;
-    DistanceFilter distanceFilter;
-    PriceFilter priceFilter;
-    DateFilter dateFilter;
+    private CategoryFilter categoryFilter;
+    private TagFilter tagFilter;
+    private PlaceFilter placeFilter;
+    private DistanceFilter distanceFilter;
+    private PriceFilter priceFilter;
+    private DateFilter dateFilter;
+    private AgeFilter ageFilter;
+    private HourFilter hourFilter;
 
-    public FiltersListAdapter(Activity act) {
+    public FiltersListAdapter(Activity act, FiltersFragment fr) {
         this.context = act;
+        fragment=fr;
         inflater=act.getLayoutInflater();
         categoryFilter=new CategoryFilter();
         tagFilter= new TagFilter();
@@ -43,6 +51,8 @@ public class FiltersListAdapter implements ExpandableListAdapter {
         distanceFilter= new DistanceFilter();
         priceFilter= new PriceFilter();
         dateFilter= new DateFilter();
+        ageFilter= new AgeFilter();
+        hourFilter=new HourFilter();
     }
 
     @Override
@@ -57,7 +67,7 @@ public class FiltersListAdapter implements ExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        return 6;
+        return 8;
     }
 
     @Override
@@ -91,6 +101,12 @@ public class FiltersListAdapter implements ExpandableListAdapter {
                 break;
             case 5 :
                 child=dateFilter;
+                break;
+            case 6 :
+                child=ageFilter;
+                break;
+            case 7:
+                child=hourFilter;
                 break;
         }
         return child;
@@ -134,7 +150,14 @@ public class FiltersListAdapter implements ExpandableListAdapter {
             case 5:
                 tv.setText("Date");
                 break;
+            case 6:
+                tv.setText("Age");
+                break;
+            case 7:
+                tv.setText("Horaires");
+                break;
         }
+        tv.setPadding(55,15,0,15);
         return tv;
     }
 
@@ -159,6 +182,14 @@ public class FiltersListAdapter implements ExpandableListAdapter {
                 break;
             case 5:
                 convertView=inflater.inflate(R.layout.fragment_date_filter,null);
+                ((Button)convertView.findViewById(R.id.firstDateText)).setText(fragment.getFirstDate());
+                ((Button)convertView.findViewById(R.id.lastDateText)).setText(fragment.getLastDate());
+                break;
+            case 6:
+                convertView=inflater.inflate(R.layout.fragment_age_filter,null);
+                break;
+            case 7:
+                convertView=inflater.inflate(R.layout.fragment_hour_filter,null);
                 break;
         }
         return convertView;

@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 
 import fr.insa.whatodo.R;
@@ -146,5 +147,8 @@ public class HomeActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void onDateButtonClicked(View v){
+        mFiltersFragment.onDateButtonClicked(v);
+    }
 
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class CategoryFilter extends Filter {
 
-    public enum Category {CONCERT, CONFERENCE, DEBAT, EXPOSITION, MATCHSPORTIF, PROJECTIONVIDEO, RENCONTRE, SOIREE, TABLERONDE};
+    public enum Category {SPECTACLE, CONCERT, THEATRE, CONFERENCE, DEBAT, EXPOSITION, SOIREE, SPORT, PROJECTIONVIDEO};
 
     protected ArrayList<Category> categories;
 

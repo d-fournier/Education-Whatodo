@@ -1,8 +1,6 @@
 package fr.insa.whatodo.ui.fragments;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.database.DataSetObserver;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -21,8 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -62,13 +60,16 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
     private DrawerLayout mDrawerLayout;
     private ExpandableListView mDrawerListView;
     private View mFragmentContainerView;
+    private FiltersListAdapter mFiltersListAdapter;
 
     private Calendar cal;
     private int day;
     private int month;
     private int year;
-    private EditText firstDate;
-    private EditText lastDate;
+    private Button firstDateButton;
+    private Button lastDateButton;
+    private String firstDate;
+    private String lastDate;
 
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
@@ -113,17 +114,31 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
                 selectItem(position);
             }
         });
-        mDrawerListView.setAdapter(new FiltersListAdapter(this.getActivity()));
+        mFiltersListAdapter=new FiltersListAdapter(this.getActivity(), this);
+        mDrawerListView.setAdapter(mFiltersListAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
-        firstDate=(EditText)mDrawerListView.findViewById(R.id.firstDateText);
-        lastDate=(EditText)mDrawerListView.findViewById(R.id.lastDateText);
+        firstDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,firstDateButton,new ViewGroup(getActivity()) {
+            @Override
+            protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+            }
+        }).findViewById(R.id.firstDateText);
+        lastDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5, 0, false, new View(getActivity()), new ViewGroup(getActivity()) {
+            @Override
+            protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+            }
+        }).findViewById(R.id.lastDateText);
         cal = Calendar.getInstance();
         day = cal.get(Calendar.DAY_OF_MONTH);
         month = cal.get(Calendar.MONTH);
         year = cal.get(Calendar.YEAR);
-//        firstDate.setOnClickListener(this);
-//        lastDate.setOnClickListener(this);
+        firstDate=day + " / " + (month + 1) + " / " + year;
+        lastDate=day + " / " + (month + 1) + " / " + (year + 1);
+
+       firstDateButton.setOnClickListener(this);
+       lastDateButton.setOnClickListener(this);
 
         return mDrawerListView;
     }
@@ -288,28 +303,62 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
-    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+    private DatePickerDialog.OnDateSetListener firstDatePickerListener = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
-            if(view.getId()==R.id.firstDateText)
-            {
-                firstDate.setText(selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear);
-            }else if(view.getId()==R.id.lastDateText)
-            {
-                lastDate.setText(selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear);
-            }
+            firstDate=selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear;
+            firstDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,firstDateButton,new ViewGroup(getActivity()) {
+                @Override
+                protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+                }
+            }).findViewById(R.id.firstDateText);
+            firstDateButton.setText(firstDate);
+// TROUVER UNE FACON DE RAFRAICHIR CETTE FUCKING VIEW !!!!
         }
     };
 
+    private DatePickerDialog.OnDateSetListener lastDatePickerListener = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int selectedYear,
+                              int selectedMonth, int selectedDay) {
+            lastDate=selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear;
+            lastDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,lastDateButton,new ViewGroup(getActivity()) {
+                @Override
+                protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+                }
+            }).findViewById(R.id.lastDateText);
+            lastDateButton.setText(lastDate);
+            // TROUVER UNE FACON DE RAFRAICHIR CETTE FUCKING VIEW !!!!
+        }
+    };
+
+    public String getFirstDate()
+    {
+        return firstDate;
+    }
+
+    public String getLastDate(){
+        return lastDate;
+    }
 
     @Override
     public void onClick(View v) {
-        new DatePickerDialog(this.getActivity(), datePickerListener, year, month, day).show();
+
     }
 
-//    protected Dialog onCreateDialog(int id) {
-//        return new DatePickerDialog(this.getActivity(), datePickerListener, year, month, day).show();
-//    }
+    public void onDateButtonClicked(View v)
+    {
+        if(v.getId()==R.id.firstDateText)
+        {
+            DatePickerDialog d= new DatePickerDialog(this.getActivity(), firstDatePickerListener, year, month, day);
+            d.show();
+        }else if(v.getId()==R.id.lastDateText)
+        {
+            DatePickerDialog d= new DatePickerDialog(this.getActivity(), lastDatePickerListener, year, month, day);
+            d.show();
+        }
+    }
 
 
     /**
