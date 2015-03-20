@@ -24,7 +24,7 @@ DEBUG = False
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ['dfournier.ovh',]
+ALLOWED_HOSTS = ['127.0.0.1',]
 
 
 # Application definition
@@ -87,6 +87,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, "static"),
 )
+
+STATIC_ROOT = '/var/www/dfournier.ovh/whatodo/static'
 
 REST_FRAMEWORK = {
 	# Use Django's standard `django.contrib.auth` permissions,

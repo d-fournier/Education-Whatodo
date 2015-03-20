@@ -54,23 +54,5 @@
             "name": "Activité sportive"
         },
         "pk": 8
-    },
-    {
-        "model": "auth.user",
-        "fields": {
-            "username": "admin",
-            "email": "",
-            "user_permissions": [],
-            "is_staff": true,
-            "password": "pbkdf2_sha256$15000$PMWdOjskHs7g$/t0rpqWJWhavvFTUypuO5N+Ai2KjbRQONAFvvFL36EQ=",
-            "is_superuser": true,
-            "first_name": "",
-            "last_login": "2015-03-19T17:05:57.590Z",
-            "last_name": "",
-            "is_active": true,
-            "groups": [],
-            "date_joined": "2015-03-19T17:05:13.261Z"
-        },
-        "pk": 4
     }
 ]
