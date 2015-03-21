@@ -1,6 +1,4 @@
-package fr.insa.whatodo.ui.model;
-
-import android.util.Pair;
+package fr.insa.whatodo.model;
 
 /**
  * Created by Segolene on 13/03/2015.

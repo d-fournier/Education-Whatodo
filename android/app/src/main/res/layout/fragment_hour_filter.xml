@@ -8,27 +8,29 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="De : "
-        android:id="@+id/textDe"/>
+        android:id="@+id/textDe"
+        android:layout_marginLeft="5dp"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/beginTime"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="A : "
-        android:id="@+id/textA" />
+        android:id="@+id/textA"
+        android:layout_marginLeft="5dp"/>
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/endTime"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"/>
 
 </GridLayout>

@@ -1,4 +1,4 @@
-package fr.insa.whatodo.ui.model;
+package fr.insa.whatodo.model;
 
 /**
  * Created by Segolene on 16/03/2015.

@@ -1,4 +1,4 @@
-package fr.insa.whatodo.models;
+package fr.insa.whatodo.model;
 
 import android.content.Context;
 import android.view.LayoutInflater;

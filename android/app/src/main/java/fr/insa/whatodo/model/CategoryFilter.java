@@ -1,4 +1,4 @@
-package fr.insa.whatodo.ui.model;
+package fr.insa.whatodo.model;
 
 import java.util.ArrayList;
 

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <CheckBox
-        android:layout_width="wrap_content"
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Moins de 5 km"
-        android:id="@+id/checkBox5" />
+        android:orientation="vertical">
+        <RadioButton android:id="@+id/radio_moinsDe5km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Moins de 5 km"/>
+        <RadioButton android:id="@+id/moinsDe30km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Moins de 30 km" />
+        <RadioButton android:id="@+id/moinsDe50km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Moins de 50 km" />
+    </RadioGroup>
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Moins de 30 km"
-        android:id="@+id/checkBox30" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Moins de 50 km"
-        android:id="@+id/checkBox50" />
-</LinearLayout>
+</FrameLayout>

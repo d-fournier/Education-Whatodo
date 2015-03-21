@@ -12,15 +12,15 @@ import android.widget.TextView;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.ui.fragments.FiltersFragment;
-import fr.insa.whatodo.ui.model.AgeFilter;
-import fr.insa.whatodo.ui.model.CategoryFilter;
-import fr.insa.whatodo.ui.model.DateFilter;
-import fr.insa.whatodo.ui.model.DistanceFilter;
-import fr.insa.whatodo.ui.model.Filter;
-import fr.insa.whatodo.ui.model.HourFilter;
-import fr.insa.whatodo.ui.model.PlaceFilter;
-import fr.insa.whatodo.ui.model.PriceFilter;
-import fr.insa.whatodo.ui.model.TagFilter;
+import fr.insa.whatodo.model.AgeFilter;
+import fr.insa.whatodo.model.CategoryFilter;
+import fr.insa.whatodo.model.DateFilter;
+import fr.insa.whatodo.model.DistanceFilter;
+import fr.insa.whatodo.model.Filter;
+import fr.insa.whatodo.model.HourFilter;
+import fr.insa.whatodo.model.PlaceFilter;
+import fr.insa.whatodo.model.PriceFilter;
+import fr.insa.whatodo.model.TagFilter;
 
 
 public class FiltersListAdapter implements ExpandableListAdapter {

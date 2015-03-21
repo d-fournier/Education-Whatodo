@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import fr.insa.whatodo.R;
-import fr.insa.whatodo.models.Event;
-import fr.insa.whatodo.models.EventAdapter;
+import fr.insa.whatodo.model.Event;
+import fr.insa.whatodo.model.EventAdapter;
 
 /**
  * Created by Benjamin on 11/03/2015.

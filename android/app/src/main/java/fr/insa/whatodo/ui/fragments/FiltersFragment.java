@@ -16,12 +16,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -118,18 +121,8 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         mDrawerListView.setAdapter(mFiltersListAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
-        firstDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,firstDateButton,new ViewGroup(getActivity()) {
-            @Override
-            protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
-            }
-        }).findViewById(R.id.firstDateText);
-        lastDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5, 0, false, new View(getActivity()), new ViewGroup(getActivity()) {
-            @Override
-            protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
-            }
-        }).findViewById(R.id.lastDateText);
+        firstDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,new View(getActivity()),null).findViewById(R.id.firstDateText);
+        lastDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5, 0, false, new View(getActivity()), null).findViewById(R.id.lastDateText);
         cal = Calendar.getInstance();
         day = cal.get(Calendar.DAY_OF_MONTH);
         month = cal.get(Calendar.MONTH);
@@ -138,7 +131,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         lastDate=day + " / " + (month + 1) + " / " + (year + 1);
 
        firstDateButton.setOnClickListener(this);
-       lastDateButton.setOnClickListener(this);
+       lastDateButton.setOnClickListener(this);;
 
         return mDrawerListView;
     }
