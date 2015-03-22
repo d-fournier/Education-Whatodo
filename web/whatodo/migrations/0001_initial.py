@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
@@ -13,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Address',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
                 ('localisation', models.CharField(max_length=255)),
             ],
             options={
@@ -44,7 +45,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Comment',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
             ],
             options={
             },
@@ -61,7 +62,7 @@ class Migration(migrations.Migration):
                 ('endTime', models.TimeField()),
                 ('startDate', models.DateField()),
                 ('endDate', models.DateField()),
-                ('price', models.DecimalField(max_digits=5, decimal_places=2)),
+                ('price', models.DecimalField(decimal_places=2, max_digits=5)),
                 ('min_age', models.IntegerField()),
                 ('addresses', models.ManyToManyField(to='whatodo.Address')),
                 ('categories', models.ManyToManyField(to='whatodo.Category')),
@@ -81,16 +82,22 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='User',
+            name='WhatodoUser',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=30)),
-                ('email', models.EmailField(max_length=254)),
+                ('password', models.CharField(verbose_name='password', max_length=128)),
+                ('last_login', models.DateTimeField(verbose_name='last login', default=django.utils.timezone.now)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('email', models.EmailField(unique=True, max_length=254)),
+                ('username', models.CharField(unique=True, max_length=30)),
+                ('is_admin', models.BooleanField(help_text='Designates whether the user can log into this admin site.', default=False)),
+                ('is_active', models.BooleanField(help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', default=True)),
+                ('date_joined', models.DateTimeField(default=django.utils.timezone.now)),
                 ('categories', models.ManyToManyField(to='whatodo.Category')),
                 ('cities', models.ManyToManyField(to='whatodo.City')),
                 ('events', models.ManyToManyField(to='whatodo.Event')),
             ],
             options={
+                'abstract': False,
             },
             bases=(models.Model,),
         ),
@@ -109,7 +116,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='comment',
             name='user',
-            field=models.ForeignKey(to='whatodo.User'),
+            field=models.ForeignKey(to='whatodo.WhatodoUser'),
             preserve_default=True,
         ),
         migrations.AddField(

@@ -94,3 +94,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
 	'PAGE_SIZE' : 10
 }
+
+#AUTH_USER_MODEL = 'whatodo.WhatodoUser'
