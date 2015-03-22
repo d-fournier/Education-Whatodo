@@ -15,5 +15,6 @@ router.register(r'address', AddressViewSet)
 urlpatterns = [
 	url(r'^api/', include(router.urls)),
 	url(r'^api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+	url(r'^auth/', include('djoser.urls')),
 	url(r'^$', 'whatodo.views.home', name='home'),
 ]
