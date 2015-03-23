@@ -1,60 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:id="@+id/event_list_item"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="15dp">
 
 
     <ImageView
+        android:id="@+id/event_list_item_picture"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_gravity="center_horizontal"
-        android:id="@+id/event_list_item_picture"
-        android:maxWidth="150dp"/>
+        android:maxWidth="150dp" />
 
     <TextView
+        android:id="@+id/event_list_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Title"
         android:layout_gravity="left"
-        android:id="@+id/event_list_item_title" />
+        android:text="Title"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/event_list_item_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Date"
-            android:id="@+id/event_list_item_date" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
+            android:id="@+id/event_list_item_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Price"
             android:gravity="right"
-            android:id="@+id/event_list_item_price" />
+            android:text="Price"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
     <TextView
+        android:id="@+id/event_list_item_place"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Place"
-        android:id="@+id/event_list_item_place" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
+        android:id="@+id/event_list_item_summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Summary"
-        android:id="@+id/event_list_item_summary" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

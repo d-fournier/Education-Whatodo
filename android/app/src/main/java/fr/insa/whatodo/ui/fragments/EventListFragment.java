@@ -1,15 +1,14 @@
 package fr.insa.whatodo.ui.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.models.Event;
@@ -25,10 +24,15 @@ public class EventListFragment extends Fragment {
     protected ListView eventListView;
 
 
+    public EventListFragment() {
+    }
 
-    public EventListFragment()
-    {
-        eventList = new ArrayList<>(); //TODO Il faudra la mettre dans une classe statique !
+    public static EventListFragment newInstance(ArrayList<Event> list) {
+        EventListFragment eventFragment = new EventListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("EventList", list);
+        eventFragment.setArguments(args);
+        return eventFragment;
     }
 
     @Nullable
@@ -37,10 +41,8 @@ public class EventListFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
 
-        for(int i=1; i<20; i++)
-        {
-            eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher),new Date(), "Evenement "+i, 10+i+" euros", "Campus", "C'est cool venez"));
-        }
+        eventList = (ArrayList<Event>) getArguments().getSerializable("EventList");
+
         //Initialiser l'adapter
         adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, eventList);
         eventListView = (ListView) rootView.findViewById(R.id.event_list);
@@ -50,13 +52,10 @@ public class EventListFragment extends Fragment {
         return rootView;
     }
 
-    public void updateListView(ArrayList<Event> listEvent)
-    {
-        if(listEvent==null)
-        {
+    public void updateListView(ArrayList<Event> listEvent) {
+        if (listEvent == null) {
             adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, eventList);
-        }else
-        {
+        } else {
             adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, listEvent);
 
         }

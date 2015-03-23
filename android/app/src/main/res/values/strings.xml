@@ -12,5 +12,8 @@
     <string name="profile_view_places_header">Lieux favoris</string>
     <string name="profile_view_interests_header">Centres d\'intérêt</string>
     <string name="profile_view_your_events_header">Vos évènements</string>
+    <string name="action_earth">Vue Carte</string>
+    <string name="action_list">Vue Liste</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
