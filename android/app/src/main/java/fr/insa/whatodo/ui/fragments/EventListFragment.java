@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.models.Event;
@@ -25,13 +24,10 @@ public class EventListFragment extends Fragment {
     ListView eventListView;
 
 
-
-    public EventListFragment()
-    {
+    public EventListFragment() {
     }
 
-    public static EventListFragment newInstance(ArrayList<Event> list)
-    {
+    public static EventListFragment newInstance(ArrayList<Event> list) {
         EventListFragment eventFragment = new EventListFragment();
         Bundle args = new Bundle();
         args.putSerializable("EventList", list);
@@ -56,13 +52,10 @@ public class EventListFragment extends Fragment {
         return rootView;
     }
 
-    public void updateListView(ArrayList<Event> listEvent)
-    {
-        if(listEvent==null)
-        {
+    public void updateListView(ArrayList<Event> listEvent) {
+        if (listEvent == null) {
             adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, eventList);
-        }else
-        {
+        } else {
             adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, listEvent);
 
         }

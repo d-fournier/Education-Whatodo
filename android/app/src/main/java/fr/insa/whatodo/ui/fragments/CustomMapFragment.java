@@ -3,6 +3,7 @@ package fr.insa.whatodo.ui.fragments;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,7 +20,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.models.Event;
@@ -31,6 +31,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
 
     SupportMapFragment s_mapFragment;
     ArrayList<Event> listEvent;
+    GoogleMap map;
 
     public CustomMapFragment() {
     }
@@ -70,6 +71,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
         putPinsOnMap(listEvent, googleMap);
     }
 
@@ -87,12 +89,25 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         Address location;
         LatLng lat_lng = null;
         try {
-            address = coder.getFromLocationName(e.getPlace(), 2);
+            address = coder.getFromLocationName(e.getPlace(), 1);
             location = address.get(0);
             lat_lng = new LatLng(location.getLatitude(), location.getLongitude());
         } catch (IOException e1) {
             e1.printStackTrace();
         }
         return lat_lng;
+    }
+
+    public void updateMapView(ArrayList<Event> list) {
+        map.clear();
+        putPinsOnMap(list, map);
+    }
+
+    public class PutPinsOnMapTask extends AsyncTask<ArrayList<Event>, Void, Void> {
+        @Override
+        protected Void doInBackground(ArrayList<Event>... params) {
+            putPinsOnMap(params[0], map);
+            return null;
+        }
     }
 }
