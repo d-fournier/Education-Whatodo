@@ -2,6 +2,7 @@ package fr.insa.whatodo.ui.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -9,7 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
+import java.util.ArrayList;
+
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.models.User;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.PlaceholderFragment;
@@ -40,12 +44,22 @@ public class HomeActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        eventListFragment = (EventListFragment) getFragmentManager().findFragmentById(R.id.event_list_fragment);
+//        eventListFragment = (EventListFragment) getFragmentManager().findFragmentById(R.id.event_list_fragment);
+        //profileViewFragment = (ProfileViewFragment) getFragmentManager().findFragmentById(R.id.profile_view_fragment);
+        ArrayList<String> cities = new ArrayList<String>();
+        cities.add("Mouans-Sartoux");
+        cities.add("Cannes");
+        cities.add("Lyon");
+        User user = new User(getResources().getDrawable(R.drawable.ic_launcher),"Wiwi","password","wiwiLeBG@auTop.fr",cities,22);
+        ProfileViewFragment pvf = ProfileViewFragment.newInstance(user);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.your_placeholder, pvf);
+        ft.commit();
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), query));
+//                eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), query));
                 return false;
             }
 
@@ -53,7 +67,7 @@ public class HomeActivity extends ActionBarActivity
             public boolean onQueryTextChange(String newText) {
                 if(newText.equals(""))
                 {
-                    eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), newText));
+//                    eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), newText));
                 }
                 return false;
             }
