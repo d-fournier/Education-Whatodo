@@ -26,13 +26,6 @@
             android:layout_height="match_parent"
             android:id="@+id/fragment_home_container"/>
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            class="com.google.android.gms.maps.MapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/map_fragment_2"/>
-
-
     </LinearLayout>
 
 

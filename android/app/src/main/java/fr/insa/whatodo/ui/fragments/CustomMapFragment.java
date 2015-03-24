@@ -3,11 +3,12 @@ package fr.insa.whatodo.ui.fragments;
 
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,11 +24,13 @@ import java.util.List;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.models.Event;
+import fr.insa.whatodo.ui.activities.HomeActivity;
+import fr.insa.whatodo.utils.OnListChangedListener;
 
 /**
  * Created by Benjamin on 16/03/2015.
  */
-public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
+public class CustomMapFragment extends Fragment implements OnMapReadyCallback, OnListChangedListener {
 
     SupportMapFragment s_mapFragment;
     ArrayList<Event> listEvent;
@@ -58,6 +61,21 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).addOnListChangedListener(this);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.home_map, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         s_mapFragment = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_fragment));
@@ -75,7 +93,15 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         putPinsOnMap(listEvent, googleMap);
     }
 
-    public void putPinsOnMap(ArrayList<Event> l, GoogleMap map) {
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).removeOnListChangedListener(this);
+        }
+    }
+
+    public void putPinsOnMap(List<Event> l, GoogleMap map) {
         for (Event e : l) {
             map.addMarker(new MarkerOptions()
                     .position(getEventCoordinates(e))
@@ -98,16 +124,9 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         return lat_lng;
     }
 
-    public void updateMapView(ArrayList<Event> list) {
+    @Override
+    public void onListChanged(List<Event> newList) {
         map.clear();
-        putPinsOnMap(list, map);
-    }
-
-    public class PutPinsOnMapTask extends AsyncTask<ArrayList<Event>, Void, Void> {
-        @Override
-        protected Void doInBackground(ArrayList<Event>... params) {
-            putPinsOnMap(params[0], map);
-            return null;
-        }
+        putPinsOnMap(newList, map);
     }
 }

@@ -12,7 +12,8 @@ import java.util.Date;
 public class Event {
 
     protected Drawable image;
-    protected Date date;
+    protected Date startDate;
+    protected Date endDate;
     protected String title;
     protected String price; //TODO A voir
     protected String place;
@@ -20,14 +21,15 @@ public class Event {
 
     protected DateFormat df;
 
-    public Event(Drawable image, Date date, String title, String price, String place, String summary) {
+    public Event(Drawable image, Date startDate, Date endDate, String title, String price, String place, String summary) {
         this.image = image;
-        this.date = date;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.title = title;
         this.price = price;
         this.place = place;
         this.summary = summary;
-        df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        df = new SimpleDateFormat("dd/MM/yyyy");
     }
 
     public Drawable getImage() {
@@ -35,7 +37,7 @@ public class Event {
     }
 
     public String getDateAsString() {
-        return df.format(date);
+        return endDate == null ? df.format(startDate) : "Du " + df.format(startDate) + " au " + df.format(endDate);
     }
 
     public String getTitle() {

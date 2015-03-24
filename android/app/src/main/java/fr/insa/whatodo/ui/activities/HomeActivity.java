@@ -1,6 +1,8 @@
 package fr.insa.whatodo.ui.activities;
 
-import android.os.AsyncTask;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -9,12 +11,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
+import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.models.Event;
@@ -22,7 +23,7 @@ import fr.insa.whatodo.services.GetEventsTask;
 import fr.insa.whatodo.ui.fragments.CustomMapFragment;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
-import fr.insa.whatodo.ui.fragments.PlaceholderFragment;
+import fr.insa.whatodo.utils.OnListChangedListener;
 import fr.insa.whatodo.utils.Search;
 
 
@@ -43,7 +44,8 @@ public class HomeActivity extends ActionBarActivity
     private EventListFragment eventListFragment;
     private CustomMapFragment mapFragment;
     private ArrayList<Event> eventList;
-    private boolean mapDisplayed = false;
+    private List<OnListChangedListener> mListeners;
+    private List<Event> mDisplayedEvents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class HomeActivity extends ActionBarActivity
 
         fillEventList();
 
+        mListeners = new ArrayList<>();
         eventListFragment = EventListFragment.newInstance(eventList);
         mapFragment = CustomMapFragment.newInstance(eventList);
 
@@ -63,14 +66,16 @@ public class HomeActivity extends ActionBarActivity
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                updateViews(query);
+                mDisplayedEvents = Search.searchByTitle(eventList, query);
+                notifyListChanged();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.equals("")) {
-                    updateViews(newText);
+                    mDisplayedEvents = Search.searchByTitle(eventList, newText);
+                    notifyListChanged();
                 }
                 return false;
             }
@@ -90,18 +95,23 @@ public class HomeActivity extends ActionBarActivity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_home_container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        switch (position) {
+            case (0):
+            //    fragmentManager.beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+                break;
+            case (1):
+
+                break;
+        }
     }
 
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                mTitle = getString(R.string.principal_view);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                mTitle = getString(R.string.profile_view);
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
@@ -141,22 +151,24 @@ public class HomeActivity extends ActionBarActivity
             case (R.id.action_settings):
                 //TODO Il faut mettre les settings ici !
                 break;
-            case (R.id.action_earth_list):
+            case (R.id.action_earth):
                 // update the main content by replacing fragments
-                if (item.getTitle().equals(getApplicationContext().getString(R.string.action_earth))) //Go to the map view
-                {
+                ConnectivityManager connMgr = (ConnectivityManager)
+                        getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                boolean isWifiConn = networkInfo.isConnected();
+                networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                boolean isMobileConn = networkInfo.isConnected();
+                if (isWifiConn || isMobileConn) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, mapFragment).commit();
-                    item.setTitle(R.string.action_list);
-                    item.setIcon(getResources().getDrawable(R.drawable.ic_list));
-                    mapDisplayed = true;
-                } else if (item.getTitle().equals(getApplicationContext().getString(R.string.action_list))) //Go to the list view
-                {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
-                    item.setTitle(R.string.action_earth);
-                    item.setIcon(getResources().getDrawable(R.drawable.ic_earth));
-                    mapDisplayed = false;
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case (R.id.action_list):
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -166,23 +178,25 @@ public class HomeActivity extends ActionBarActivity
         eventList = new ArrayList<>();
         String response = null;
 
-        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), "Evt 1", "10 euros", "19 Rue Marcel Dutarte 69100 Villeurbanne", "C'est cool venez"));
-        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), "Evenement 2", "10 euros", "3 Rue du Château d'Eau 70100 Beaujeu", "C'est cool venez"));
-        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), "Evt 3", "10 euros", "820 S Michigan Ave Chicago IL 60605-7102", "C'est cool venez"));
-        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), "Evenement 4", "10 euros", "69, rue Farabi Marrakech Maroc", "C'est cool venez"));
+        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), null, "Evt 1", "10 euros", "19 Rue Marcel Dutarte 69100 Villeurbanne", "C'est cool venez"));
+        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), new Date(115,05,21), "Evenement 2", "10 euros", "3 Rue du Château d'Eau 70100 Beaujeu", "C'est cool venez"));
+        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), null, "Evt 3", "10 euros", "820 S Michigan Ave Chicago IL 60605-7102", "C'est cool venez"));
+        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), new Date(115, 06, 31), "Evenement 4", "10 euros", "69, rue Farabi Marrakech Maroc", "C'est cool venez"));
 
-       new GetEventsTask().execute("http://dfournier.ovh",null,response);
+        new GetEventsTask().execute("http://dfournier.ovh", null, response);
     }
 
-    public void updateViews(String query) {
-        if (!mapDisplayed) {
-            eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), query));
-        } else {
-            mapFragment.updateMapView(Search.searchByTitle(eventListFragment.getEventList(), query));
+    private void notifyListChanged() {
+        for(OnListChangedListener list : mListeners){
+            list.onListChanged(mDisplayedEvents);
         }
-
     }
 
+    public void addOnListChangedListener(OnListChangedListener list) {
+        mListeners.add(list);
+    }
 
-
+    public void removeOnListChangedListener(OnListChangedListener list) {
+        mListeners.remove(list);
+    }
 }
