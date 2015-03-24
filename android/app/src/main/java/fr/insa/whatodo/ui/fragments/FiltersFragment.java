@@ -20,7 +20,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -30,6 +32,14 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.model.AgeFilter;
+import fr.insa.whatodo.model.CategoryFilter;
+import fr.insa.whatodo.model.DateFilter;
+import fr.insa.whatodo.model.DistanceFilter;
+import fr.insa.whatodo.model.HourFilter;
+import fr.insa.whatodo.model.PlaceFilter;
+import fr.insa.whatodo.model.PriceFilter;
+import fr.insa.whatodo.model.TagFilter;
 import fr.insa.whatodo.ui.adapters.FiltersListAdapter;
 
 /**
@@ -78,7 +88,57 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
+    //Filtres
+    private CategoryFilter categoryFilter;
+    private TagFilter tagFilter;
+    private PlaceFilter placeFilter;
+    private DistanceFilter distanceFilter;
+    private PriceFilter priceFilter;
+    private DateFilter dateFilter;
+    private AgeFilter ageFilter;
+    private HourFilter hourFilter;
+
     public FiltersFragment() {
+        categoryFilter=new CategoryFilter();
+        tagFilter= new TagFilter();
+        placeFilter= new PlaceFilter();
+        distanceFilter= new DistanceFilter();
+        priceFilter= new PriceFilter();
+        dateFilter= new DateFilter();
+        ageFilter= new AgeFilter();
+        hourFilter=new HourFilter();
+    }
+
+    public CategoryFilter getCategoryFilter() {
+        return categoryFilter;
+    }
+
+    public TagFilter getTagFilter() {
+        return tagFilter;
+    }
+
+    public PlaceFilter getPlaceFilter() {
+        return placeFilter;
+    }
+
+    public DistanceFilter getDistanceFilter() {
+        return distanceFilter;
+    }
+
+    public PriceFilter getPriceFilter() {
+        return priceFilter;
+    }
+
+    public DateFilter getDateFilter() {
+        return dateFilter;
+    }
+
+    public AgeFilter getAgeFilter() {
+        return ageFilter;
+    }
+
+    public HourFilter getHourFilter() {
+        return hourFilter;
     }
 
     @Override
@@ -300,13 +360,11 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
             firstDate=selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear;
-            firstDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,firstDateButton,new ViewGroup(getActivity()) {
-                @Override
-                protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
-                }
-            }).findViewById(R.id.firstDateText);
+            firstDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,firstDateButton,null).findViewById(R.id.firstDateText);
             firstDateButton.setText(firstDate);
+//            BaseExpandableListAdapter bela=(BaseExpandableListAdapter)mDrawerListView.getExpandableListAdapter();
+//            bela.notifyDataSetChanged();
+
 // TROUVER UNE FACON DE RAFRAICHIR CETTE FUCKING VIEW !!!!
         }
     };
@@ -315,12 +373,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
             lastDate=selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear;
-            lastDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,lastDateButton,new ViewGroup(getActivity()) {
-                @Override
-                protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
-                }
-            }).findViewById(R.id.lastDateText);
+            lastDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,lastDateButton,null).findViewById(R.id.lastDateText);
             lastDateButton.setText(lastDate);
             // TROUVER UNE FACON DE RAFRAICHIR CETTE FUCKING VIEW !!!!
         }
@@ -353,6 +406,77 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void onCheckBoxClicked(View v)
+    {
+        CheckBox c = (CheckBox) v;
+        if(c.isChecked())
+        {
+            switch (v.getId())
+            {
+                case R.id.checkBoxSpectacle :
+                    categoryFilter.addCategory(CategoryFilter.Category.SPECTACLE);
+                    break;
+                case R.id.checkBoxConcert :
+                    categoryFilter.addCategory(CategoryFilter.Category.CONCERT);
+                    break;
+                case R.id.checkBoxTheatre :
+                    categoryFilter.addCategory(CategoryFilter.Category.THEATRE);
+                    break;
+                case R.id.checkBoxConference :
+                    categoryFilter.addCategory(CategoryFilter.Category.CONFERENCE);
+                    break;
+                case R.id.checkBoxDebat :
+                    categoryFilter.addCategory(CategoryFilter.Category.DEBAT);
+                    break;
+                case R.id.checkBoxExposition :
+                    categoryFilter.addCategory(CategoryFilter.Category.EXPOSITION);
+                    break;
+                case R.id.checkBoxSoiree :
+                    categoryFilter.addCategory(CategoryFilter.Category.SOIREE);
+                    break;
+                case R.id.checkBoxSport :
+                    categoryFilter.addCategory(CategoryFilter.Category.SPORT);
+                    break;
+                case R.id.checkBoxProjection :
+                    categoryFilter.addCategory(CategoryFilter.Category.PROJECTIONVIDEO);
+                    break;
+            }
+        }
+        else
+        {
+           switch (v.getId())
+            {
+                case R.id.checkBoxSpectacle :
+                    categoryFilter.removeCategory(CategoryFilter.Category.SPECTACLE);
+                    break;
+                case R.id.checkBoxConcert :
+                    categoryFilter.removeCategory(CategoryFilter.Category.CONCERT);
+                    break;
+                case R.id.checkBoxTheatre :
+                    categoryFilter.removeCategory(CategoryFilter.Category.THEATRE);
+                    break;
+                case R.id.checkBoxConference :
+                    categoryFilter.removeCategory(CategoryFilter.Category.CONFERENCE);
+                    break;
+                case R.id.checkBoxDebat :
+                    categoryFilter.removeCategory(CategoryFilter.Category.DEBAT);
+                    break;
+                case R.id.checkBoxExposition :
+                    categoryFilter.removeCategory(CategoryFilter.Category.EXPOSITION);
+                    break;
+                case R.id.checkBoxSoiree :
+                    categoryFilter.removeCategory(CategoryFilter.Category.SOIREE);
+                    break;
+                case R.id.checkBoxSport :
+                    categoryFilter.removeCategory(CategoryFilter.Category.SPORT);
+                    break;
+                case R.id.checkBoxProjection :
+                    categoryFilter.removeCategory(CategoryFilter.Category.PROJECTIONVIDEO);
+                    break;
+            }
+        }
+
+    }
 
     /**
      * Callbacks interface that all activities using this fragment must implement.

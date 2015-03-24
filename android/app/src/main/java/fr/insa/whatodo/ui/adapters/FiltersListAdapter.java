@@ -6,9 +6,14 @@ import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ExpandableListAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.ui.fragments.FiltersFragment;
@@ -23,7 +28,7 @@ import fr.insa.whatodo.model.PriceFilter;
 import fr.insa.whatodo.model.TagFilter;
 
 
-public class FiltersListAdapter implements ExpandableListAdapter {
+public class FiltersListAdapter extends BaseExpandableListAdapter implements ExpandableListAdapter {
 
     //context variable
     private Context context;
@@ -31,28 +36,11 @@ public class FiltersListAdapter implements ExpandableListAdapter {
 
     public LayoutInflater inflater;
 
-    //Filtres
-    private CategoryFilter categoryFilter;
-    private TagFilter tagFilter;
-    private PlaceFilter placeFilter;
-    private DistanceFilter distanceFilter;
-    private PriceFilter priceFilter;
-    private DateFilter dateFilter;
-    private AgeFilter ageFilter;
-    private HourFilter hourFilter;
 
     public FiltersListAdapter(Activity act, FiltersFragment fr) {
         this.context = act;
         fragment=fr;
         inflater=act.getLayoutInflater();
-        categoryFilter=new CategoryFilter();
-        tagFilter= new TagFilter();
-        placeFilter= new PlaceFilter();
-        distanceFilter= new DistanceFilter();
-        priceFilter= new PriceFilter();
-        dateFilter= new DateFilter();
-        ageFilter= new AgeFilter();
-        hourFilter=new HourFilter();
     }
 
     @Override
@@ -85,28 +73,28 @@ public class FiltersListAdapter implements ExpandableListAdapter {
         Filter child=null;
         switch(groupPosition){
             case 0 :
-                child=categoryFilter;
+                child= fragment.getCategoryFilter();
                 break;
             case 1:
-                child=tagFilter;
+                child=fragment.getTagFilter();
                 break;
             case 2:
-                child=placeFilter;
+                child=fragment.getPlaceFilter();
                 break;
             case 3:
-                child=distanceFilter;
+                child=fragment.getDistanceFilter();
                 break;
             case 4:
-                child=priceFilter;
+                child=fragment.getPriceFilter();
                 break;
             case 5 :
-                child=dateFilter;
+                child=fragment.getDateFilter();
                 break;
             case 6 :
-                child=ageFilter;
+                child=fragment.getAgeFilter();
                 break;
             case 7:
-                child=hourFilter;
+                child=fragment.getHourFilter();
                 break;
         }
         return child;
@@ -167,6 +155,49 @@ public class FiltersListAdapter implements ExpandableListAdapter {
         {
             case 0:
                 convertView=inflater.inflate(R.layout.fragment_category_filter,null);
+                ArrayList<CategoryFilter.Category> categories=(ArrayList<CategoryFilter.Category>)fragment.getCategoryFilter().getValue();
+                for(int i=0; i<categories.size(); i++)
+                {
+                    switch(categories.get(i))
+                    {
+                        case SPECTACLE :
+                            CheckBox cb1=(CheckBox)convertView.findViewById(R.id.checkBoxSpectacle);
+                            cb1.setChecked(true);
+                            break;
+                        case CONCERT :
+                            CheckBox cb2=(CheckBox)convertView.findViewById(R.id.checkBoxConcert);
+                            cb2.setChecked(true);
+                            break;
+                        case THEATRE :
+                            CheckBox cb3=(CheckBox)convertView.findViewById(R.id.checkBoxTheatre);
+                            cb3.setChecked(true);
+                            break;
+                        case CONFERENCE :
+                            CheckBox cb4=(CheckBox)convertView.findViewById(R.id.checkBoxConference);
+                            cb4.setChecked(true);
+                            break;
+                        case DEBAT :
+                            CheckBox cb5=(CheckBox)convertView.findViewById(R.id.checkBoxDebat);
+                            cb5.setChecked(true);
+                            break;
+                        case EXPOSITION :
+                            CheckBox cb6=(CheckBox)convertView.findViewById(R.id.checkBoxExposition);
+                            cb6.setChecked(true);
+                            break;
+                        case SOIREE :
+                            CheckBox cb7=(CheckBox)convertView.findViewById(R.id.checkBoxSoiree);
+                            cb7.setChecked(true);
+                            break;
+                        case SPORT :
+                            CheckBox cb8=(CheckBox)convertView.findViewById(R.id.checkBoxSport);
+                            cb8.setChecked(true);
+                            break;
+                        case PROJECTIONVIDEO :
+                            CheckBox cb9=(CheckBox)convertView.findViewById(R.id.checkBoxProjection);
+                            cb9.setChecked(true);
+                            break;
+                    }
+                }
                 break;
             case 1 :
                 convertView=inflater.inflate(R.layout.fragment_tag_filter,null);
@@ -184,6 +215,7 @@ public class FiltersListAdapter implements ExpandableListAdapter {
                 convertView=inflater.inflate(R.layout.fragment_date_filter,null);
                 ((Button)convertView.findViewById(R.id.firstDateText)).setText(fragment.getFirstDate());
                 ((Button)convertView.findViewById(R.id.lastDateText)).setText(fragment.getLastDate());
+//                notifyDataSetChanged();
                 break;
             case 6:
                 convertView=inflater.inflate(R.layout.fragment_age_filter,null);

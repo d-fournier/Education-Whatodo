@@ -20,4 +20,10 @@ public class CategoryFilter extends Filter {
     public Object getValue() {
         return categories;
     }
+
+    public void addCategory(Category c){
+        categories.add(c);
+    }
+
+    public void removeCategory(Category c){categories.remove(c);}
 }
