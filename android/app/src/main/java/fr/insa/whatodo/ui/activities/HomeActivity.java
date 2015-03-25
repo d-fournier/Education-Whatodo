@@ -151,4 +151,6 @@ public class HomeActivity extends ActionBarActivity
         mFiltersFragment.onDateButtonClicked(v);
     }
 
+    public void onCheckBoxClicked(View v)  {mFiltersFragment.onCheckBoxClicked(v); }
+
 }

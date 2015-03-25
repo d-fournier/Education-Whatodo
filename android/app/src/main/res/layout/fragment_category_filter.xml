@@ -1,62 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FiltersFragment">
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Spectacle"
-        android:id="@+id/checkBoxSpectacle" />
+        android:id="@+id/checkBoxSpectacle"
+        android:onClick="onCheckBoxClicked"/>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Concert"
-        android:id="@+id/checkBoxConcert" />
+        android:id="@+id/checkBoxConcert"
+        android:onClick="onCheckBoxClicked"/>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pièce de théâtre"
-        android:id="@+id/checkBoxTheatre" />
+        android:id="@+id/checkBoxTheatre"
+        android:onClick="onCheckBoxClicked"/>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Conférence"
-        android:id="@+id/checkBoxConference" />
+        android:id="@+id/checkBoxConference"
+        android:onClick="onCheckBoxClicked"/>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Débat"
-        android:id="@+id/checkBoxDebat" />
+        android:id="@+id/checkBoxDebat"
+        android:onClick="onCheckBoxClicked"/>
 
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Exposition"
-        android:id="@+id/checkBoxExposition" />
+        android:id="@+id/checkBoxExposition"
+        android:onClick="onCheckBoxClicked"/>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Soirée"
-        android:id="@+id/checkBoxSoiree" />
+        android:id="@+id/checkBoxSoiree"
+        android:onClick="onCheckBoxClicked"/>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Activité sportive"
-        android:id="@+id/checkBoxSport" />
+        android:id="@+id/checkBoxSport"
+        android:onClick="onCheckBoxClicked"/>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Projection vidéo"
-        android:id="@+id/checkBoxProjection" />
+        android:id="@+id/checkBoxProjection"
+        android:onClick="onCheckBoxClicked"/>
 
 
 </LinearLayout>
