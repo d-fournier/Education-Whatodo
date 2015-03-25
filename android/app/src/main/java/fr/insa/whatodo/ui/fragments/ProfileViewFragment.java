@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.models.User;
 
@@ -29,11 +27,6 @@ public class ProfileViewFragment extends Fragment {
         //Bundle allows you to
         Bundle args = new Bundle();
         args.putSerializable("user", user);
-//        args.putString("name", user.getName());
-//        args.putString("password", user.getPassword());
-//        args.putString("mail", user.getMail());
-//        args.putStringArrayList("cities", user.getCities());
-//        args.putInt("age", user.getAge());
         f.setArguments(args);
 
 
@@ -56,12 +49,16 @@ public class ProfileViewFragment extends Fragment {
         imageItem.setImageDrawable(user.getImage());
         textItemName.setText(user.getName());
         textItemMail.setText(user.getMail());
-        textItemAge.setText(""+user.getAge());
-        String cities="";
-        for (String city : user.getCities()){
-            cities += city+", ";
+        textItemAge.setText("" + user.getAge());
+        String cities = "";
+        try {
+            for (String city : user.getCities()) {
+                cities += city + ", ";
+            }
+            cities = cities.substring(0, cities.length() - 2);
+        } catch (NullPointerException e) {
+
         }
-        cities=cities.substring(0, cities.length()-2);
         textItemPlaces.setText(cities);
         textItemInterests.setText("Bla bla bla interests");
 

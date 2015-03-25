@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -23,14 +24,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.models.Event;
+import fr.insa.whatodo.models.User;
 import fr.insa.whatodo.ui.fragments.CustomMapFragment;
 import fr.insa.whatodo.ui.fragments.DownloadFailedFragment;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
+import fr.insa.whatodo.ui.fragments.ProfileViewFragment;
 import fr.insa.whatodo.utils.OnListChangedListener;
 import fr.insa.whatodo.utils.Search;
 
@@ -49,21 +53,29 @@ public class HomeActivity extends ActionBarActivity
     private CharSequence mTitle;
 
     private SearchView searchBar;
+
+    /**
+     * Fragments of the activity
+     */
     private EventListFragment eventListFragment;
     private CustomMapFragment mapFragment;
     private DownloadFailedFragment downloadFragment;
+    private ProfileViewFragment profileFragment;
+
     private ArrayList<Event> eventList;
     private List<OnListChangedListener> mListeners;
     private List<Event> mDisplayedEvents;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        fillEventList();
-
+        eventList = new ArrayList<>();
         mListeners = new ArrayList<>();
+
+        profileFragment = ProfileViewFragment.newInstance(new User("Nom", "passwd", "email@email.com", null, 24));
         eventListFragment = EventListFragment.newInstance(eventList);
         mapFragment = CustomMapFragment.newInstance(eventList);
         downloadFragment = new DownloadFailedFragment();
@@ -104,14 +116,24 @@ public class HomeActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        switch (position) {
-            case (0):
-                //    fragmentManager.beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
-                break;
-            case (1):
-
-                break;
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            switch (position) {
+                case (0):
+                    searchBar.setVisibility(View.VISIBLE);
+                    if (eventList.isEmpty()) {
+                        new GetEventsTask().execute("http://dfournier.ovh/api/event/?format=json", null, "");
+                    } else {
+                        fragmentManager.beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+                    }
+                    break;
+                case (1):
+                    searchBar.setVisibility(View.GONE);
+                    fragmentManager.beginTransaction().replace(R.id.fragment_home_container, profileFragment).commit();
+                    break;
+            }
+        } catch (NullPointerException e) {
+            //On passe la première fois
         }
     }
 
@@ -178,7 +200,7 @@ public class HomeActivity extends ActionBarActivity
             case (R.id.action_list):
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
                 break;
-            case (R.id.action_refresh) :
+            case (R.id.action_refresh):
                 new GetEventsTask().execute("http://dfournier.ovh/api/event/?format=json", null, "");
                 break;
 
@@ -187,15 +209,6 @@ public class HomeActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void fillEventList() {
-        eventList = new ArrayList<>();
-
-/*      eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), null, "Evt 1", "10 euros", "19 Rue Marcel Dutarte 69100 Villeurbanne", "C'est cool venez"));
-        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), new Date(115,05,21), "Evenement 2", "10 euros", "3 Rue du Château d'Eau 70100 Beaujeu", "C'est cool venez"));
-        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), null, "Evt 3", "10 euros", "820 S Michigan Ave Chicago IL 60605-7102", "C'est cool venez"));
-        eventList.add(new Event(getResources().getDrawable(R.drawable.ic_launcher), new Date(), new Date(115, 06, 31), "Evenement 4", "10 euros", "69, rue Farabi Marrakech Maroc", "C'est cool venez"));
-*/
-    }
 
     private void notifyListChanged() {
         for (OnListChangedListener list : mListeners) {
@@ -230,6 +243,7 @@ public class HomeActivity extends ActionBarActivity
             } else {
                 //Pas de connexion internet
                 HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
+                Toast.makeText(getApplicationContext(),"Vérifiez votre connexion",Toast.LENGTH_SHORT);
                 this.cancel(true);
             }
         }
@@ -237,9 +251,10 @@ public class HomeActivity extends ActionBarActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            dialog.dismiss();
-            dialog = ProgressDialog.show(HomeActivity.this, null, getString(R.string.parse));
+            eventList.clear();
+            eventList.add(new Event(getResources().getDrawable(R.drawable.bann), new Date(), new Date(115/05/15), "Evenement", "20 €", "20 Avenue Albert Einstein 69100 Villeurbanne", "Joli evenement"));
             //TODO Il faut parser la string ici !
+            notifyListChanged();
             dialog.dismiss();
             HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
         }
