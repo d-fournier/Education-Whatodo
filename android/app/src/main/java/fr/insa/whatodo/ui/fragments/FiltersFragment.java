@@ -1,6 +1,7 @@
 package fr.insa.whatodo.ui.fragments;
 
 import android.app.DatePickerDialog;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -12,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -97,6 +99,9 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
 
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
+
+//        firstDateButton.setOnClickListener(this);
+ //       lastDateButton.setOnClickListener(this);
     }
 
     @Override
@@ -104,6 +109,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -121,8 +127,8 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         mDrawerListView.setAdapter(mFiltersListAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
-        firstDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,new View(getActivity()),null).findViewById(R.id.firstDateText);
-        lastDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5, 0, false, new View(getActivity()), null).findViewById(R.id.lastDateText);
+ //       firstDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,new View(getActivity()),null).findViewById(R.id.firstDateText);
+ //       lastDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5, 0, false, new View(getActivity()), null).findViewById(R.id.lastDateText);
         cal = Calendar.getInstance();
         day = cal.get(Calendar.DAY_OF_MONTH);
         month = cal.get(Calendar.MONTH);
@@ -130,10 +136,12 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         firstDate=day + " / " + (month + 1) + " / " + year;
         lastDate=day + " / " + (month + 1) + " / " + (year + 1);
 
-       firstDateButton.setOnClickListener(this);
-       lastDateButton.setOnClickListener(this);;
-
         return mDrawerListView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     public boolean isDrawerOpen() {
@@ -300,14 +308,14 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
             firstDate=selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear;
-            firstDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,firstDateButton,new ViewGroup(getActivity()) {
+            firstDateButton = (Button) getActivity().findViewById(R.id.firstDateText);
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
-                protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
+                public void run(){
+                    firstDateButton.setText(firstDate);
                 }
-            }).findViewById(R.id.firstDateText);
-            firstDateButton.setText(firstDate);
-// TROUVER UNE FACON DE RAFRAICHIR CETTE FUCKING VIEW !!!!
+            });
+
         }
     };
 
@@ -315,14 +323,13 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
             lastDate=selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear;
-            lastDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,lastDateButton,new ViewGroup(getActivity()) {
+            lastDateButton = (Button) getActivity().findViewById(R.id.lastDateText);
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
-                protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
+                public void run() {
+                    lastDateButton.setText(lastDate);
                 }
-            }).findViewById(R.id.lastDateText);
-            lastDateButton.setText(lastDate);
-            // TROUVER UNE FACON DE RAFRAICHIR CETTE FUCKING VIEW !!!!
+            });
         }
     };
 
