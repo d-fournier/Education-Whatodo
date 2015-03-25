@@ -93,10 +93,10 @@
             android:text="@string/profile_view_your_events_header"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <fragment
-            android:name="fr.insa.whatodo.ui.fragments.EventListFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <!--<fragment-->
+            <!--android:name="fr.insa.whatodo.ui.fragments.EventListFragment"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
 
     </LinearLayout>
 

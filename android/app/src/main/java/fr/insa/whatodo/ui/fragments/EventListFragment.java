@@ -24,9 +24,9 @@ import fr.insa.whatodo.utils.OnListChangedListener;
  */
 public class EventListFragment extends Fragment implements OnListChangedListener {
 
-    ArrayList<Event> eventList;
-    EventAdapter<Event> adapter;
-    ListView eventListView;
+    protected ArrayList<Event> eventList;
+    protected EventAdapter<Event> adapter;
+    protected ListView eventListView;
 
     public EventListFragment() {
     }
