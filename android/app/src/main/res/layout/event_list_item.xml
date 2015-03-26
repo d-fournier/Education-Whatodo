@@ -6,6 +6,15 @@
     android:orientation="vertical"
     android:padding="5dp">
 
+    <TextView
+        android:id="@+id/event_list_item_no_image"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="#33333333"
+        android:text="@string/no_image"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ImageView
         android:id="@+id/event_list_item_picture"

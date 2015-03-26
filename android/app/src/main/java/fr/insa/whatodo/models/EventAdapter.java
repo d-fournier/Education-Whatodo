@@ -34,6 +34,7 @@ public class EventAdapter<T> extends ArrayAdapter {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.event_list_item, parent, false);
         }
         // Lookup view for data population
+        TextView textNoImage = (TextView) convertView.findViewById(R.id.event_list_item_no_image);
         ImageView imageItem = (ImageView) convertView.findViewById(R.id.event_list_item_picture);
         TextView textItemTitle = (TextView) convertView.findViewById(R.id.event_list_item_title);
         TextView textItemDate = (TextView) convertView.findViewById(R.id.event_list_item_date);
@@ -42,12 +43,19 @@ public class EventAdapter<T> extends ArrayAdapter {
         TextView textItemSummary = (TextView) convertView.findViewById(R.id.event_list_item_summary);
 
         // Populate the data into the template view using the data object
-        imageItem.setImageDrawable(event.getImage());
-        textItemTitle.setText(event.getTitle());
-        textItemDate.setText(event.getDateAsString());
-        textItemPrice.setText(event.getPrice());
-        textItemPlace.setText(event.getPlace());
-        textItemSummary.setText(event.getSummary());
+        if(event.getImage() == null) {
+            imageItem.setVisibility(View.GONE);
+        }else{
+            textNoImage.setVisibility(View.GONE);
+        }
+            imageItem.setImageDrawable(event.getImage());
+            textItemTitle.setText(event.getTitle());
+            textItemDate.setText(event.getDateAsString());
+            textItemPrice.setText(event.getPrice());
+            textItemPlace.setText(event.getPlace());
+            textItemSummary.setText(event.getSummary());
+
+
 
         // Return the completed view to render on screen
         return convertView;

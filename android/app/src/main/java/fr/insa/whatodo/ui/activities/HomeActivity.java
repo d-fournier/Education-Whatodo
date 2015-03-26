@@ -35,6 +35,7 @@ import fr.insa.whatodo.ui.fragments.DownloadFailedFragment;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.ProfileViewFragment;
+import fr.insa.whatodo.utils.JSonParser;
 import fr.insa.whatodo.utils.OnListChangedListener;
 import fr.insa.whatodo.utils.Search;
 
@@ -224,7 +225,7 @@ public class HomeActivity extends ActionBarActivity
         mListeners.remove(list);
     }
 
-    public class GetEventsTask extends AsyncTask<String, Void, String> {
+    public class GetEventsTask extends AsyncTask<String, Void, Void> {
 
         ProgressDialog dialog = null;
 
@@ -243,30 +244,25 @@ public class HomeActivity extends ActionBarActivity
             } else {
                 //Pas de connexion internet
                 HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
-                Toast.makeText(getApplicationContext(),"Vérifiez votre connexion",Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(),"Vérifiez votre connexion",Toast.LENGTH_SHORT).show();
                 this.cancel(true);
             }
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            eventList.clear();
-            eventList.add(new Event(getResources().getDrawable(R.drawable.bann), new Date(), new Date(115/05/15), "Evenement", "20 €", "20 Avenue Albert Einstein 69100 Villeurbanne", "Joli evenement"));
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
+//            eventList.add(new Event(null, new Date(), new Date(115/05/15), "Evenement", "20 €", "20 Avenue Albert Einstein 69100 Villeurbanne", "Joli evenement"));
             //TODO Il faut parser la string ici !
             notifyListChanged();
             dialog.dismiss();
             HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
         }
 
-        protected String doInBackground(String... urls) {
+        protected Void doInBackground(String... urls) {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-
-            // Will contain the raw JSON response as a string.
-            String eventJsonStr = null;
 
             try {
                 // Construct the URL for the server query
@@ -279,41 +275,22 @@ public class HomeActivity extends ActionBarActivity
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    // Nothing to do.
-                    return null;
-                }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
-                    buffer.append(line + "\n");
+               try {
+                    eventList = JSonParser.readJsonStream(inputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
-                if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
-                    return null;
-                }
-                eventJsonStr = buffer.toString();
+                return null;
+
             } catch (IOException e) {
-                return "network_error";
-            } finally {
+                return null;
+            }finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e("Getting Events", "Error closing stream", e);
-                    }
-                }
             }
-            return eventJsonStr;
         }
 
     }
