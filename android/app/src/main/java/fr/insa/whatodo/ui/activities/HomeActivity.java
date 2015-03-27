@@ -74,7 +74,7 @@ public class HomeActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        eventList = new ArrayList<>();
+        eventList = new ArrayList<>(); //TODO charger depuis la database
         mListeners = new ArrayList<>();
 
         profileFragment = ProfileViewFragment.newInstance(new User("Nom", "passwd", "email@email.com", null, 24));
