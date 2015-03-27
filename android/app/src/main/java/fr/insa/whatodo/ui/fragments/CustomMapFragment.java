@@ -105,7 +105,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, O
         for (Event e : l) {
             map.addMarker(new MarkerOptions()
                     .position(getEventCoordinates(e))
-                    .title(e.getTitle()));
+                    .title(e.getName()));
         }
     }
 
@@ -115,7 +115,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, O
         Address location;
         LatLng lat_lng = null;
         try {
-            address = coder.getFromLocationName(e.getPlace(), 1);
+            address = coder.getFromLocationName(e.getAddress(), 1);
             location = address.get(0);
             lat_lng = new LatLng(location.getLatitude(), location.getLongitude());
         } catch (IOException e1) {

@@ -5,31 +5,45 @@ import android.graphics.drawable.Drawable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Benjamin on 11/03/2015.
  */
 public class Event {
 
-    protected Drawable image;
-    protected Date startDate;
-    protected Date endDate;
-    protected String title;
-    protected String price; //TODO A voir
-    protected String place;
+    protected int id;
+    protected String name;
     protected String summary;
+    protected String url;
+    protected String startTime;
+    protected String endTime;
+    protected String startDate;
+    protected String endDate;
+    protected String price;
+    protected int min_age;
+    protected String address;
+    protected List<Category> categories;
+    protected List<Tag> tags;
+    protected Drawable image;
 
-    protected DateFormat df;
+    protected DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Event(Drawable image, Date startDate, Date endDate, String title, String price, String place, String summary) {
-        this.image = image;
+    public Event(int id, String name, String summary, String url, String startTime, String endTime, String startDate, String endDate, String price, int min_age, String address, List<Tag> tags, List<Category> categories, Drawable image) {
+        this.id = id;
+        this.name = name;
+        this.summary = summary;
+        this.url = url;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.title = title;
         this.price = price;
-        this.place = place;
-        this.summary = summary;
-        df = new SimpleDateFormat("dd/MM/yyyy");
+        this.min_age = min_age;
+        this.address = address;
+        this.tags = tags;
+        this.categories = categories;
+        this.image = image;
     }
 
     public Drawable getImage() {
@@ -40,19 +54,55 @@ public class Event {
         return endDate == null ? df.format(startDate) : "Du " + df.format(startDate) + " au " + df.format(endDate);
     }
 
-    public String getTitle() {
-        return title;
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
     }
 
     public String getPrice() {
         return price;
     }
 
-    public String getPlace() {
-        return place;
+    public int getMin_age() {
+        return min_age;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getAddress() {
+        return address;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
     }
 }

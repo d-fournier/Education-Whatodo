@@ -68,6 +68,7 @@ public class HomeActivity extends ActionBarActivity
     private List<Event> mDisplayedEvents;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +113,11 @@ public class HomeActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override

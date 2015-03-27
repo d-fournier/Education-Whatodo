@@ -49,10 +49,10 @@ public class EventAdapter<T> extends ArrayAdapter {
             textNoImage.setVisibility(View.GONE);
         }
             imageItem.setImageDrawable(event.getImage());
-            textItemTitle.setText(event.getTitle());
+            textItemTitle.setText(event.getName());
             textItemDate.setText(event.getDateAsString());
             textItemPrice.setText(event.getPrice());
-            textItemPlace.setText(event.getPlace());
+            textItemPlace.setText(event.getAddress());
             textItemSummary.setText(event.getSummary());
 
 
