@@ -43,12 +43,12 @@ public class EventAdapter<T> extends ArrayAdapter {
         TextView textItemSummary = (TextView) convertView.findViewById(R.id.event_list_item_summary);
 
         // Populate the data into the template view using the data object
-        if(event.getImage() == null) {
+       /*  if(event.getImage() == null) {
             imageItem.setVisibility(View.GONE);
         }else{
             textNoImage.setVisibility(View.GONE);
         }
-            imageItem.setImageDrawable(event.getImage());
+            imageItem.setImageDrawable(event.getImage());*/ //TODO A MODIFIER !
             textItemTitle.setText(event.getName());
             textItemDate.setText(event.getDateAsString());
             textItemPrice.setText(event.getPrice());

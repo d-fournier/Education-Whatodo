@@ -27,34 +27,34 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
                     EventDatabaseContract.EventTable.COLUMN_NAME_END_DATE + TEXT_TYPE + COMMA_SEP +
                     EventDatabaseContract.EventTable.COLUMN_NAME_PRICE + TEXT_TYPE + COMMA_SEP +
                     EventDatabaseContract.EventTable.COLUMN_NAME_MIN_AGE + TEXT_TYPE + COMMA_SEP +
-                    EventDatabaseContract.EventTable.COLUMN_NAME_IMAGE + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.EventTable.COLUMN_NAME_ADDRESS + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.EventTable.COLUMN_NAME_IMAGE_URL + TEXT_TYPE +
                     " )";
     private static final String SQL_CREATE_ENTRIES_CATEGORY =
             "CREATE TABLE " + EventDatabaseContract.CategoryTable.TABLE_NAME + " (" +
                     EventDatabaseContract.CategoryTable.COLUMN_NAME_ID + TEXT_TYPE + COMMA_SEP +
-                    EventDatabaseContract.CategoryTable.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.CategoryTable.COLUMN_NAME_NAME + TEXT_TYPE +
                     " )";
     private static final String SQL_CREATE_ENTRIES_TAG =
             "CREATE TABLE " + EventDatabaseContract.TagTable.TABLE_NAME + " (" +
                     EventDatabaseContract.TagTable.COLUMN_NAME_ID + TEXT_TYPE + COMMA_SEP +
-                    EventDatabaseContract.TagTable.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.TagTable.COLUMN_NAME_NAME + TEXT_TYPE +
                     " )";
     private static final String SQL_CREATE_ENTRIES_EVENT_CATEGORY =
             "CREATE TABLE " + EventDatabaseContract.EventCategoryTable.TABLE_NAME + " (" +
                     EventDatabaseContract.EventCategoryTable.COLUMN_NAME_ID_EVENT + TEXT_TYPE + COMMA_SEP +
-                    EventDatabaseContract.EventCategoryTable.COLUMN_NAME_ID_CATEGORY + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.EventCategoryTable.COLUMN_NAME_ID_CATEGORY + TEXT_TYPE +
                     " )";
     private static final String SQL_CREATE_ENTRIES_EVENT_TAG =
             "CREATE TABLE " + EventDatabaseContract.EventTagTable.TABLE_NAME + " (" +
                     EventDatabaseContract.EventTagTable.COLUMN_NAME_ID_EVENT + TEXT_TYPE + COMMA_SEP +
-                    EventDatabaseContract.EventTagTable.COLUMN_NAME_ID_TAG + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.EventTagTable.COLUMN_NAME_ID_TAG + TEXT_TYPE +
                     " )";
 
-
-    //On ne delete pas les tags et les catagories, ça reste fixe
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + EventDatabaseContract.EventTable.TABLE_NAME + COMMA_SEP + EventDatabaseContract.EventCategoryTable.TABLE_NAME +
-                    EventDatabaseContract.EventTagTable.TABLE_NAME;
+                    EventDatabaseContract.EventTagTable.TABLE_NAME + COMMA_SEP + EventDatabaseContract.EventCategoryTable.TABLE_NAME +
+                    COMMA_SEP + EventDatabaseContract.EventTagTable.TABLE_NAME;
 
     public EventDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

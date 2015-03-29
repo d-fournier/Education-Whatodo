@@ -2,6 +2,7 @@ package fr.insa.whatodo.ui.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -28,13 +29,16 @@ import java.util.Date;
 import java.util.List;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.models.Category;
 import fr.insa.whatodo.models.Event;
 import fr.insa.whatodo.models.User;
+import fr.insa.whatodo.services.DatabaseServices;
 import fr.insa.whatodo.ui.fragments.CustomMapFragment;
 import fr.insa.whatodo.ui.fragments.DownloadFailedFragment;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.ProfileViewFragment;
+import fr.insa.whatodo.utils.EventDatabaseHelper;
 import fr.insa.whatodo.utils.JSonParser;
 import fr.insa.whatodo.utils.OnListChangedListener;
 import fr.insa.whatodo.utils.Search;
@@ -66,6 +70,7 @@ public class HomeActivity extends ActionBarActivity
     private ArrayList<Event> eventList;
     private List<OnListChangedListener> mListeners;
     private List<Event> mDisplayedEvents;
+    private EventDatabaseHelper mDbHelper;
 
 
 
@@ -74,7 +79,14 @@ public class HomeActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        eventList = new ArrayList<>(); //TODO charger depuis la database
+        mDbHelper = new EventDatabaseHelper(getApplicationContext());
+        SQLiteDatabase write_db = mDbHelper.getWritableDatabase();
+        SQLiteDatabase read_db = mDbHelper.getReadableDatabase();
+
+        Event e = new Event(1,"name","coucou","url","start","end","start2","end2", "12", 15,"address",null, null,"urlimage");
+        DatabaseServices.putEventInDatabase(e, write_db);
+
+        eventList = (ArrayList) DatabaseServices.getAllEvents(read_db); //TODO charger depuis la database
         mListeners = new ArrayList<>();
 
         profileFragment = ProfileViewFragment.newInstance(new User("Nom", "passwd", "email@email.com", null, 24));
@@ -260,6 +272,7 @@ public class HomeActivity extends ActionBarActivity
             super.onPostExecute(v);
 //            eventList.add(new Event(null, new Date(), new Date(115/05/15), "Evenement", "20 €", "20 Avenue Albert Einstein 69100 Villeurbanne", "Joli evenement"));
             //TODO Il faut parser la string ici !
+            //TODO Il faut changer les String en date
             notifyListChanged();
             dialog.dismiss();
             HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();

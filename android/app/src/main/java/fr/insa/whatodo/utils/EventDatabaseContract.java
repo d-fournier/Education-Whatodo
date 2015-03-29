@@ -19,7 +19,8 @@ public final class EventDatabaseContract {
         public static final String COLUMN_NAME_END_DATE = "end_date";
         public static final String COLUMN_NAME_PRICE = "price";
         public static final String COLUMN_NAME_MIN_AGE = "min_age";
-        public static final String COLUMN_NAME_IMAGE = "image";
+        public static final String COLUMN_NAME_ADDRESS= "address";
+        public static final String COLUMN_NAME_IMAGE_URL = "image_url";
     }
 
     public static abstract class CategoryTable {

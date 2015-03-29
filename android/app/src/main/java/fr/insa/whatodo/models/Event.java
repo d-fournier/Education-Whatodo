@@ -1,10 +1,7 @@
 package fr.insa.whatodo.models;
 
-import android.graphics.drawable.Drawable;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,15 +18,15 @@ public class Event {
     protected String startDate;
     protected String endDate;
     protected String price;
-    protected int min_age;
+    protected int minAge;
     protected String address;
     protected List<Category> categories;
     protected List<Tag> tags;
-    protected Drawable image;
+    protected String imageURL;
 
     protected DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Event(int id, String name, String summary, String url, String startTime, String endTime, String startDate, String endDate, String price, int min_age, String address, List<Tag> tags, List<Category> categories, Drawable image) {
+    public Event(int id, String name, String summary, String url, String startTime, String endTime, String startDate, String endDate, String price, int minAge, String address, List<Tag> tags, List<Category> categories, String imageURL) {
         this.id = id;
         this.name = name;
         this.summary = summary;
@@ -39,15 +36,15 @@ public class Event {
         this.startDate = startDate;
         this.endDate = endDate;
         this.price = price;
-        this.min_age = min_age;
+        this.minAge = minAge;
         this.address = address;
         this.tags = tags;
         this.categories = categories;
-        this.image = image;
+        this.imageURL = imageURL;
     }
 
-    public Drawable getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
     public String getDateAsString() {
@@ -90,8 +87,8 @@ public class Event {
         return price;
     }
 
-    public int getMin_age() {
-        return min_age;
+    public int getMinAge() {
+        return minAge;
     }
 
     public String getAddress() {
