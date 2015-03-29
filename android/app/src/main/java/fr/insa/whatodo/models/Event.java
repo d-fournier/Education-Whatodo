@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,7 +13,7 @@ public class Event {
 
     protected int id;
     protected String name;
-    protected String summary;
+    protected String description;
     protected String url;
     protected String startTime;
     protected String endTime;
@@ -22,17 +21,17 @@ public class Event {
     protected String endDate;
     protected String price;
     protected int min_age;
-    protected String address;
+    protected List<Address> addresses;
     protected List<Category> categories;
     protected List<Tag> tags;
     protected Drawable image;
 
     protected DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Event(int id, String name, String summary, String url, String startTime, String endTime, String startDate, String endDate, String price, int min_age, String address, List<Tag> tags, List<Category> categories, Drawable image) {
+    public Event(int id, String name, String description, String url, String startTime, String endTime, String startDate, String endDate, String price, int min_age, List<Address> addresses, List<Tag> tags, List<Category> categories, Drawable image) {
         this.id = id;
         this.name = name;
-        this.summary = summary;
+        this.description = description;
         this.url = url;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -40,7 +39,7 @@ public class Event {
         this.endDate = endDate;
         this.price = price;
         this.min_age = min_age;
-        this.address = address;
+        this.addresses = addresses;
         this.tags = tags;
         this.categories = categories;
         this.image = image;
@@ -62,8 +61,8 @@ public class Event {
         return name;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getDescription() {
+        return description;
     }
 
     public String getUrl() {
@@ -94,8 +93,8 @@ public class Event {
         return min_age;
     }
 
-    public String getAddress() {
-        return address;
+    public List<Address> getAddress() {
+        return addresses;
     }
 
     public List<Category> getCategories() {

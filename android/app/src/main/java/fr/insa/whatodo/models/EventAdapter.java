@@ -52,8 +52,8 @@ public class EventAdapter<T> extends ArrayAdapter {
             textItemTitle.setText(event.getName());
             textItemDate.setText(event.getDateAsString());
             textItemPrice.setText(event.getPrice());
-            textItemPlace.setText(event.getAddress());
-            textItemSummary.setText(event.getSummary());
+            textItemPlace.setText(event.getAddress().get(0).getLocalisation()); /** A CHANGER POUR PLUSIEURS ADRESSES */
+            textItemSummary.setText(event.getDescription());
 
 
 

@@ -10,21 +10,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import fr.insa.whatodo.R;
@@ -35,7 +31,8 @@ import fr.insa.whatodo.ui.fragments.DownloadFailedFragment;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.ProfileViewFragment;
-import fr.insa.whatodo.utils.JSonParser;
+import fr.insa.whatodo.utils.JSonParser.JSonParser;
+import fr.insa.whatodo.utils.OldJSonParser;
 import fr.insa.whatodo.utils.OnListChangedListener;
 import fr.insa.whatodo.utils.Search;
 
@@ -83,8 +80,10 @@ public class HomeActivity extends ActionBarActivity
         downloadFragment = new DownloadFailedFragment();
 
         // Add the fragment to the 'fragment_container' FrameLayout
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.fragment_home_container, downloadFragment).commit();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_home_container, downloadFragment).commit();
+                .add(R.id.fragment_home_container, eventListFragment).commit();
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
 
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -93,6 +92,7 @@ public class HomeActivity extends ActionBarActivity
                 mDisplayedEvents = Search.searchByTitle(eventList, query);
                 notifyListChanged();
                 return false;
+
             }
 
             @Override
@@ -282,11 +282,18 @@ public class HomeActivity extends ActionBarActivity
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
 
-               try {
-                    eventList = JSonParser.readJsonStream(inputStream);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//               try {
+//                    eventList = OldJSonParser.readJsonStream(inputStream);
+                JSonParser parser = new JSonParser();
+                eventList = parser.readJsonStream();
+                /***** Debug Section *****/
+                System.out.println(eventList.size()+" évènements parsés !");
+                Event e = eventList.get(0);
+                System.out.println(e.getId()+" "+e.getAddress().get(0).getLocalisation()+" "+e.getDescription());
+                /************************/
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
                 return null;
 

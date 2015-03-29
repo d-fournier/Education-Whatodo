@@ -115,7 +115,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, O
         Address location;
         LatLng lat_lng = null;
         try {
-            address = coder.getFromLocationName(e.getAddress(), 1);
+            address = coder.getFromLocationName(e.getAddress().get(0).getLocalisation(), 1); /** A CHANGER POUR PLUSIEURS ADRESSES */
             location = address.get(0);
             lat_lng = new LatLng(location.getLatitude(), location.getLongitude());
         } catch (IOException e1) {
