@@ -4,7 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import fr.insa.whatodo.models.Category;
@@ -17,16 +20,19 @@ import fr.insa.whatodo.utils.EventDatabaseContract;
  */
 public class DatabaseServices {
 
+    private static SimpleDateFormat df_date = new SimpleDateFormat("yyyy-MM-dd");
+    private static SimpleDateFormat df_time = new SimpleDateFormat("HH-mm-ss");
+
     public static void putEventInDatabase(Event e, SQLiteDatabase db) {
         ContentValues values = new ContentValues();
         values.put(EventDatabaseContract.EventTable.COLUMN_NAME_ID, e.getId());
         values.put(EventDatabaseContract.EventTable.COLUMN_NAME_NAME, e.getName());
         values.put(EventDatabaseContract.EventTable.COLUMN_NAME_SUMMARY, e.getSummary());
         values.put(EventDatabaseContract.EventTable.COLUMN_NAME_URL, e.getUrl());
-        values.put(EventDatabaseContract.EventTable.COLUMN_NAME_START_TIME, e.getStartTime());
-        values.put(EventDatabaseContract.EventTable.COLUMN_NAME_END_TIME, e.getEndTime());
-        values.put(EventDatabaseContract.EventTable.COLUMN_NAME_START_DATE, e.getStartDate());
-        values.put(EventDatabaseContract.EventTable.COLUMN_NAME_END_DATE, e.getEndDate());
+        values.put(EventDatabaseContract.EventTable.COLUMN_NAME_START_TIME, df_time.format(e.getStartTime()));
+        values.put(EventDatabaseContract.EventTable.COLUMN_NAME_END_TIME, df_time.format(e.getEndTime()));
+        values.put(EventDatabaseContract.EventTable.COLUMN_NAME_START_DATE, df_date.format(e.getStartDate()));
+        values.put(EventDatabaseContract.EventTable.COLUMN_NAME_END_DATE, df_date.format(e.getEndDate()));
         values.put(EventDatabaseContract.EventTable.COLUMN_NAME_PRICE, e.getPrice());
         values.put(EventDatabaseContract.EventTable.COLUMN_NAME_MIN_AGE, e.getMinAge());
         values.put(EventDatabaseContract.EventTable.COLUMN_NAME_ADDRESS, e.getAddress());
@@ -78,9 +84,17 @@ public class DatabaseServices {
         Event e = null;
         if (c.moveToFirst()) {
             do {
-                e = new Event(c.getInt(0), c.getString(1),  c.getString(2),  c.getString(3),  c.getString(4), c.getString(5),  c.getString(6),
-                        c.getString(7),  c.getString(8),  c.getInt(9),  c.getString(10), null, null, c.getString(11));
-                listEvents.add(e);
+                try {
+                    Date startDate = df_date.parse(c.getString(6));
+                    Date endDate = df_date.parse(c.getString(7));
+                    Date  startTime = df_time.parse(c.getString(4));
+                    Date endTime = df_time.parse(c.getString(5));
+                    e = new Event(c.getInt(0), c.getString(1),  c.getString(2),  c.getString(3),  startTime, endTime,  startDate,
+                            endDate,  c.getString(8),  c.getInt(9),  c.getString(10), null, null, c.getString(11));
+                    listEvents.add(e);
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
             } while (c.moveToNext());
         }
 

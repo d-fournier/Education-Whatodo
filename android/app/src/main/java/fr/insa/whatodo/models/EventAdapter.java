@@ -48,7 +48,8 @@ public class EventAdapter<T> extends ArrayAdapter {
         }else{
             textNoImage.setVisibility(View.GONE);
         }
-            imageItem.setImageDrawable(event.getImage());*/ //TODO A MODIFIER !
+            imageItem.setImageDrawable(event.getImage());*/
+            imageItem.setVisibility(View.GONE);// TODO A MODIFIER AVEC IMAGELOADER !
             textItemTitle.setText(event.getName());
             textItemDate.setText(event.getDateAsString());
             textItemPrice.setText(event.getPrice());

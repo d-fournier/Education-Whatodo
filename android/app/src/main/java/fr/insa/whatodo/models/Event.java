@@ -2,6 +2,7 @@ package fr.insa.whatodo.models;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,10 +14,10 @@ public class Event {
     protected String name;
     protected String summary;
     protected String url;
-    protected String startTime;
-    protected String endTime;
-    protected String startDate;
-    protected String endDate;
+    protected Date startTime;
+    protected Date endTime;
+    protected Date startDate;
+    protected Date endDate;
     protected String price;
     protected int minAge;
     protected String address;
@@ -24,9 +25,10 @@ public class Event {
     protected List<Tag> tags;
     protected String imageURL;
 
-    protected DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    protected DateFormat df_date = new SimpleDateFormat("dd/MM/yyyy");
+    protected DateFormat df_time = new SimpleDateFormat("HH:mm");
 
-    public Event(int id, String name, String summary, String url, String startTime, String endTime, String startDate, String endDate, String price, int minAge, String address, List<Tag> tags, List<Category> categories, String imageURL) {
+    public Event(int id, String name, String summary, String url, Date startTime, Date endTime, Date startDate, Date endDate, String price, int minAge, String address, List<Tag> tags, List<Category> categories, String imageURL) {
         this.id = id;
         this.name = name;
         this.summary = summary;
@@ -48,7 +50,10 @@ public class Event {
     }
 
     public String getDateAsString() {
-        return endDate == null ? df.format(startDate) : "Du " + df.format(startDate) + " au " + df.format(endDate);
+        return endDate == null ? df_date.format(startDate) : "Du " + df_date.format(startDate) + " au " + df_date.format(endDate);
+    }
+    public String getTimeAsString() {
+        return endDate == null ? df_time.format(startTime) : "De " + df_time.format(startTime) + " à " + df_time.format(endTime);
     }
 
     public int getId() {
@@ -59,6 +64,22 @@ public class Event {
         return name;
     }
 
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
     public String getSummary() {
         return summary;
     }
@@ -67,21 +88,7 @@ public class Event {
         return url;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
 
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
 
     public String getPrice() {
         return price;

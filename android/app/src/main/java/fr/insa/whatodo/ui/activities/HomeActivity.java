@@ -83,7 +83,7 @@ public class HomeActivity extends ActionBarActivity
         SQLiteDatabase write_db = mDbHelper.getWritableDatabase();
         SQLiteDatabase read_db = mDbHelper.getReadableDatabase();
 
-        Event e = new Event(1,"name","coucou","url","start","end","start2","end2", "12", 15,"address",null, null,"urlimage");
+        Event e = new Event(1,"name","coucou","url",new Date(),new Date(),new Date(),new Date(), "12", 15,"address",null, null,"urlimage");
         DatabaseServices.putEventInDatabase(e, write_db);
 
         eventList = (ArrayList) DatabaseServices.getAllEvents(read_db); //TODO charger depuis la database
@@ -96,7 +96,7 @@ public class HomeActivity extends ActionBarActivity
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_home_container, downloadFragment).commit();
+                .add(R.id.fragment_home_container, eventListFragment).commit();
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
 
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
