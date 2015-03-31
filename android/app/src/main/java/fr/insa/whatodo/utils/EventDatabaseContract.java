@@ -20,6 +20,8 @@ public final class EventDatabaseContract {
         public static final String COLUMN_NAME_PRICE = "price";
         public static final String COLUMN_NAME_MIN_AGE = "min_age";
         public static final String COLUMN_NAME_ADDRESS= "address";
+        public static final String COLUMN_NAME_CITY_CODE= "city_code";
+        public static final String COLUMN_NAME_CITY_NAME= "city_name";
         public static final String COLUMN_NAME_IMAGE_URL = "image_url";
     }
 

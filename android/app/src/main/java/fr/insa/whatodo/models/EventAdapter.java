@@ -53,7 +53,7 @@ public class EventAdapter<T> extends ArrayAdapter {
             textItemTitle.setText(event.getName());
             textItemDate.setText(event.getDateAsString());
             textItemPrice.setText(event.getPrice());
-            textItemPlace.setText(event.getAddress());
+            textItemPlace.setText(event.getFullAddress());
             textItemSummary.setText(event.getSummary());
 
 

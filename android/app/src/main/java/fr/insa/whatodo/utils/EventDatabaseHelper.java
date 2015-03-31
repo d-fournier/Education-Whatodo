@@ -28,6 +28,8 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
                     EventDatabaseContract.EventTable.COLUMN_NAME_PRICE + TEXT_TYPE + COMMA_SEP +
                     EventDatabaseContract.EventTable.COLUMN_NAME_MIN_AGE + TEXT_TYPE + COMMA_SEP +
                     EventDatabaseContract.EventTable.COLUMN_NAME_ADDRESS + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.EventTable.COLUMN_NAME_CITY_CODE + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.EventTable.COLUMN_NAME_CITY_NAME + TEXT_TYPE + COMMA_SEP +
                     EventDatabaseContract.EventTable.COLUMN_NAME_IMAGE_URL + TEXT_TYPE +
                     " )";
     private static final String SQL_CREATE_ENTRIES_CATEGORY =

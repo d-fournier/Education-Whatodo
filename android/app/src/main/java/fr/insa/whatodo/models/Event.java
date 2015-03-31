@@ -1,6 +1,6 @@
 package fr.insa.whatodo.models;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class Event {
 
+    private static SimpleDateFormat df_date = new SimpleDateFormat("yyyy-MM-dd");
+    private static SimpleDateFormat df_time = new SimpleDateFormat("HH-mm-ss");
     protected int id;
     protected String name;
     protected String summary;
@@ -21,25 +23,24 @@ public class Event {
     protected String price;
     protected int minAge;
     protected String address;
+    protected City city;
     protected List<Category> categories;
     protected List<Tag> tags;
     protected String imageURL;
 
-    protected DateFormat df_date = new SimpleDateFormat("dd/MM/yyyy");
-    protected DateFormat df_time = new SimpleDateFormat("HH:mm");
-
-    public Event(int id, String name, String summary, String url, Date startTime, Date endTime, Date startDate, Date endDate, String price, int minAge, String address, List<Tag> tags, List<Category> categories, String imageURL) {
+    public Event(int id, String name, String summary, String url, String startTime, String endTime, String startDate, String endDate, String price, int minAge, String address, City city, List<Tag> tags, List<Category> categories, String imageURL) throws ParseException {
         this.id = id;
         this.name = name;
         this.summary = summary;
         this.url = url;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startTime = df_time.parse(startTime);
+        this.endTime = df_time.parse(endTime);
+        this.startDate = df_date.parse(startDate);
+        this.endDate = df_date.parse(endDate);
         this.price = price;
         this.minAge = minAge;
         this.address = address;
+        this.city = city;
         this.tags = tags;
         this.categories = categories;
         this.imageURL = imageURL;
@@ -100,6 +101,14 @@ public class Event {
 
     public String getAddress() {
         return address;
+    }
+
+    public String getFullAddress() {
+        return address+" "+city.getCode()+" "+city.getName();
+    }
+
+    public City getCity() {
+        return city;
     }
 
     public List<Category> getCategories() {

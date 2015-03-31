@@ -42,6 +42,7 @@ import fr.insa.whatodo.utils.Search;
 public class HomeActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    private static final String DOWNLOAD_URL = "http://dfournier.ovh/api/event/?format=json";
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -83,7 +84,7 @@ public class HomeActivity extends ActionBarActivity
         eventListFragment = EventListFragment.newInstance(eventList);
         mapFragment = CustomMapFragment.newInstance(eventList);
 
-        new GetEventsTask().execute("http://dfournier.ovh/api/event/?format=json", null, "");
+        new GetEventsTask().execute(DOWNLOAD_URL, null, "");
 
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -203,7 +204,7 @@ public class HomeActivity extends ActionBarActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
                 break;
             case (R.id.action_refresh):
-                new GetEventsTask().execute("http://dfournier.ovh/api/event/?format=json", null, "");
+                new GetEventsTask().execute(DOWNLOAD_URL, null, "");
                 break;
 
         }
@@ -248,7 +249,6 @@ public class HomeActivity extends ActionBarActivity
                 dialog = ProgressDialog.show(HomeActivity.this, null, getString(R.string.download));
             } else {
                 //Pas de connexion internet
-
                 eventList = (ArrayList) DatabaseServices.getAllEvents(read_db);
                 if (eventList.isEmpty()) {
                     HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
