@@ -11,25 +11,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import fr.insa.whatodo.R;
-import fr.insa.whatodo.models.Category;
 import fr.insa.whatodo.models.Event;
 import fr.insa.whatodo.models.User;
 import fr.insa.whatodo.services.DatabaseServices;
@@ -71,7 +66,8 @@ public class HomeActivity extends ActionBarActivity
     private List<OnListChangedListener> mListeners;
     private List<Event> mDisplayedEvents;
     private EventDatabaseHelper mDbHelper;
-
+    SQLiteDatabase write_db = null;
+    SQLiteDatabase read_db = null;
 
 
     @Override
@@ -80,25 +76,16 @@ public class HomeActivity extends ActionBarActivity
         setContentView(R.layout.activity_home);
 
         mDbHelper = new EventDatabaseHelper(getApplicationContext());
-        SQLiteDatabase write_db = mDbHelper.getWritableDatabase();
-        SQLiteDatabase read_db = mDbHelper.getReadableDatabase();
-
-        Event e = new Event(1,"name","coucou","url",new Date(),new Date(),new Date(),new Date(), "12", 15,"address",null, null,"urlimage");
-        DatabaseServices.putEventInDatabase(e, write_db);
-
-        eventList = (ArrayList) DatabaseServices.getAllEvents(read_db); //TODO charger depuis la database
+        eventList = new ArrayList<>();
         mListeners = new ArrayList<>();
-
+        downloadFragment = new DownloadFailedFragment();
         profileFragment = ProfileViewFragment.newInstance(new User("Nom", "passwd", "email@email.com", null, 24));
         eventListFragment = EventListFragment.newInstance(eventList);
         mapFragment = CustomMapFragment.newInstance(eventList);
-        downloadFragment = new DownloadFailedFragment();
 
-        // Add the fragment to the 'fragment_container' FrameLayout
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_home_container, eventListFragment).commit();
+        new GetEventsTask().execute("http://dfournier.ovh/api/event/?format=json", null, "");
+
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
-
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -140,11 +127,7 @@ public class HomeActivity extends ActionBarActivity
             switch (position) {
                 case (0):
                     searchBar.setVisibility(View.VISIBLE);
-                    if (eventList.isEmpty()) {
-                        new GetEventsTask().execute("http://dfournier.ovh/api/event/?format=json", null, "");
-                    } else {
-                        fragmentManager.beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
-                    }
+                    fragmentManager.beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
                     break;
                 case (1):
                     searchBar.setVisibility(View.GONE);
@@ -250,6 +233,10 @@ public class HomeActivity extends ActionBarActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            if (write_db == null || read_db == null) {
+                write_db = mDbHelper.getWritableDatabase();
+                read_db = mDbHelper.getReadableDatabase();
+            }
             ConnectivityManager connMgr = (ConnectivityManager)
                     getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -261,8 +248,12 @@ public class HomeActivity extends ActionBarActivity
                 dialog = ProgressDialog.show(HomeActivity.this, null, getString(R.string.download));
             } else {
                 //Pas de connexion internet
-                HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
-                Toast.makeText(getApplicationContext(),"Vérifiez votre connexion",Toast.LENGTH_SHORT).show();
+
+                eventList = (ArrayList) DatabaseServices.getAllEvents(read_db);
+                if (eventList.isEmpty()) {
+                    HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
+                }
+                Toast.makeText(getApplicationContext(), "Pas de connexion", Toast.LENGTH_SHORT).show();
                 this.cancel(true);
             }
         }
@@ -270,9 +261,6 @@ public class HomeActivity extends ActionBarActivity
         @Override
         protected void onPostExecute(Void v) {
             super.onPostExecute(v);
-//            eventList.add(new Event(null, new Date(), new Date(115/05/15), "Evenement", "20 €", "20 Avenue Albert Einstein 69100 Villeurbanne", "Joli evenement"));
-            //TODO Il faut parser la string ici !
-            //TODO Il faut changer les String en date
             notifyListChanged();
             dialog.dismiss();
             HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
@@ -295,7 +283,7 @@ public class HomeActivity extends ActionBarActivity
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
 
-               try {
+                try {
                     eventList = JSonParser.readJsonStream(inputStream);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -305,7 +293,7 @@ public class HomeActivity extends ActionBarActivity
 
             } catch (IOException e) {
                 return null;
-            }finally {
+            } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
