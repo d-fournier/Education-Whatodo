@@ -17,7 +17,7 @@ import fr.insa.whatodo.models.Tag;
 /**
  * Created by Benjamin on 25/03/2015.
  */
-public class JSonParser {
+public class OldJSonParser {
 
 
     public static ArrayList<Event> readJsonStream(InputStream in) throws IOException {
