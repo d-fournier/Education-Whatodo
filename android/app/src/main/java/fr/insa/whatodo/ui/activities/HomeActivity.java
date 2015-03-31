@@ -34,7 +34,7 @@ import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.ProfileViewFragment;
 import fr.insa.whatodo.utils.EventDatabaseHelper;
-import fr.insa.whatodo.utils.JSonParser;
+import fr.insa.whatodo.utils.JSonParser.JSonParser;
 import fr.insa.whatodo.utils.OnListChangedListener;
 import fr.insa.whatodo.utils.Search;
 
@@ -128,7 +128,11 @@ public class HomeActivity extends ActionBarActivity
             switch (position) {
                 case (0):
                     searchBar.setVisibility(View.VISIBLE);
-                    fragmentManager.beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+                    if (eventList.isEmpty()) {
+                        HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
+                    }else {
+                        fragmentManager.beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+                    }
                     break;
                 case (1):
                     searchBar.setVisibility(View.GONE);
@@ -283,11 +287,8 @@ public class HomeActivity extends ActionBarActivity
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
 
-                try {
-                    eventList = JSonParser.readJsonStream(inputStream);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                JSonParser parser = new JSonParser();
+                eventList = parser.readJsonStream(inputStream);
 
                 return null;
 
