@@ -1,6 +1,5 @@
 
-from .eventSerializer import EventSerializer
+from .eventSerializer import EventCreateSerializer, EventReadSerializer
 from .tagSerializer import TagSerializer
-from .addressSerializer import AddressSerializer
 from .categorySerializer import CategorySerializer
 from .citySerializer import CitySerializer

@@ -7,7 +7,6 @@ router.register(r'event', EventViewSet)
 router.register(r'category', CategoryViewSet)
 router.register(r'tag', TagViewSet)
 router.register(r'city', CityViewSet)
-router.register(r'address', AddressViewSet)
 
 
 # Wire up our API using automatic URL routing.
