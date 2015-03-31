@@ -3,8 +3,8 @@ obj  = json.load(open("citiesOfFrance.json"))
 data = {}
 i = 0
 
-# Iterate through the objects in the JSON and pop (remove)                      
-# the obj once we find it.                                                      
+# Iterate through the objects in the JSON and create                      
+# datas with the items we found.                                                      
 for item in obj: 
 	data[i]= {}
 	data[i]['ZIPcode'] = item['code postal']
