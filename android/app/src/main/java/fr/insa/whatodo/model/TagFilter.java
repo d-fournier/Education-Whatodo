@@ -14,8 +14,11 @@ public class TagFilter extends Filter {
         tags=new ArrayList<String>();
     }
 
-    @Override
-    public Object getValue() {
+    public ArrayList<String> getValues() {
         return tags;
+    }
+
+    public void setValues(ArrayList<String> tagsList){
+        tags=tagsList;
     }
 }

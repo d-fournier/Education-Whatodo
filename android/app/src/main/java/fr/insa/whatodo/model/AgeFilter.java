@@ -12,8 +12,9 @@ public class AgeFilter extends Filter {
         plusDe18=true;
     }
 
-    @Override
-    public Object getValue() {
+    public boolean is18orMore() {
         return plusDe18;
     }
+
+    public void setValue(boolean is18orMore){plusDe18=is18orMore;}
 }

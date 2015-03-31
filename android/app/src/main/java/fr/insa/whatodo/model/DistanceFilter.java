@@ -10,11 +10,17 @@ public class DistanceFilter extends Filter {
     public DistanceFilter() {
 
         super(FilterType.DISTANCE);
-        maxDistance=30;
+        maxDistance=50;
     }
 
-    @Override
-    public Object getValue() {
+    public int getValue() {
         return maxDistance;
+    }
+
+    public void setDistance(int dist){
+        if(dist==5 || dist==30 || dist==50)
+        {
+            maxDistance=dist;
+        }
     }
 }

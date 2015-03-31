@@ -17,6 +17,4 @@ public abstract class Filter {
     {
         return mType;
     }
-
-    public abstract Object getValue();
 }

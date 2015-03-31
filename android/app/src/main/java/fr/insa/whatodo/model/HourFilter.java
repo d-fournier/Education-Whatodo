@@ -18,8 +18,7 @@ public class HourFilter extends Filter {
         endMinutes=59;
     }
 
-    @Override
-    public Object getValue() {
+    public int[] getValues() {
         int[] values={beginHours, beginMinutes, endHours, endMinutes};
         return values;
     }

@@ -31,7 +31,10 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.model.AgeFilter;
@@ -83,8 +86,6 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
     private int year;
     private Button firstDateButton;
     private Button lastDateButton;
-    private String firstDate;
-    private String lastDate;
 
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
@@ -187,14 +188,11 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         mDrawerListView.setAdapter(mFiltersListAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
- //       firstDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5,0,false,new View(getActivity()),null).findViewById(R.id.firstDateText);
- //       lastDateButton =(Button)mDrawerListView.getExpandableListAdapter().getChildView(5, 0, false, new View(getActivity()), null).findViewById(R.id.lastDateText);
         cal = Calendar.getInstance();
         day = cal.get(Calendar.DAY_OF_MONTH);
         month = cal.get(Calendar.MONTH);
         year = cal.get(Calendar.YEAR);
-        firstDate=day + " / " + (month + 1) + " / " + year;
-        lastDate=day + " / " + (month + 1) + " / " + (year + 1);
+
 
         return mDrawerListView;
     }
@@ -367,13 +365,14 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
     private DatePickerDialog.OnDateSetListener firstDatePickerListener = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
-            firstDate=selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear;
-
+            GregorianCalendar gc=new GregorianCalendar(selectedYear,selectedMonth,selectedDay);
+            dateFilter.setDateMin(gc.getTime());
             firstDateButton = (Button) getActivity().findViewById(R.id.firstDateText);
             getActivity().runOnUiThread(new Runnable() {
                 @Override
-                public void run(){
-                    firstDateButton.setText(firstDate);
+                public void run() {
+                    SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+                    firstDateButton.setText(format.format(dateFilter.getDates()[0]));
                 }
             });
         }
@@ -382,26 +381,21 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
     private DatePickerDialog.OnDateSetListener lastDatePickerListener = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
-            lastDate=selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear;
-            lastDateButton = (Button) getActivity().findViewById(R.id.lastDateText);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    lastDateButton.setText(lastDate);
-                }
-            });
-
+            GregorianCalendar gc=new GregorianCalendar(selectedYear,selectedMonth,selectedDay);
+            if(dateFilter.setDateMax(gc.getTime()))
+            {
+                lastDateButton = (Button) getActivity().findViewById(R.id.lastDateText);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+                        lastDateButton.setText(format.format(dateFilter.getDates()[1]));
+                    }
+                });
+            }
         }
     };
 
-    public String getFirstDate()
-    {
-        return firstDate;
-    }
-
-    public String getLastDate(){
-        return lastDate;
-    }
 
     @Override
     public void onClick(View v) {
@@ -410,13 +404,16 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
 
     public void onDateButtonClicked(View v)
     {
+        GregorianCalendar gc=new GregorianCalendar();
         if(v.getId()==R.id.firstDateText)
         {
-            DatePickerDialog d= new DatePickerDialog(this.getActivity(), firstDatePickerListener, year, month, day);
+            gc.setTime(dateFilter.getDates()[0]);
+            DatePickerDialog d= new DatePickerDialog(this.getActivity(), firstDatePickerListener, gc.get(Calendar.YEAR), gc.get(Calendar.MONTH), gc.get(Calendar.DAY_OF_MONTH));
             d.show();
         }else if(v.getId()==R.id.lastDateText)
         {
-            DatePickerDialog d= new DatePickerDialog(this.getActivity(), lastDatePickerListener, year, month, day);
+            gc.setTime(dateFilter.getDates()[1]);
+            DatePickerDialog d= new DatePickerDialog(this.getActivity(), lastDatePickerListener, gc.get(Calendar.YEAR), gc.get(Calendar.MONTH), gc.get(Calendar.DAY_OF_MONTH));
             d.show();
         }
     }

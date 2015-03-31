@@ -5,8 +5,9 @@
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <RadioButton android:id="@+id/radio_moinsDe5km"
+        android:orientation="vertical"
+        android:id="@+id/radioGroupDistance">
+        <RadioButton android:id="@+id/moinsDe5km"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Moins de 5 km"/>

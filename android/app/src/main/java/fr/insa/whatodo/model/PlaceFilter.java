@@ -9,10 +9,14 @@ public class PlaceFilter  extends Filter {
 
     public PlaceFilter() {
         super(FilterType.LIEU);
+        place="";
     }
 
-    @Override
-    public Object getValue() {
+    public String getValue() {
         return place;
+    }
+
+    public void setTown(String town){
+        place=town;
     }
 }

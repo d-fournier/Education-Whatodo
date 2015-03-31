@@ -5,15 +5,22 @@ package fr.insa.whatodo.model;
  */
 public class PriceFilter extends Filter {
 
-    protected int maxPrice;
+    protected float maxPrice;
 
     public PriceFilter() {
         super(FilterType.PRIX);
-        maxPrice=0;
+        maxPrice=-1;
     }
 
-    @Override
-    public Object getValue() {
+    public float getValue() {
         return maxPrice;
+    }
+
+    public void setValue(float price)
+    {
+        if(price>=0)
+        {
+            maxPrice=price;
+        }
     }
 }

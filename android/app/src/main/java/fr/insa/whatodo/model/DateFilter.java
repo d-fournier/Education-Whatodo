@@ -11,6 +11,8 @@ public class DateFilter extends Filter {
 
     protected Date dateMin;
     protected Date dateMax;
+    protected boolean semaine;
+    protected boolean weekend;
 
     public DateFilter() {
         super(FilterType.DATE);
@@ -19,11 +21,43 @@ public class DateFilter extends Filter {
         calendar.setTime(dateMin);
         calendar.add(Calendar.YEAR,1);
         dateMax=calendar.getTime();
+        semaine=true;
+        weekend=true;
     }
 
-    @Override
-    public Object getValue() {
-        Date[] values={dateMin, dateMax};
-        return values;
+    public Date[] getDates() {
+        Date[] dates={dateMin, dateMax};
+        return dates;
+    }
+
+    public boolean allowWeekDays()
+    {
+        return semaine;
+    }
+
+    public boolean allowWeekEnds()
+    {
+        return weekend;
+    }
+
+    public void setAllowWeekDays(boolean allow){
+        semaine=allow;
+    }
+
+    public void setAllowWeekends(boolean allow){
+        weekend=allow;
+    }
+
+    public void setDateMin(Date d)
+    {
+        dateMin=d;
+    }
+
+    public boolean setDateMax(Date d){
+        if(d.after(dateMin)){
+            dateMax=d;
+            return true;
+        }
+        return false;
     }
 }

@@ -16,8 +16,7 @@ public class CategoryFilter extends Filter {
         categories=new ArrayList<Category>();
     }
 
-    @Override
-    public Object getValue() {
+    public ArrayList<Category> getValue() {
         return categories;
     }
 
