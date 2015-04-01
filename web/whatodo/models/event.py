@@ -1,7 +1,8 @@
 from django.db import models
-from .address import Address
 from .tag import Tag
 from .category import Category
+from .city import City
+
 
 
 class Event(models.Model):
@@ -19,7 +20,8 @@ class Event(models.Model):
 	min_age = models.IntegerField()
 	
 
-	addresses = models.ManyToManyField(Address)
+	address = models.CharField (max_length = 500)
+	city = models.ForeignKey(City)
 	categories = models.ManyToManyField(Category)
 	#organizer = models.ForeignKey(User) 
 	tags = models.ManyToManyField(Tag)
