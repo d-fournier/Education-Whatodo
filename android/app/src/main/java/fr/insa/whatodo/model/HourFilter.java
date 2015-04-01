@@ -18,8 +18,38 @@ public class HourFilter extends Filter {
         endMinutes=59;
     }
 
-    public int[] getValues() {
-        int[] values={beginHours, beginMinutes, endHours, endMinutes};
-        return values;
+
+    public int getBeginHours() {
+        return beginHours;
     }
+
+    public int getBeginMinutes() {
+        return beginMinutes;
+    }
+
+    public int getEndHours() {
+        return endHours;
+    }
+
+    public int getEndMinutes() {
+        return endMinutes;
+    }
+
+    public void setBeginHours(int beginHours, int beginMinutes) {
+
+        this.beginHours = beginHours;
+        this.beginMinutes = beginMinutes;
+    }
+
+
+
+    public boolean setEndHours(int endHours, int endMinutes) {
+        if(endHours>beginHours || (endHours==beginHours && endMinutes >beginMinutes)){
+            this.endHours = endHours;
+            return true;
+        }
+        return false;
+    }
+
+
 }

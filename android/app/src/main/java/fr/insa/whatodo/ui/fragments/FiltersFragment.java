@@ -1,6 +1,7 @@
 package fr.insa.whatodo.ui.fragments;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -29,6 +30,7 @@ import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -79,13 +81,6 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
     private ExpandableListView mDrawerListView;
     private View mFragmentContainerView;
     private FiltersListAdapter mFiltersListAdapter;
-
-    private Calendar cal;
-    private int day;
-    private int month;
-    private int year;
-    private Button firstDateButton;
-    private Button lastDateButton;
 
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
@@ -161,8 +156,6 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
 
-//        firstDateButton.setOnClickListener(this);
- //       lastDateButton.setOnClickListener(this);
     }
 
     @Override
@@ -187,11 +180,6 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         mFiltersListAdapter=new FiltersListAdapter(this.getActivity(), this);
         mDrawerListView.setAdapter(mFiltersListAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-
-        cal = Calendar.getInstance();
-        day = cal.get(Calendar.DAY_OF_MONTH);
-        month = cal.get(Calendar.MONTH);
-        year = cal.get(Calendar.YEAR);
 
 
         return mDrawerListView;
@@ -367,10 +355,10 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
                               int selectedMonth, int selectedDay) {
             GregorianCalendar gc=new GregorianCalendar(selectedYear,selectedMonth,selectedDay);
             dateFilter.setDateMin(gc.getTime());
-            firstDateButton = (Button) getActivity().findViewById(R.id.firstDateText);
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Button firstDateButton = (Button) getActivity().findViewById(R.id.firstDateText);
                     SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
                     firstDateButton.setText(format.format(dateFilter.getDates()[0]));
                 }
@@ -384,17 +372,53 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
             GregorianCalendar gc=new GregorianCalendar(selectedYear,selectedMonth,selectedDay);
             if(dateFilter.setDateMax(gc.getTime()))
             {
-                lastDateButton = (Button) getActivity().findViewById(R.id.lastDateText);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Button lastDateButton = (Button) getActivity().findViewById(R.id.lastDateText);
                         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
                         lastDateButton.setText(format.format(dateFilter.getDates()[1]));
                     }
                 });
+            } else{
+            //TODO : message d'erreur
             }
         }
     };
+
+    private TimePickerDialog.OnTimeSetListener firstTimePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            hourFilter.setBeginHours(hourOfDay, minute);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Button firstHourButton=(Button)getActivity().findViewById(R.id.firstHourText);
+                    firstHourButton.setText(hourFilter.getBeginHours()+" : "+hourFilter.getBeginMinutes());
+                }
+            });
+        }
+    };
+
+    private TimePickerDialog.OnTimeSetListener lastTimePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            if(hourFilter.setEndHours(hourOfDay, minute)){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Button lastHourButton=(Button)getActivity().findViewById(R.id.lastHourText);
+                        lastHourButton.setText(hourFilter.getEndHours()+" : "+hourFilter.getEndMinutes());
+                    }
+                });
+            }else{
+                //TODO : message d'erreur
+            }
+        }
+    };
+
+
+
 
 
     @Override
@@ -414,6 +438,18 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         {
             gc.setTime(dateFilter.getDates()[1]);
             DatePickerDialog d= new DatePickerDialog(this.getActivity(), lastDatePickerListener, gc.get(Calendar.YEAR), gc.get(Calendar.MONTH), gc.get(Calendar.DAY_OF_MONTH));
+            d.show();
+        }
+    }
+
+    public void onHourButtonClicked(View v){
+        if(v.getId()==R.id.firstHourText)
+        {
+            TimePickerDialog d=new TimePickerDialog(getActivity(),firstTimePickerListener,hourFilter.getBeginHours(), hourFilter.getBeginMinutes(), true);
+            d.show();
+        }else if(v.getId()==R.id.lastHourText)
+        {
+            TimePickerDialog d=new TimePickerDialog(this.getActivity(), lastTimePickerListener, hourFilter.getEndHours(), hourFilter.getEndMinutes(), true);
             d.show();
         }
     }

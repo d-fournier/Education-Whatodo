@@ -387,6 +387,11 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                 break;
             case 7:
                 convertView=inflater.inflate(R.layout.fragment_hour_filter,null);
+                Button firstHourButton=(Button)convertView.findViewById(R.id.firstHourText);
+                Button lastHourButton=(Button)convertView.findViewById(R.id.lastHourText);
+                HourFilter hf=fragment.getHourFilter();
+                firstHourButton.setText(hf.getBeginHours()+" : "+hf.getBeginMinutes());
+                lastHourButton.setText(hf.getEndHours()+" : "+hf.getEndMinutes());
                 break;
         }
         return convertView;
