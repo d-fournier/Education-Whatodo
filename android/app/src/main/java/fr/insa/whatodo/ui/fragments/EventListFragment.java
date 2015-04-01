@@ -13,7 +13,7 @@ import java.util.Date;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.model.Event;
-import fr.insa.whatodo.model.EventAdapter;
+import fr.insa.whatodo.ui.adapters.EventAdapter;
 
 /**
  * Created by Benjamin on 11/03/2015.

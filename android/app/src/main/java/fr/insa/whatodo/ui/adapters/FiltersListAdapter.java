@@ -3,6 +3,9 @@ package fr.insa.whatodo.ui.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.location.Location;
+import android.location.LocationManager;
+import android.media.Image;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
@@ -249,6 +253,7 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
             case 2:
                 convertView=inflater.inflate(R.layout.fragment_place_filter,null);
                 AutoCompleteTextView placeTextView=(AutoCompleteTextView)convertView.findViewById(R.id.PlaceTextField);
+                ImageButton myLocation= (ImageButton) convertView.findViewById(R.id.imageMyLocation);
                 placeTextView.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -265,7 +270,19 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                         fragment.getPlaceFilter().setTown(s.toString());
                     }
                 });
-                placeTextView.setText(fragment.getPlaceFilter().getValue());
+                myLocation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+                        try{
+                            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            fragment.getPlaceFilter().setLocation(location.getLongitude(),location.getLatitude());
+                        }catch(Exception e){
+                            //TODO : message d'erreur
+                        }
+                    }
+                });
+                placeTextView.setText(fragment.getPlaceFilter().getTown());
                 break;
             case 3:
                 convertView=inflater.inflate(R.layout.fragment_distance_filter,null);
