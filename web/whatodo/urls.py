@@ -6,6 +6,7 @@ router = routers.DefaultRouter()
 router.register(r'event', EventViewSet)
 router.register(r'category', CategoryViewSet)
 router.register(r'tag', TagViewSet)
+router.register(r'city', CityViewSet)
 
 
 # Wire up our API using automatic URL routing.

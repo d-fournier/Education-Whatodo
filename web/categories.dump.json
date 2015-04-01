@@ -1,0 +1,58 @@
+[
+    {
+        "model": "whatodo.category",
+        "fields": {
+            "name": "Spectacle"
+        },
+        "pk": 1
+    },
+    {
+        "model": "whatodo.category",
+        "fields": {
+            "name": "Concert"
+        },
+        "pk": 2
+    },
+    {
+        "model": "whatodo.category",
+        "fields": {
+            "name": "Pièce de Théâtre"
+        },
+        "pk": 3
+    },
+    {
+        "model": "whatodo.category",
+        "fields": {
+            "name": "Conférence"
+        },
+        "pk": 4
+    },
+    {
+        "model": "whatodo.category",
+        "fields": {
+            "name": "Débat"
+        },
+        "pk": 5
+    },
+    {
+        "model": "whatodo.category",
+        "fields": {
+            "name": "Exposition"
+        },
+        "pk": 6
+    },
+    {
+        "model": "whatodo.category",
+        "fields": {
+            "name": "Soirée"
+        },
+        "pk": 7
+    },
+    {
+        "model": "whatodo.category",
+        "fields": {
+            "name": "Activité sportive"
+        },
+        "pk": 8
+    }
+]
