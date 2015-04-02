@@ -12,18 +12,18 @@ import fr.insa.whatodo.R;
 /**
  * Created by Benjamin on 24/03/2015.
  */
-public class DownloadFailedFragment extends Fragment {
+public class DownloadFragment extends Fragment {
 
-
-    public DownloadFailedFragment() {
+    public DownloadFragment() {
 
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_download_failed, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_download, container, false);
         return rootView;
     }
+
 
 }

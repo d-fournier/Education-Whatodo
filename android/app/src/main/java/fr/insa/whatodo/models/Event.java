@@ -1,8 +1,6 @@
 package fr.insa.whatodo.models;
 
-import android.graphics.drawable.Drawable;
-
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +10,9 @@ import java.util.List;
  */
 public class Event {
 
+    private static SimpleDateFormat df_date_parse = new SimpleDateFormat("yyyy-MM-dd");
+    private static SimpleDateFormat df_date_format = new SimpleDateFormat("dd MMMM yyyy");
+    private static SimpleDateFormat df_time = new SimpleDateFormat("HH:mm:ss");
     protected int id;
     protected String name;
     protected String summary;
@@ -21,15 +22,14 @@ public class Event {
     protected String startDate;
     protected String endDate;
     protected String price;
-    protected int min_age;
+    protected int minAge;
     protected String address;
+    protected City city;
     protected List<Category> categories;
     protected List<Tag> tags;
-    protected Drawable image;
+    protected String imageURL;
 
-    protected DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-    public Event(int id, String name, String summary, String url, String startTime, String endTime, String startDate, String endDate, String price, int min_age, String address, List<Tag> tags, List<Category> categories, Drawable image) {
+    public Event(int id, String name, String summary, String url, String startTime, String endTime, String startDate, String endDate, String price, int minAge, String address, City city, List<Tag> tags, List<Category> categories, String imageURL) throws ParseException {
         this.id = id;
         this.name = name;
         this.summary = summary;
@@ -39,19 +39,25 @@ public class Event {
         this.startDate = startDate;
         this.endDate = endDate;
         this.price = price;
-        this.min_age = min_age;
+        this.minAge = minAge;
         this.address = address;
+        this.city = city;
         this.tags = tags;
         this.categories = categories;
-        this.image = image;
+        this.imageURL = imageURL;
     }
 
-    public Drawable getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public String getDateAsString() {
-        return endDate == null ? df.format(startDate) : "Du " + df.format(startDate) + " au " + df.format(endDate);
+    public String getDateAsString() throws ParseException {
+        return endDate.equals("") ? df_date_format.format(df_date_parse.parse(startDate)) :
+                "Du " + df_date_format.format(df_date_parse.parse(startDate)) + " au " + df_date_format.format(df_date_parse.parse(endDate));
+    }
+
+    public String getTimeAsString() throws ParseException {
+        return endTime.equals("") ? df_time.format(df_time.parse(startTime)) : "De " + df_time.format(df_time.parse(startTime)) + " à " + df_time.format(df_time.parse(endTime));
     }
 
     public int getId() {
@@ -62,6 +68,24 @@ public class Event {
         return name;
     }
 
+    public Date getStartTime() throws ParseException {
+        return df_time.parse(startTime);
+
+    }
+
+    public Date getEndTime() throws ParseException {
+        return df_time.parse(endTime);
+    }
+
+    public Date getStartDate() throws ParseException {
+        return df_date_parse.parse(startDate);
+    }
+
+    public Date getEndDate() throws ParseException {
+        return df_date_parse.parse(endDate);
+
+    }
+
     public String getSummary() {
         return summary;
     }
@@ -70,32 +94,25 @@ public class Event {
         return url;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
 
     public String getPrice() {
         return price;
     }
 
-    public int getMin_age() {
-        return min_age;
+    public int getMinAge() {
+        return minAge;
     }
 
     public String getAddress() {
         return address;
+    }
+
+    public String getFullAddress() {
+        return address + " " + city.getCode() + " " + city.getName();
+    }
+
+    public City getCity() {
+        return city;
     }
 
     public List<Category> getCategories() {
