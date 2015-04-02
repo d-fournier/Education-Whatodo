@@ -29,7 +29,6 @@ import fr.insa.whatodo.models.Event;
  * Created by William on 29/03/2015.
  */
 public class JSonParser{
-    String url = "http://dfournier.ovh/api/event/?format=json";
 
     public JSonParser() {
     }

@@ -29,7 +29,7 @@ import fr.insa.whatodo.models.Event;
 import fr.insa.whatodo.models.User;
 import fr.insa.whatodo.services.DatabaseServices;
 import fr.insa.whatodo.ui.fragments.CustomMapFragment;
-import fr.insa.whatodo.ui.fragments.DownloadFailedFragment;
+import fr.insa.whatodo.ui.fragments.DownloadFragment;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.ProfileViewFragment;
@@ -60,7 +60,7 @@ public class HomeActivity extends ActionBarActivity
      */
     private EventListFragment eventListFragment;
     private CustomMapFragment mapFragment;
-    private DownloadFailedFragment downloadFragment;
+    private DownloadFragment downloadFragment;
     private ProfileViewFragment profileFragment;
 
     private ArrayList<Event> eventList;
@@ -79,7 +79,7 @@ public class HomeActivity extends ActionBarActivity
         mDbHelper = new EventDatabaseHelper(getApplicationContext());
         eventList = new ArrayList<>();
         mListeners = new ArrayList<>();
-        downloadFragment = new DownloadFailedFragment();
+        downloadFragment = new DownloadFragment();
         profileFragment = ProfileViewFragment.newInstance(new User("Nom", "passwd", "email@email.com", null, 24));
         eventListFragment = EventListFragment.newInstance(eventList);
         mapFragment = CustomMapFragment.newInstance(eventList);
@@ -130,7 +130,7 @@ public class HomeActivity extends ActionBarActivity
                     searchBar.setVisibility(View.VISIBLE);
                     if (eventList.isEmpty()) {
                         HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
-                    }else {
+                    } else {
                         fragmentManager.beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
                     }
                     break;
@@ -233,11 +233,12 @@ public class HomeActivity extends ActionBarActivity
 
     public class GetEventsTask extends AsyncTask<String, Void, Void> {
 
-        ProgressDialog dialog = null;
+        ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            dialog = ProgressDialog.show(HomeActivity.this, null, getString(R.string.download));
             if (write_db == null || read_db == null) {
                 write_db = mDbHelper.getWritableDatabase();
                 read_db = mDbHelper.getReadableDatabase();
@@ -250,14 +251,16 @@ public class HomeActivity extends ActionBarActivity
             boolean isMobileConn = networkInfo.isConnected();
             if (isWifiConn || isMobileConn) {
                 //On ne fait rien, on est bien connecté à internet
-                dialog = ProgressDialog.show(HomeActivity.this, null, getString(R.string.download));
             } else {
                 //Pas de connexion internet
                 eventList = (ArrayList) DatabaseServices.getAllEvents(read_db);
-                if (eventList.isEmpty()) {
+                if (!eventList.isEmpty()) {
+                    HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+                } else {
                     HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
+
                 }
-                Toast.makeText(getApplicationContext(), "Pas de connexion", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
                 this.cancel(true);
             }
         }
@@ -265,9 +268,16 @@ public class HomeActivity extends ActionBarActivity
         @Override
         protected void onPostExecute(Void v) {
             super.onPostExecute(v);
-            notifyListChanged();
+            if (!eventList.isEmpty()) {
+                eventListFragment = EventListFragment.newInstance(eventList);
+                mapFragment = CustomMapFragment.newInstance(eventList);
+                HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+            } else {
+                HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
+            }
+           /* mDisplayedEvents = eventList;
+            notifyListChanged();*/
             dialog.dismiss();
-            HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
         }
 
         protected Void doInBackground(String... urls) {
@@ -289,7 +299,7 @@ public class HomeActivity extends ActionBarActivity
 
                 JSonParser parser = new JSonParser();
                 eventList = parser.readJsonStream(inputStream);
-
+                DatabaseServices.updateEventTable(eventList, write_db);
                 return null;
 
             } catch (IOException e) {

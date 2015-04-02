@@ -4,12 +4,12 @@ package fr.insa.whatodo.models;
  * Created by Benjamin on 31/03/2015.
  */
 public class City {
+    protected String ZIPcode;
     protected String name;
-    protected String code;
 
     public City(String name, String code) {
         this.name = name;
-        this.code = code;
+        this.ZIPcode = code;
     }
 
     public String getName() {
@@ -17,6 +17,6 @@ public class City {
     }
 
     public String getCode() {
-        return code;
+        return ZIPcode;
     }
 }

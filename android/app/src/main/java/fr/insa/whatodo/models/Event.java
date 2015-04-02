@@ -10,16 +10,17 @@ import java.util.List;
  */
 public class Event {
 
-    private static SimpleDateFormat df_date = new SimpleDateFormat("yyyy-MM-dd");
-    private static SimpleDateFormat df_time = new SimpleDateFormat("HH-mm-ss");
+    private static SimpleDateFormat df_date_parse = new SimpleDateFormat("yyyy-MM-dd");
+    private static SimpleDateFormat df_date_format = new SimpleDateFormat("dd MMMM yyyy");
+    private static SimpleDateFormat df_time = new SimpleDateFormat("HH:mm:ss");
     protected int id;
     protected String name;
     protected String summary;
     protected String url;
-    protected Date startTime;
-    protected Date endTime;
-    protected Date startDate;
-    protected Date endDate;
+    protected String startTime;
+    protected String endTime;
+    protected String startDate;
+    protected String endDate;
     protected String price;
     protected int minAge;
     protected String address;
@@ -33,10 +34,10 @@ public class Event {
         this.name = name;
         this.summary = summary;
         this.url = url;
-        this.startTime = df_time.parse(startTime);
-        this.endTime = df_time.parse(endTime);
-        this.startDate = df_date.parse(startDate);
-        this.endDate = df_date.parse(endDate);
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.price = price;
         this.minAge = minAge;
         this.address = address;
@@ -50,11 +51,13 @@ public class Event {
         return imageURL;
     }
 
-    public String getDateAsString() {
-        return endDate == null ? df_date.format(startDate) : "Du " + df_date.format(startDate) + " au " + df_date.format(endDate);
+    public String getDateAsString() throws ParseException {
+        return endDate.equals("") ? df_date_format.format(df_date_parse.parse(startDate)) :
+                "Du " + df_date_format.format(df_date_parse.parse(startDate)) + " au " + df_date_format.format(df_date_parse.parse(endDate));
     }
-    public String getTimeAsString() {
-        return endDate == null ? df_time.format(startTime) : "De " + df_time.format(startTime) + " à " + df_time.format(endTime);
+
+    public String getTimeAsString() throws ParseException {
+        return endTime.equals("") ? df_time.format(df_time.parse(startTime)) : "De " + df_time.format(df_time.parse(startTime)) + " à " + df_time.format(df_time.parse(endTime));
     }
 
     public int getId() {
@@ -65,20 +68,22 @@ public class Event {
         return name;
     }
 
-    public Date getStartTime() {
-        return startTime;
+    public Date getStartTime() throws ParseException {
+        return df_time.parse(startTime);
+
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public Date getEndTime() throws ParseException {
+        return df_time.parse(endTime);
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getStartDate() throws ParseException {
+        return df_date_parse.parse(startDate);
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getEndDate() throws ParseException {
+        return df_date_parse.parse(endDate);
+
     }
 
     public String getSummary() {
@@ -88,7 +93,6 @@ public class Event {
     public String getUrl() {
         return url;
     }
-
 
 
     public String getPrice() {
@@ -104,7 +108,7 @@ public class Event {
     }
 
     public String getFullAddress() {
-        return address+" "+city.getCode()+" "+city.getName();
+        return address + " " + city.getCode() + " " + city.getName();
     }
 
     public City getCity() {

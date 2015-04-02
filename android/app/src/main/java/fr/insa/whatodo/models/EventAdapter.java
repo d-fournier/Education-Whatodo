@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.util.List;
 
 import fr.insa.whatodo.R;
@@ -51,8 +52,12 @@ public class EventAdapter<T> extends ArrayAdapter {
             imageItem.setImageDrawable(event.getImage());*/
             imageItem.setVisibility(View.GONE);// TODO A MODIFIER AVEC IMAGELOADER !
             textItemTitle.setText(event.getName());
+        try {
             textItemDate.setText(event.getDateAsString());
-            textItemPrice.setText(event.getPrice());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        textItemPrice.setText(event.getPrice());
             textItemPlace.setText(event.getFullAddress());
             textItemSummary.setText(event.getSummary());
 
