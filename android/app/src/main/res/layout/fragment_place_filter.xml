@@ -16,5 +16,7 @@
         android:layout_height="40dp"
         android:id="@+id/imageMyLocation"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        android:src="@drawable/ic_my_position"
+        android:background="@android:color/transparent"/>
 </LinearLayout>
