@@ -96,6 +96,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
     private AgeFilter ageFilter;
     private HourFilter hourFilter;
 
+
     public FiltersFragment() {
         categoryFilter=new CategoryFilter();
         tagFilter= new TagFilter();

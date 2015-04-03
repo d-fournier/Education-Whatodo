@@ -54,6 +54,10 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
     public LayoutInflater inflater;
 
 
+    private static String[] existingTags={"tag1","atag","tag2"};
+    private static String[] existingTowns={"Lyon", "Paris", "St Etienne"};
+
+
     public FiltersListAdapter(Activity act, FiltersFragment fr) {
         this.context = act;
         fragment=fr;
@@ -172,7 +176,7 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
         {
             case 0:
                 convertView=inflater.inflate(R.layout.fragment_category_filter,null);
-                ArrayList<CategoryFilter.Category> categories=(ArrayList<CategoryFilter.Category>)fragment.getCategoryFilter().getValue();
+                ArrayList<CategoryFilter.Category> categories=fragment.getCategoryFilter().getValue();
                 for(int i=0; i<categories.size(); i++)
                 {
                     switch(categories.get(i))
@@ -219,8 +223,7 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
             case 1 :
                 convertView=inflater.inflate(R.layout.fragment_tag_filter,null);
                 MultiAutoCompleteTextView tagsView=(MultiAutoCompleteTextView) convertView.findViewById(R.id.TagsTextView);
-                String[] existingTags={"tag1","tag2"};
-                ArrayAdapter<String> tagsAdapter = new ArrayAdapter<String>(fragment.getActivity(), R.layout.abc_list_menu_item_layout, existingTags);
+                ArrayAdapter<String> tagsAdapter = new ArrayAdapter<String>(fragment.getActivity(),android.R.layout.simple_dropdown_item_1line, existingTags);
                 tagsView.setAdapter(tagsAdapter);
                 tagsView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
@@ -253,6 +256,8 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
             case 2:
                 convertView=inflater.inflate(R.layout.fragment_place_filter,null);
                 AutoCompleteTextView placeTextView=(AutoCompleteTextView)convertView.findViewById(R.id.PlaceTextField);
+                ArrayAdapter<String> placeAdapter = new ArrayAdapter<String>(fragment.getActivity(), android.R.layout.simple_dropdown_item_1line, existingTowns);
+                placeTextView.setAdapter(placeAdapter);
                 ImageButton myLocation= (ImageButton) convertView.findViewById(R.id.imageMyLocation);
                 placeTextView.addTextChangedListener(new TextWatcher() {
                     @Override
