@@ -15,7 +15,7 @@ public class  Search {
 
         for(Event e : listEvent)
         {
-            if(e.getTitle().toLowerCase().contains(titleToSearch.toLowerCase()))
+            if(e.getName().toLowerCase().contains(titleToSearch.toLowerCase()))
             {
                 returnList.add(e);
             }

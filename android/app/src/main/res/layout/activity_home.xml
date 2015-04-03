@@ -1,3 +1,4 @@
+
     <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
     <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
@@ -5,22 +6,26 @@
         tools:context=".HomeActivity" android:layout_gravity="right"
         android:layout_weight="1">
 
+
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
-    <LinearLayout android:id="@+id/container" android:layout_width="match_parent"
+    <LinearLayout
+
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <SearchView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:id="@+id/home_search_bar"
-        android:queryHint="Rechercher..."></SearchView>
 
-        <fragment android:id="@+id/event_list_fragment"
-            android:layout_width="match_parent" android:layout_height="match_parent"
-            android:name="fr.insa.whatodo.ui.fragments.EventListFragment"
-            tools:layout="@layout/fragment_event_list" />
+        <SearchView
+            android:id="@+id/home_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:queryHint="Rechercher..."></SearchView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_home_container"/>
 
     </LinearLayout>
 
@@ -36,6 +41,7 @@
             android:layout_width="@dimen/navigation_drawer_width" android:layout_height="match_parent"
             android:layout_gravity="start" android:name="fr.insa.whatodo.ui.fragments.NavigationDrawerFragment"
             tools:layout="@layout/fragment_navigation_drawer" />
+
 
         <fragment android:id="@+id/filters_drawer"
             android:layout_width="@dimen/navigation_drawer_width" android:layout_height="match_parent"

@@ -1,5 +1,11 @@
-package fr.insa.whatodo.ui.activities;
+﻿package fr.insa.whatodo.ui.activities;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -9,18 +15,36 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.insa.whatodo.R;
+
 import fr.insa.whatodo.ui.fragments.FiltersFragment;
+import fr.insa.whatodo.models.Event;
+import fr.insa.whatodo.models.User;
+import fr.insa.whatodo.services.DatabaseServices;
+import fr.insa.whatodo.ui.fragments.CustomMapFragment;
+import fr.insa.whatodo.ui.fragments.DownloadFragment;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
-import fr.insa.whatodo.ui.fragments.PlaceholderFragment;
+import fr.insa.whatodo.ui.fragments.ProfileViewFragment;
+import fr.insa.whatodo.utils.EventDatabaseHelper;
+import fr.insa.whatodo.utils.JSonParser.JSonParser;
+import fr.insa.whatodo.utils.OnListChangedListener;
 import fr.insa.whatodo.utils.Search;
 
 
 public class HomeActivity extends ActionBarActivity
         implements FiltersFragment.NavigationDrawerCallbacks, NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    private static final String DOWNLOAD_URL = "http://dfournier.ovh/api/event/?format=json";
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -35,12 +59,28 @@ public class HomeActivity extends ActionBarActivity
     private CharSequence mTitle;
 
     private SearchView searchBar;
+
+    /**
+     * Fragments of the activity
+     */
     private EventListFragment eventListFragment;
+    private CustomMapFragment mapFragment;
+    private DownloadFragment downloadFragment;
+    private ProfileViewFragment profileFragment;
+
+    private ArrayList<Event> eventList;
+    private List<OnListChangedListener> mListeners;
+    private List<Event> mDisplayedEvents;
+    private EventDatabaseHelper mDbHelper;
+    SQLiteDatabase write_db = null;
+    SQLiteDatabase read_db = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
 
       mFiltersFragment = (FiltersFragment)
                 getSupportFragmentManager().findFragmentById(R.id.filters_drawer);
@@ -51,17 +91,30 @@ public class HomeActivity extends ActionBarActivity
         eventListFragment = (EventListFragment) getFragmentManager().findFragmentById(R.id.event_list_fragment);
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
 
+        mDbHelper = new EventDatabaseHelper(getApplicationContext());
+        eventList = new ArrayList<>();
+        mListeners = new ArrayList<>();
+        downloadFragment = new DownloadFragment();
+        profileFragment = ProfileViewFragment.newInstance(new User("Nom", "passwd", "email@email.com", null, 24));
+        eventListFragment = EventListFragment.newInstance(eventList);
+        mapFragment = CustomMapFragment.newInstance(eventList);
+
+        new GetEventsTask().execute(DOWNLOAD_URL, null, "");
+
+        searchBar = (SearchView) findViewById(R.id.home_search_bar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), query));
+                mDisplayedEvents = Search.searchByTitle(eventList, query);
+                notifyListChanged();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.equals("")) {
-                    eventListFragment.updateListView(Search.searchByTitle(eventListFragment.getEventList(), newText));
+                    mDisplayedEvents = Search.searchByTitle(eventList, newText);
+                    notifyListChanged();
                 }
                 return false;
             }
@@ -81,21 +134,41 @@ public class HomeActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            switch (position) {
+                case (0):
+                    searchBar.setVisibility(View.VISIBLE);
+                    if (eventList.isEmpty()) {
+                        HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
+                    } else {
+                        fragmentManager.beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+                    }
+                    break;
+                case (1):
+                    searchBar.setVisibility(View.GONE);
+                    fragmentManager.beginTransaction().replace(R.id.fragment_home_container, profileFragment).commit();
+                    break;
+            }
+        } catch (NullPointerException e) {
+            //On passe la première fois
+        }
     }
 
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                mTitle = getString(R.string.principal_view);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                mTitle = getString(R.string.profile_view);
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
@@ -107,7 +180,7 @@ public class HomeActivity extends ActionBarActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle("Whatodo");
     }
 
 
@@ -120,13 +193,6 @@ public class HomeActivity extends ActionBarActivity
             getMenuInflater().inflate(R.menu.home, menu);
             restoreActionBar();
             return true;
-//        if (!mFiltersFragment.isDrawerOpen()) {
-//            // Only show items in the action bar relevant to this screen
-//            // if the drawer is not showing. Otherwise, let the drawer
-//            // decide what to show in the action bar.
-//            getMenuInflater().inflate(R.menu.home, menu);
-//            restoreActionBar();
-//            return true;
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -138,10 +204,31 @@ public class HomeActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            //TODO Il faut mettre les settings ici !
-            return true;
+        switch (id) {
+            case (R.id.action_settings):
+                //TODO Il faut mettre les settings ici !
+                break;
+            case (R.id.action_earth):
+                // update the main content by replacing fragments
+                ConnectivityManager connMgr = (ConnectivityManager)
+                        getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                boolean isWifiConn = networkInfo.isConnected();
+                networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                boolean isMobileConn = networkInfo.isConnected();
+                if (isWifiConn || isMobileConn) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, mapFragment).commit();
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case (R.id.action_list):
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+                break;
+            case (R.id.action_refresh):
+                new GetEventsTask().execute(DOWNLOAD_URL, null, "");
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -155,4 +242,99 @@ public class HomeActivity extends ActionBarActivity
 
     public void onCheckBoxClicked(View v)  {mFiltersFragment.onCheckBoxClicked(v); }
 
+    private void notifyListChanged() {
+        for (OnListChangedListener list : mListeners) {
+            list.onListChanged(mDisplayedEvents);
+        }
+    }
+
+    public void addOnListChangedListener(OnListChangedListener list) {
+        mListeners.add(list);
+    }
+
+    public void removeOnListChangedListener(OnListChangedListener list) {
+        mListeners.remove(list);
+    }
+
+    public class GetEventsTask extends AsyncTask<String, Void, Void> {
+
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = ProgressDialog.show(HomeActivity.this, null, getString(R.string.download));
+            if (write_db == null || read_db == null) {
+                write_db = mDbHelper.getWritableDatabase();
+                read_db = mDbHelper.getReadableDatabase();
+            }
+            ConnectivityManager connMgr = (ConnectivityManager)
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            boolean isWifiConn = networkInfo.isConnected();
+            networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            boolean isMobileConn = networkInfo.isConnected();
+            if (isWifiConn || isMobileConn) {
+                //On ne fait rien, on est bien connecté à internet
+            } else {
+                //Pas de connexion internet
+                eventList = (ArrayList) DatabaseServices.getAllEvents(read_db);
+                if (!eventList.isEmpty()) {
+                    HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+                } else {
+                    HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
+
+                }
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+                this.cancel(true);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
+            if (!eventList.isEmpty()) {
+                eventListFragment = EventListFragment.newInstance(eventList);
+                mapFragment = CustomMapFragment.newInstance(eventList);
+                HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
+            } else {
+                HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
+            }
+           /* mDisplayedEvents = eventList;
+            notifyListChanged();*/
+            dialog.dismiss();
+        }
+
+        protected Void doInBackground(String... urls) {
+            // These two need to be declared outside the try/catch
+            // so that they can be closed in the finally block.
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // Construct the URL for the server query
+                URL url = new URL(urls[0]);
+
+                // Create the request to the server, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+
+                JSonParser parser = new JSonParser();
+                eventList = parser.readJsonStream(inputStream);
+                DatabaseServices.updateEventTable(eventList, write_db);
+                return null;
+
+            } catch (IOException e) {
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+        }
+
+    }
 }

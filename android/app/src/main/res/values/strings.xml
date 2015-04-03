@@ -14,5 +14,17 @@
     <string name="profile_view_places_header">Lieux favoris</string>
     <string name="profile_view_interests_header">Centres d\'intérêt</string>
     <string name="profile_view_your_events_header">Vos évènements</string>
+    <string name="action_earth">Vue Carte</string>
+    <string name="action_list">Vue Liste</string>
+    <string name="action_refresh">Rafraîchir</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_connection">Pas de connexion internet</string>
+    <string name="no_image">Pas d\'image disponible</string>
+    <string name="principal_view">Vue principale</string>
+    <string name="profile_view">Profil</string>
+    <string name="download">Téléchargement des événements</string>
+    <string name="parse">Traitement des événements</string>
+    <string name="download_failed_txt">Aucun événement disponible</string>
+    <string name="download_failed_btn">Réessayer</string>
 
 </resources>
