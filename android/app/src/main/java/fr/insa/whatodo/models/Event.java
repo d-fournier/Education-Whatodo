@@ -1,4 +1,4 @@
-package fr.insa.whatodo.model;
+package fr.insa.whatodo.models;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

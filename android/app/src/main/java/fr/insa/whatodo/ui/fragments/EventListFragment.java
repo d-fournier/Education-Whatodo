@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.insa.whatodo.R;
-import fr.insa.whatodo.model.Event;
-import fr.insa.whatodo.ui.adapters.EventAdapter;
 import fr.insa.whatodo.models.Event;
 import fr.insa.whatodo.models.EventAdapter;
 import fr.insa.whatodo.ui.activities.HomeActivity;
