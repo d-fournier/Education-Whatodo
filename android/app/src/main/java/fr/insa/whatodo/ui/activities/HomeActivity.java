@@ -1,4 +1,4 @@
-﻿package fr.insa.whatodo.ui.activities;
+package fr.insa.whatodo.ui.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -87,9 +87,6 @@ public class HomeActivity extends ActionBarActivity
 				
 	 mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-				
-        eventListFragment = (EventListFragment) getFragmentManager().findFragmentById(R.id.event_list_fragment);
-        searchBar = (SearchView) findViewById(R.id.home_search_bar);
 
         mDbHelper = new EventDatabaseHelper(getApplicationContext());
         eventList = new ArrayList<>();
