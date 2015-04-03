@@ -37,6 +37,13 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
                     EventDatabaseContract.CategoryTable.COLUMN_NAME_ID + TEXT_TYPE + COMMA_SEP +
                     EventDatabaseContract.CategoryTable.COLUMN_NAME_NAME + TEXT_TYPE +
                     " )";
+
+    private static final String SQL_CREATE_ENTRIES_CITY =
+            "CREATE TABLE " + EventDatabaseContract.CityTable.TABLE_NAME + " (" +
+                    EventDatabaseContract.CityTable.COLUMN_NAME_CODE + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.CityTable.COLUMN_NAME_NAME + TEXT_TYPE +
+                    " )";
+
     private static final String SQL_CREATE_ENTRIES_TAG =
             "CREATE TABLE " + EventDatabaseContract.TagTable.TABLE_NAME + " (" +
                     EventDatabaseContract.TagTable.COLUMN_NAME_ID + TEXT_TYPE + COMMA_SEP +
@@ -56,7 +63,7 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + EventDatabaseContract.EventTable.TABLE_NAME + COMMA_SEP + EventDatabaseContract.EventCategoryTable.TABLE_NAME +
                     EventDatabaseContract.EventTagTable.TABLE_NAME + COMMA_SEP + EventDatabaseContract.EventCategoryTable.TABLE_NAME +
-                    COMMA_SEP + EventDatabaseContract.EventTagTable.TABLE_NAME;
+                    COMMA_SEP + EventDatabaseContract.EventTagTable.TABLE_NAME + EventDatabaseContract.CityTable.TABLE_NAME;
 
     public EventDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -67,6 +74,7 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_ENTRIES_EVENT);
         db.execSQL(SQL_CREATE_ENTRIES_CATEGORY);
         db.execSQL(SQL_CREATE_ENTRIES_TAG);
+        db.execSQL(SQL_CREATE_ENTRIES_CITY);
         db.execSQL(SQL_CREATE_ENTRIES_EVENT_CATEGORY);
         db.execSQL(SQL_CREATE_ENTRIES_EVENT_TAG);
     }

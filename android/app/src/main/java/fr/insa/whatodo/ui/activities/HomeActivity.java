@@ -42,7 +42,11 @@ import fr.insa.whatodo.utils.Search;
 public class HomeActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    private static final String DOWNLOAD_URL = "http://dfournier.ovh/api/event/?format=json";
+    private static final String DOWNLOAD_EVENTS_URL = "http://dfournier.ovh/api/event/?format=json";
+    private static final String DOWNLOAD_CITIES_URL = "http://dfournier.ovh/api/city/?format=json";
+    private static final String DOWNLOAD_CATEGORIES_URL = "http://dfournier.ovh/api/category/?format=json";
+    private static final String DOWNLOAD_TAGS_URL = "http://dfournier.ovh/api/tag/?format=json";
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -84,7 +88,7 @@ public class HomeActivity extends ActionBarActivity
         eventListFragment = EventListFragment.newInstance(eventList);
         mapFragment = CustomMapFragment.newInstance(eventList);
 
-        new GetEventsTask().execute(DOWNLOAD_URL, null, "");
+        new GetEventsTask().execute(DOWNLOAD_EVENTS_URL, null, "");
 
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -208,7 +212,7 @@ public class HomeActivity extends ActionBarActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
                 break;
             case (R.id.action_refresh):
-                new GetEventsTask().execute(DOWNLOAD_URL, null, "");
+                new GetEventsTask().execute(DOWNLOAD_EVENTS_URL, null, "");
                 break;
 
         }
