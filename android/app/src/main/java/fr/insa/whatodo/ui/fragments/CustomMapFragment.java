@@ -85,6 +85,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, O
         }
         s_mapFragment.getMapAsync(this);
         listEvent = (ArrayList<Event>) getArguments().getSerializable("EventList");
+        getArguments().remove("EventList");
     }
 
     @Override

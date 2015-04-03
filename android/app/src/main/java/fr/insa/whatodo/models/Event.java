@@ -1,5 +1,6 @@
 package fr.insa.whatodo.models;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * Created by Benjamin on 11/03/2015.
  */
-public class Event {
+public class Event implements Serializable {
 
     private static SimpleDateFormat df_date_parse = new SimpleDateFormat("yyyy-MM-dd");
     private static SimpleDateFormat df_date_format = new SimpleDateFormat("dd MMMM yyyy");
