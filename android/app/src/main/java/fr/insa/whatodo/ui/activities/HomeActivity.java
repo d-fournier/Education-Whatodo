@@ -183,7 +183,7 @@ public class HomeActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        if (!mNavigationDrawerFragment.isDrawerOpen() && !mFiltersFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -225,7 +225,14 @@ public class HomeActivity extends ActionBarActivity
             case (R.id.action_refresh):
                 new GetEventsTask().execute(DOWNLOAD_URL, null, "");
                 break;
-
+            case  (R.id.action_filters) :
+                if(mFiltersFragment.isDrawerOpen())
+                {
+                    mFiltersFragment.closeFilters();
+                }else{
+                    mFiltersFragment.openFilters();
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);

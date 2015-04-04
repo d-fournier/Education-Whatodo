@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -171,7 +172,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
                 selectItem(position);
             }
         });
-        mFiltersListAdapter=new FiltersListAdapter(this.getActivity(), this);
+        mFiltersListAdapter=new FiltersListAdapter(getActivity(), this);
         mDrawerListView.setAdapter(mFiltersListAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
@@ -211,7 +212,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+                R.drawable.ic_filters,             /* nav drawer image to replace 'Up' caret */
                 R.string.filters_open,  /* "open drawer" description for accessibility */
                 R.string.filters_drawer_close  /* "close drawer" description for accessibility */
         ) {
@@ -244,6 +245,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
         };
+
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
@@ -306,6 +308,8 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.home_filters, menu);
+
         // If the drawer is open, show the global app actions in the action bar. See also
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
@@ -528,5 +532,13 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+    public void openFilters(){
+        mDrawerLayout.openDrawer(Gravity.END);
+    }
+
+    public void closeFilters(){
+        mDrawerLayout.closeDrawer(Gravity.END);
     }
 }

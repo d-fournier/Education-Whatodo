@@ -26,5 +26,14 @@
     <string name="parse">Traitement des événements</string>
     <string name="download_failed_txt">Aucun événement disponible</string>
     <string name="download_failed_btn">Réessayer</string>
+    <string name="categories">Catégories</string>
+    <string name="tags">Tags</string>
+    <string name="place">Lieu</string>
+    <string name="distance">Distance</string>
+    <string name="price">Prix</string>
+    <string name="date">Date</string>
+    <string name="age">Age</string>
+    <string name="hours">Horaires</string>
+    <string name="action_filters">Filtres</string>
 
 </resources>

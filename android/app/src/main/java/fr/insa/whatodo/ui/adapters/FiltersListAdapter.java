@@ -3,14 +3,17 @@ package fr.insa.whatodo.ui.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.Image;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -58,10 +61,11 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
     private static String[] existingTowns={"Lyon", "Paris", "St Etienne"};
 
 
-    public FiltersListAdapter(Activity act, FiltersFragment fr) {
-        this.context = act;
+    public FiltersListAdapter(Context c, FiltersFragment fr) {
+        context = c;
         fragment=fr;
-        inflater=act.getLayoutInflater();
+        inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
     }
 
     @Override
@@ -142,31 +146,35 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
         switch(groupPosition)
         {
             case 0 :
-                tv.setText("Catégories");
+                tv.setText(R.string.categories);
                 break;
             case 1 :
-                tv.setText("Tags");
+                tv.setText(R.string.tags);
                 break;
             case 2 :
-                tv.setText("Lieu");
+                tv.setText(R.string.place);
                 break;
             case 3 :
-                tv.setText("Distance");
+                tv.setText(R.string.distance);
                 break;
             case 4:
-                tv.setText("Prix");
+                tv.setText(R.string.price);
                 break;
             case 5:
-                tv.setText("Date");
+                tv.setText(R.string.date);
                 break;
             case 6:
-                tv.setText("Age");
+                tv.setText(R.string.age);
                 break;
             case 7:
-                tv.setText("Horaires");
+                tv.setText(R.string.hours);
                 break;
         }
         tv.setPadding(55,15,0,15);
+        tv.setTextColor(Color.WHITE);
+        tv.setBackgroundColor(android.R.attr.activatedBackgroundIndicator);
+        tv.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
         return tv;
     }
 

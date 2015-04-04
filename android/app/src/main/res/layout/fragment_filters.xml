@@ -3,4 +3,4 @@
     android:layout_height="match_parent" android:background="#cccc"
     tools:context=".FiltersFragment"
     android:layout_alignParentBottom="true"
-    android:layout_alignParentLeft="true" />
+    android:layout_alignParentLeft="true"/>

@@ -48,9 +48,4 @@
             android:layout_gravity="end" android:name="fr.insa.whatodo.ui.fragments.FiltersFragment"
             tools:layout="@layout/fragment_filters" />
 
-
-        <!--    <fragment android:id="@+id/navigation_drawer"
-                android:layout_width="@dimen/navigation_drawer_width" android:layout_height="match_parent"
-                android:layout_gravity="start" android:name="fr.insa.whatodo.ui.fragments.NavigationDrawerFragment"
-                tools:layout="@layout/fragment_filters" />-->
     </android.support.v4.widget.DrawerLayout>
