@@ -230,6 +230,10 @@ public class HomeActivity extends ActionBarActivity
                 {
                     mFiltersFragment.closeFilters();
                 }else{
+                    if(mNavigationDrawerFragment.isDrawerOpen())
+                    {
+                        mNavigationDrawerFragment.closeDrawer();
+                    }
                     mFiltersFragment.openFilters();
                 }
                 break;

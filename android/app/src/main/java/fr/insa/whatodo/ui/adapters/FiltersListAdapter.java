@@ -142,7 +142,9 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        TextView tv = new TextView(context);
+
+        View v=inflater.inflate(android.R.layout.simple_list_item_activated_1,null);
+        TextView tv = (TextView)v.findViewById(android.R.id.text1);
         switch(groupPosition)
         {
             case 0 :
@@ -170,10 +172,9 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                 tv.setText(R.string.hours);
                 break;
         }
+
         tv.setPadding(55,15,0,15);
         tv.setTextColor(Color.WHITE);
-        tv.setBackgroundColor(android.R.attr.activatedBackgroundIndicator);
-        tv.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         return tv;
     }
