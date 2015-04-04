@@ -27,8 +27,8 @@ import java.util.List;
 import fr.insa.whatodo.R;
 
 import fr.insa.whatodo.ui.fragments.FiltersFragment;
-import fr.insa.whatodo.models.Event;
-import fr.insa.whatodo.models.User;
+import fr.insa.whatodo.model.Event;
+import fr.insa.whatodo.model.User;
 import fr.insa.whatodo.services.DatabaseServices;
 import fr.insa.whatodo.ui.fragments.CustomMapFragment;
 import fr.insa.whatodo.ui.fragments.DownloadFragment;

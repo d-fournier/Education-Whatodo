@@ -1,9 +1,8 @@
 package fr.insa.whatodo.utils.JSonParser;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import fr.insa.whatodo.models.Event;
+import fr.insa.whatodo.model.Event;
 
 /**
  * Created by William on 29/03/2015.
