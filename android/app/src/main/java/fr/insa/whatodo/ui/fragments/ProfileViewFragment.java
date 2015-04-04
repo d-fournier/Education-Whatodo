@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import fr.insa.whatodo.R;
-import fr.insa.whatodo.models.User;
+import fr.insa.whatodo.model.User;
 
 /**
  * Created by William on 16/03/2015.

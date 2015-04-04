@@ -25,8 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.insa.whatodo.R;
-import fr.insa.whatodo.models.Event;
-import fr.insa.whatodo.models.User;
+
+import fr.insa.whatodo.ui.fragments.FiltersFragment;
+import fr.insa.whatodo.model.Event;
+import fr.insa.whatodo.model.User;
 import fr.insa.whatodo.services.DatabaseServices;
 import fr.insa.whatodo.ui.fragments.CustomMapFragment;
 import fr.insa.whatodo.ui.fragments.DownloadFragment;
@@ -40,13 +42,16 @@ import fr.insa.whatodo.utils.Search;
 
 
 public class HomeActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements FiltersFragment.NavigationDrawerCallbacks, NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static final String DOWNLOAD_URL = "http://dfournier.ovh/api/event/?format=json";
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private FiltersFragment mFiltersFragment;
+   private NavigationDrawerFragment mNavigationDrawerFragment;
+
+
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -75,6 +80,13 @@ public class HomeActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+      mFiltersFragment = (FiltersFragment)
+                getSupportFragmentManager().findFragmentById(R.id.filters_drawer);
+				
+	 mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         mDbHelper = new EventDatabaseHelper(getApplicationContext());
         eventList = new ArrayList<>();
@@ -105,11 +117,14 @@ public class HomeActivity extends ActionBarActivity
             }
         });
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+       
         mTitle = getTitle();
 
         // Set up the drawer.
+
+        mFiltersFragment.setUp(
+                R.id.filters_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -216,6 +231,13 @@ public class HomeActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void onDateButtonClicked(View v){
+        mFiltersFragment.onDateButtonClicked(v);
+    }
+
+    public void onHourButtonClicked(View v){mFiltersFragment.onHourButtonClicked(v);}
+
+    public void onCheckBoxClicked(View v)  {mFiltersFragment.onCheckBoxClicked(v); }
 
     private void notifyListChanged() {
         for (OnListChangedListener list : mListeners) {

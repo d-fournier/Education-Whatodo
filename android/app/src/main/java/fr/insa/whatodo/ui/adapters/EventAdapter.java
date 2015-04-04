@@ -1,4 +1,4 @@
-package fr.insa.whatodo.models;
+package fr.insa.whatodo.ui.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.model.Event;
 
 /**
  * Created by Benjamin on 11/03/2015.

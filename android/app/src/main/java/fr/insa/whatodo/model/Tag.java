@@ -1,13 +1,13 @@
-package fr.insa.whatodo.models;
+package fr.insa.whatodo.model;
 
 /**
  * Created by Benjamin on 26/03/2015.
  */
-public class Category {
+public class Tag {
     int id;
     String name;
 
-    public Category(int id, String name) {
+    public Tag(int id, String name) {
         this.id = id;
         this.name = name;
     }
