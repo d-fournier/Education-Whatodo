@@ -28,7 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.models.Category;
+import fr.insa.whatodo.models.City;
 import fr.insa.whatodo.models.Event;
+import fr.insa.whatodo.models.Tag;
 import fr.insa.whatodo.models.User;
 import fr.insa.whatodo.services.DatabaseServices;
 import fr.insa.whatodo.ui.fragments.CustomMapFragment;
@@ -261,12 +264,14 @@ public class HomeActivity extends ActionBarActivity
                 //Pas de connexion internet
                 eventList = (ArrayList) DatabaseServices.getAllEvents(read_db);
                 if (!eventList.isEmpty()) {
+                    eventListFragment = EventListFragment.newInstance(eventList);
                     HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
                 } else {
                     HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
 
                 }
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
                 this.cancel(true);
             }
         }
@@ -281,8 +286,6 @@ public class HomeActivity extends ActionBarActivity
             } else {
                 HomeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, downloadFragment).commit();
             }
-           /* mDisplayedEvents = eventList;
-            notifyListChanged();*/
             dialog.dismiss();
         }
 
@@ -290,6 +293,9 @@ public class HomeActivity extends ActionBarActivity
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
+            List<City> cityList;
+            List<Category> categoriesList;
+            List<Tag> tagsList;
 
             try {
                 // Construct the URL for the server query
@@ -317,6 +323,13 @@ public class HomeActivity extends ActionBarActivity
 
                 JSonParser parser = new JSonParser();
                 eventList = parser.parseEvents(inputStreamEvents);
+                tagsList = parser.parseTags(inputStreamTags);
+                categoriesList = parser.parseCategories(inputStreamCategories);
+                cityList = parser.parseCities(inputStreamCities);
+
+                DatabaseServices.putAllCitiesInDatabase(cityList, write_db);
+                DatabaseServices.updateCategoryTable(categoriesList, write_db);
+                DatabaseServices.updateTagTable(tagsList, write_db);
                 DatabaseServices.updateEventTable(eventList, write_db);
                 return null;
 
