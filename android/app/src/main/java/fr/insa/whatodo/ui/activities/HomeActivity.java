@@ -302,7 +302,7 @@ public class HomeActivity extends ActionBarActivity
                 InputStream inputStream = urlConnection.getInputStream();
 
                 JSonParser parser = new JSonParser();
-                eventList = parser.readJsonStream(inputStream);
+                eventList = parser.parseEvents(inputStream);
                 DatabaseServices.updateEventTable(eventList, write_db);
                 return null;
 
