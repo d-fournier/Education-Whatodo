@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -43,7 +46,6 @@ public class HomeActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static final String DOWNLOAD_EVENTS_URL = "http://dfournier.ovh/api/event/?format=json";
-    private static final String DOWNLOAD_CITIES_URL = "http://dfournier.ovh/api/city/?format=json";
     private static final String DOWNLOAD_CATEGORIES_URL = "http://dfournier.ovh/api/category/?format=json";
     private static final String DOWNLOAD_TAGS_URL = "http://dfournier.ovh/api/tag/?format=json";
 
@@ -212,7 +214,7 @@ public class HomeActivity extends ActionBarActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
                 break;
             case (R.id.action_refresh):
-                new GetEventsTask().execute(DOWNLOAD_EVENTS_URL, null, "");
+                new GetEventsTask().execute(DOWNLOAD_EVENTS_URL, DOWNLOAD_CATEGORIES_URL, DOWNLOAD_TAGS_URL, null, "");
                 break;
 
         }
@@ -291,18 +293,30 @@ public class HomeActivity extends ActionBarActivity
 
             try {
                 // Construct the URL for the server query
-                URL url = new URL(urls[0]);
+                URL event_url = new URL(urls[0]);
+                URL categories_url = new URL(urls[1]);
+                URL tags_url = new URL(urls[2]);
 
-                // Create the request to the server, and open the connection
-                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream inputStreamCities = getResources().openRawResource(R.raw.cities);
+
+                urlConnection = (HttpURLConnection) event_url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
+                InputStream inputStreamEvents = urlConnection.getInputStream();
 
-                // Read the input stream into a String
-                InputStream inputStream = urlConnection.getInputStream();
+                urlConnection = (HttpURLConnection) categories_url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+                InputStream inputStreamCategories = urlConnection.getInputStream();
+
+                urlConnection = (HttpURLConnection) tags_url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+                InputStream inputStreamTags = urlConnection.getInputStream();
+
 
                 JSonParser parser = new JSonParser();
-                eventList = parser.parseEvents(inputStream);
+                eventList = parser.parseEvents(inputStreamEvents);
                 DatabaseServices.updateEventTable(eventList, write_db);
                 return null;
 
