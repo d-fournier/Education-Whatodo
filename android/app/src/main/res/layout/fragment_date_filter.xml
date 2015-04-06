@@ -36,8 +36,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/firstDateText"
             android:layout_toRightOf="@id/textDu"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:layout_marginRight="30dp"
             android:onClick="onDateButtonClicked"/>
 
 
@@ -54,8 +53,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/lastDateText"
             android:layout_toRightOf="@id/textAu"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:layout_marginRight="30dp"
             android:onClick="onDateButtonClicked"/>
 
     </GridLayout>

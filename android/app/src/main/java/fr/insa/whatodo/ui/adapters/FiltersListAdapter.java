@@ -174,8 +174,7 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
         }
 
         tv.setPadding(55,15,0,15);
-        tv.setTextColor(Color.WHITE);
-
+//        tv.setTextColor(Color.WHITE);
         return tv;
     }
 
