@@ -3,6 +3,7 @@ package fr.insa.whatodo.ui.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -16,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,15 +71,13 @@ public class HomeActivity extends ActionBarActivity
     private List<OnListChangedListener> mListeners;
     private List<Event> mDisplayedEvents;
     private EventDatabaseHelper mDbHelper;
-    SQLiteDatabase write_db = null;
-    SQLiteDatabase read_db = null;
-
+    protected SQLiteDatabase write_db = null;
+    protected SQLiteDatabase read_db = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         mDbHelper = new EventDatabaseHelper(getApplicationContext());
         eventList = new ArrayList<>();
         mListeners = new ArrayList<>();

@@ -48,7 +48,7 @@ public class DatabaseServices {
             ContentValues values = new ContentValues();
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_ID, e.getId());
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_NAME, e.getName());
-            values.put(EventDatabaseContract.EventTable.COLUMN_NAME_SUMMARY, e.getSummary());
+            values.put(EventDatabaseContract.EventTable.COLUMN_NAME_SUMMARY, e.getDescription());
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_URL, e.getUrl());
             try {
                 values.put(EventDatabaseContract.EventTable.COLUMN_NAME_START_TIME, df_time.format(e.getStartTime()));

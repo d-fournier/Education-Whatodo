@@ -1,9 +1,11 @@
 package fr.insa.whatodo.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Benjamin on 31/03/2015.
  */
-public class City {
+public class City implements Serializable{
     protected String ZIPcode;
     protected String name;
 

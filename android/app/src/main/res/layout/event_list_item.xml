@@ -18,9 +18,10 @@
     <ImageView
         android:id="@+id/event_list_item_picture"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:transitionName="@string/event_details_transition"/>
+        android:transitionName="@string/event_details_transition"
+        android:elevation="3dp"/>
 
     <TextView
         android:id="@+id/event_list_item_title"

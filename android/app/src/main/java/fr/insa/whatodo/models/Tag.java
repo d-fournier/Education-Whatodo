@@ -1,9 +1,11 @@
 package fr.insa.whatodo.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Benjamin on 26/03/2015.
  */
-public class Tag {
+public class Tag implements Serializable{
     int id;
     String name;
 
