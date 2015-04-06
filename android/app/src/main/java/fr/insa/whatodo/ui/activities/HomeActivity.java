@@ -17,9 +17,6 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -93,7 +90,7 @@ public class HomeActivity extends ActionBarActivity
         eventListFragment = EventListFragment.newInstance(eventList);
         mapFragment = CustomMapFragment.newInstance(eventList);
 
-        new GetEventsTask().execute(DOWNLOAD_EVENTS_URL, null, "");
+        new GetEventsTask().execute(null, null, null);
 
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -217,7 +214,7 @@ public class HomeActivity extends ActionBarActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
                 break;
             case (R.id.action_refresh):
-                new GetEventsTask().execute(DOWNLOAD_EVENTS_URL, DOWNLOAD_CATEGORIES_URL, DOWNLOAD_TAGS_URL, null, "");
+                new GetEventsTask().execute(null, null, null);
                 break;
 
         }
@@ -240,7 +237,7 @@ public class HomeActivity extends ActionBarActivity
         mListeners.remove(list);
     }
 
-    public class GetEventsTask extends AsyncTask<String, Void, Void> {
+    public class GetEventsTask extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog dialog;
 
@@ -289,7 +286,7 @@ public class HomeActivity extends ActionBarActivity
             dialog.dismiss();
         }
 
-        protected Void doInBackground(String... urls) {
+        protected Void doInBackground(Void... params) {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -299,10 +296,9 @@ public class HomeActivity extends ActionBarActivity
 
             try {
                 // Construct the URL for the server query
-                URL event_url = new URL(urls[0]);
-                URL categories_url = new URL(urls[1]);
-                URL tags_url = new URL(urls[2]);
-
+                URL event_url = new URL(DOWNLOAD_EVENTS_URL);
+                URL categories_url = new URL(DOWNLOAD_CATEGORIES_URL);
+                URL tags_url = new URL(DOWNLOAD_TAGS_URL);
                 InputStream inputStreamCities = getResources().openRawResource(R.raw.cities);
 
                 urlConnection = (HttpURLConnection) event_url.openConnection();
@@ -320,7 +316,6 @@ public class HomeActivity extends ActionBarActivity
                 urlConnection.connect();
                 InputStream inputStreamTags = urlConnection.getInputStream();
 
-
                 JSonParser parser = new JSonParser();
                 eventList = parser.parseEvents(inputStreamEvents);
                 tagsList = parser.parseTags(inputStreamTags);
@@ -331,8 +326,11 @@ public class HomeActivity extends ActionBarActivity
                 DatabaseServices.updateCategoryTable(categoriesList, write_db);
                 DatabaseServices.updateTagTable(tagsList, write_db);
                 DatabaseServices.updateEventTable(eventList, write_db);
-                return null;
 
+                List<String> list = DatabaseServices.getAllCityNames(read_db);
+                list = DatabaseServices.getAllTagsNames(read_db);
+
+                return null;
             } catch (IOException e) {
                 return null;
             } finally {
