@@ -9,6 +9,8 @@ from .models.tag import Tag
 from .models.event import Event
 from .models.city import City
 from .filters import EventFilter
+from .utils import * 
+
 
 class EventViewSet(viewsets.ModelViewSet):
 	queryset = Event.objects.all()
@@ -29,14 +31,26 @@ class EventViewSet(viewsets.ModelViewSet):
 		if city_param is not None and distance_param is not None:
 			try:
 				city = City.objects.get(id=city_param)
-			except app.DoesNotExist:
+			except City.DoesNotExist:
 				pass
 			lat_dist = change_in_latitude_km(distance_param)
 			long_dist = change_in_longitude_km(lat_dist, distance_param)
-			queryset = queryset.filter(latitude__lte=(city.latitude + lat_dist))
-			queryset = queryset.filter(latitude__gte=(city.latitude - lat_dist ))
-			queryset = queryset.filter(longitude__gte=(city.longitude - long_dist))
-			queryset = queryset.filter(longitude__lte=(city.longitude + long_dist))
+			max_lat = float(city.latitude) + lat_dist
+			min_lat = float(city.latitude) - lat_dist
+			max_long = float(city.longitude) + long_dist
+			min_long = float(city.longitude) - long_dist
+			print("Latitude : "+ str(city.latitude))
+			print("Max Latitude : "+ str(float(city.latitude) + lat_dist))
+			print("Min Latitude : "+ str(float(city.latitude) - lat_dist))
+			print("Longitude : "+ str(city.longitude))
+			print("Max Longitude : "+ str(float(city.longitude) + long_dist))
+			print("Min Longitude : "+ str(float(city.longitude) - long_dist))
+			queryset = queryset.filter(latitude__lte=max_lat)
+			queryset = queryset.filter(latitude__gte=min_lat)
+			queryset = queryset.filter(longitude__gte=min_long)
+			queryset = queryset.filter(longitude__lte=max_long)
+		elif city_param is not None:
+			queryset = queryset.filter(city=city_param)
 		return queryset
 
 	

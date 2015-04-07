@@ -15,8 +15,8 @@ for item in obj:
 		data[i]['fields'] = {}
 		data[i]['fields']['ZIPcode'] = item['code postal']
 		data[i]['fields']['name'] = item['VILLE']
-		data[i]['fields']['longitude'] = item['longitude']
-		data[i]['fields']['latitude'] = item['latitude']
+		data[i]['fields']['longitude'] = item['latitude']
+		data[i]['fields']['latitude'] = item['longitude']
 		data[i]['pk'] = i
 		i = i+1
 # Output the string with pretty JSON                                      

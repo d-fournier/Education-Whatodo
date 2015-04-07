@@ -12,21 +12,21 @@ km_to_miles = 1/1.609344
 
 def change_in_latitude(miles):
     "Given a distance north, return the change in latitude."
-    return (miles/earth_radius)*radians_to_degrees
+    return (float(miles)/earth_radius)*radians_to_degrees
 
 def change_in_longitude(latitude, miles):
     "Given a latitude and a distance west, return the change in longitude."
     # Find the radius of a circle around the earth at given latitude.
     r = earth_radius*math.cos(latitude*degrees_to_radians)
-    return (miles/r)*radians_to_degrees
+    return (float(miles)/r)*radians_to_degrees
 
 	
 def change_in_latitude_km(km):
     "Given a distance north, return the change in latitude."
-    return (miles*km_to_miles/earth_radius)*radians_to_degrees
+    return (float(km)*km_to_miles/earth_radius)*radians_to_degrees
 
 def change_in_longitude_km(latitude, km):
     "Given a latitude and a distance west, return the change in longitude."
     # Find the radius of a circle around the earth at given latitude.
     r = earth_radius*math.cos(latitude*degrees_to_radians)
-    return (miles*km_to_miles/r)*radians_to_degrees
+    return (float(km)*km_to_miles/r)*radians_to_degrees

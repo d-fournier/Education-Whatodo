@@ -10,4 +10,4 @@ class EventFilter(django_filters.FilterSet):
 	min_hour = django_filters.TimeFilter(name='startTime', lookup_type='gte')
 	class Meta:
 		model = Event
-		fields = ['categories', 'tags', 'city', 'min_date', 'max_date', 'min_price', 'max_price', 'min_hour', 'max_hour']
+		fields = ['categories', 'tags', 'min_date', 'max_date', 'min_price', 'max_price', 'min_hour', 'max_hour']
