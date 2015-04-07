@@ -2,11 +2,13 @@ package fr.insa.whatodo.ui.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -70,6 +72,8 @@ public class HomeActivity extends ActionBarActivity
     private ProfileViewFragment profileFragment;
 
     private ArrayList<Event> eventList;
+    private List<String> cityNamesList;
+    private List<String> tagNamesList;
     private List<OnListChangedListener> mListeners;
     private List<Event> mDisplayedEvents;
     private EventDatabaseHelper mDbHelper;
@@ -237,6 +241,10 @@ public class HomeActivity extends ActionBarActivity
         mListeners.remove(list);
     }
 
+    public List<String> getCityNamesList() {
+        return cityNamesList;
+    }
+
     public class GetEventsTask extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog dialog;
@@ -290,7 +298,6 @@ public class HomeActivity extends ActionBarActivity
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
-            List<City> cityList;
             List<Category> categoriesList;
             List<Tag> tagsList;
 
@@ -299,7 +306,6 @@ public class HomeActivity extends ActionBarActivity
                 URL event_url = new URL(DOWNLOAD_EVENTS_URL);
                 URL categories_url = new URL(DOWNLOAD_CATEGORIES_URL);
                 URL tags_url = new URL(DOWNLOAD_TAGS_URL);
-                InputStream inputStreamCities = getResources().openRawResource(R.raw.cities);
 
                 urlConnection = (HttpURLConnection) event_url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -320,15 +326,21 @@ public class HomeActivity extends ActionBarActivity
                 eventList = parser.parseEvents(inputStreamEvents);
                 tagsList = parser.parseTags(inputStreamTags);
                 categoriesList = parser.parseCategories(inputStreamCategories);
-                cityList = parser.parseCities(inputStreamCities);
 
-                DatabaseServices.putAllCitiesInDatabase(cityList, write_db);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this);
+                if(!prefs.getBoolean("firstTime", false)) {
+                    DatabaseServices.putAllCitiesInDatabase(getApplicationContext(), write_db);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("firstTime", true);
+                    editor.commit();
+                }
+
+                DatabaseServices.updateEventTable(eventList, write_db);
                 DatabaseServices.updateCategoryTable(categoriesList, write_db);
                 DatabaseServices.updateTagTable(tagsList, write_db);
-                DatabaseServices.updateEventTable(eventList, write_db);
 
-                List<String> list = DatabaseServices.getAllCityNames(read_db);
-                list = DatabaseServices.getAllTagsNames(read_db);
+                cityNamesList = DatabaseServices.getAllCityNames(read_db);
+                tagNamesList = DatabaseServices.getAllTagsNames(read_db);
 
                 return null;
             } catch (IOException e) {
