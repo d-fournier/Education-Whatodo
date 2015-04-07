@@ -31,6 +31,12 @@ public final class EventDatabaseContract {
         public static final String COLUMN_NAME_NAME = "name";
     }
 
+    public static abstract class CityTable {
+        public static final String TABLE_NAME = "City";
+        public static final String COLUMN_NAME_NAME = "nme";
+        public static final String COLUMN_NAME_CODE = "code";
+    }
+
     public static abstract class TagTable {
         public static final String TABLE_NAME = "Tag";
         public static final String COLUMN_NAME_ID = "id";
