@@ -24,9 +24,7 @@ class EventViewSet(viewsets.ModelViewSet):
 		city_param = self.request.QUERY_PARAMS.get('city', None)
 		distance_param = self.request.QUERY_PARAMS.get('distance', None)
 		if legal_age_param is not None:
-			if legal_age_param:
-				queryset = queryset.filter(min_age__gte=18)
-			else:
+			if legal_age_param == 'False':
 				queryset = queryset.filter(min_age__lt=18)
 		if city_param is not None and distance_param is not None:
 			try:

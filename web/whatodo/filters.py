@@ -8,7 +8,6 @@ class EventFilter(django_filters.FilterSet):
 	min_date = django_filters.DateFilter(name='startDate', lookup_type='gte')
 	max_hour = django_filters.TimeFilter(name='endTime', lookup_type='lte')
 	min_hour = django_filters.TimeFilter(name='startTime', lookup_type='gte')
-	
 	class Meta:
 		model = Event
 		fields = ['categories', 'tags', 'city', 'min_date', 'max_date', 'min_price', 'max_price', 'min_hour', 'max_hour']

@@ -13,7 +13,7 @@ class EventReadSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Event
-		fields = ('id', 'name', 'description', 'url', 'startTime', 'endTime', 'startDate', 'endDate', 'price', 'min_age', 'address', 'city', 'categories', 'tags')
+		fields = ('id', 'name', 'description', 'url', 'startTime', 'endTime', 'startDate', 'endDate', 'price', 'min_age', 'address', 'city', 'latitude', 'longitude', 'categories', 'tags')
 
 
 class EventCreateSerializer(serializers.ModelSerializer):
@@ -22,4 +22,4 @@ class EventCreateSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Event
-		fields = ('id', 'name', 'description', 'url', 'startTime', 'endTime', 'startDate', 'endDate', 'price', 'min_age', 'address', 'city', 'categories', 'tags')
+		fields = ('id', 'name', 'description', 'url', 'startTime', 'endTime', 'startDate', 'endDate', 'price', 'min_age', 'address', 'city', 'latitude', 'longitude', 'categories', 'tags')
