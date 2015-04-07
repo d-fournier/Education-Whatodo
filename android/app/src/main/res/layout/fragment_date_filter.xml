@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FiltersFragment">
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Semaine"
+        android:id="@+id/checkBoxSemaine"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Week end"
+        android:id="@+id/checkBoxWeekEnd"
+        android:layout_below="@id/checkBoxSemaine"/>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:rowCount="2" android:columnCount="2"
+        android:layout_margin="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Du : "
+            android:id="@+id/textDu"
+            android:layout_below="@+id/checkBoxWeekEnd"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/firstDateText"
+            android:layout_toRightOf="@id/textDu"
+            android:layout_marginRight="30dp"
+            android:onClick="onDateButtonClicked"/>
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Au : "
+            android:id="@+id/textAu"
+            android:layout_below="@+id/textDu"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lastDateText"
+            android:layout_toRightOf="@id/textAu"
+            android:layout_marginRight="30dp"
+            android:onClick="onDateButtonClicked"/>
+
+    </GridLayout>
+</LinearLayout>

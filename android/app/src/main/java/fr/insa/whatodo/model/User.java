@@ -1,11 +1,9 @@
-package fr.insa.whatodo.models;
+package fr.insa.whatodo.model;
 
 import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import fr.insa.whatodo.R;
 
 /**
  * Created by William on 16/03/2015.

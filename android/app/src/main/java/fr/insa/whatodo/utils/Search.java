@@ -2,7 +2,7 @@ package fr.insa.whatodo.utils;
 
 import java.util.ArrayList;
 
-import fr.insa.whatodo.models.Event;
+import fr.insa.whatodo.model.Event;
 
 /**
  * Created by Benjamin on 12/03/2015.

@@ -1,4 +1,4 @@
-package fr.insa.whatodo.models;
+package fr.insa.whatodo.ui.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,9 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.util.List;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.model.Event;
 
 /**
  * Created by Benjamin on 11/03/2015.
@@ -43,16 +45,21 @@ public class EventAdapter<T> extends ArrayAdapter {
         TextView textItemSummary = (TextView) convertView.findViewById(R.id.event_list_item_summary);
 
         // Populate the data into the template view using the data object
-        if(event.getImage() == null) {
+       /*  if(event.getImage() == null) {
             imageItem.setVisibility(View.GONE);
         }else{
             textNoImage.setVisibility(View.GONE);
         }
-            imageItem.setImageDrawable(event.getImage());
+            imageItem.setImageDrawable(event.getImage());*/
+            imageItem.setVisibility(View.GONE);// TODO A MODIFIER AVEC IMAGELOADER !
             textItemTitle.setText(event.getName());
+        try {
             textItemDate.setText(event.getDateAsString());
-            textItemPrice.setText(event.getPrice());
-            textItemPlace.setText(event.getAddress());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        textItemPrice.setText(event.getPrice());
+            textItemPlace.setText(event.getFullAddress());
             textItemSummary.setText(event.getSummary());
 
 

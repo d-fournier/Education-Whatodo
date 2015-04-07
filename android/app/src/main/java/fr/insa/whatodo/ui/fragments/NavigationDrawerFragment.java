@@ -11,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.ui.activities.HomeActivity;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -121,7 +123,7 @@ public class NavigationDrawerFragment extends Fragment {
      * @param fragmentId   The android:id of this fragment in its activity's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
-    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
+    public void setUp(int fragmentId, final DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 
@@ -157,6 +159,10 @@ public class NavigationDrawerFragment extends Fragment {
                 super.onDrawerOpened(drawerView);
                 if (!isAdded()) {
                     return;
+                }
+
+                if(drawerLayout.isDrawerOpen(Gravity.END)){
+                    drawerLayout.closeDrawer(Gravity.END);
                 }
 
                 if (!mUserLearnedDrawer) {
@@ -274,5 +280,9 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+    public void closeDrawer(){
+        mDrawerLayout.closeDrawer(Gravity.START);
     }
 }
