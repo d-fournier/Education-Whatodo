@@ -39,12 +39,6 @@ class EventViewSet(viewsets.ModelViewSet):
 			min_lat = float(city.latitude) - lat_dist
 			max_long = float(city.longitude) + long_dist
 			min_long = float(city.longitude) - long_dist
-			print("Latitude : "+ str(city.latitude))
-			print("Max Latitude : "+ str(float(city.latitude) + lat_dist))
-			print("Min Latitude : "+ str(float(city.latitude) - lat_dist))
-			print("Longitude : "+ str(city.longitude))
-			print("Max Longitude : "+ str(float(city.longitude) + long_dist))
-			print("Min Longitude : "+ str(float(city.longitude) - long_dist))
 			queryset = queryset.filter(latitude__lte=max_lat)
 			queryset = queryset.filter(latitude__gte=min_lat)
 			queryset = queryset.filter(longitude__gte=min_long)
