@@ -4,10 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,11 +15,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.insa.whatodo.R;
-import fr.insa.whatodo.models.Category;
-import fr.insa.whatodo.models.City;
-import fr.insa.whatodo.models.Event;
-import fr.insa.whatodo.models.Tag;
+import fr.insa.whatodo.model.Category;
+import fr.insa.whatodo.model.City;
+import fr.insa.whatodo.model.Event;
+import fr.insa.whatodo.model.Tag;
 import fr.insa.whatodo.utils.EventDatabaseContract;
 
 /**

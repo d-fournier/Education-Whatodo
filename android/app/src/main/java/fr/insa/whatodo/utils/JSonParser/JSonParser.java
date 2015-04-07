@@ -9,10 +9,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 
-import fr.insa.whatodo.models.Category;
-import fr.insa.whatodo.models.City;
-import fr.insa.whatodo.models.Event;
-import fr.insa.whatodo.models.Tag;
+import fr.insa.whatodo.model.Category;
+import fr.insa.whatodo.model.City;
+import fr.insa.whatodo.model.Event;
+import fr.insa.whatodo.model.Tag;
 
 /**
  * Created by William on 29/03/2015.

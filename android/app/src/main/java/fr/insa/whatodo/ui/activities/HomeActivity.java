@@ -27,15 +27,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.insa.whatodo.R;
-import fr.insa.whatodo.models.Category;
-import fr.insa.whatodo.models.City;
-import fr.insa.whatodo.models.Event;
-import fr.insa.whatodo.models.Tag;
-import fr.insa.whatodo.models.User;
+import fr.insa.whatodo.model.User;
+import fr.insa.whatodo.model.Category;
+import fr.insa.whatodo.model.Event;
+import fr.insa.whatodo.model.Tag;
 import fr.insa.whatodo.services.DatabaseServices;
 import fr.insa.whatodo.ui.fragments.CustomMapFragment;
 import fr.insa.whatodo.ui.fragments.DownloadFragment;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
+import fr.insa.whatodo.ui.fragments.FiltersFragment;
 import fr.insa.whatodo.ui.fragments.NavigationDrawerFragment;
 import fr.insa.whatodo.ui.fragments.ProfileViewFragment;
 import fr.insa.whatodo.utils.EventDatabaseHelper;
@@ -45,7 +45,7 @@ import fr.insa.whatodo.utils.Search;
 
 
 public class HomeActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FiltersFragment.NavigationDrawerCallbacks {
 
     private static final String DOWNLOAD_EVENTS_URL = "http://dfournier.ovh/api/event/?format=json";
     private static final String DOWNLOAD_CATEGORIES_URL = "http://dfournier.ovh/api/category/?format=json";
@@ -70,6 +70,7 @@ public class HomeActivity extends ActionBarActivity
     private CustomMapFragment mapFragment;
     private DownloadFragment downloadFragment;
     private ProfileViewFragment profileFragment;
+    private FiltersFragment mFiltersFragment;
 
     private ArrayList<Event> eventList;
     private List<String> cityNamesList;
@@ -85,6 +86,13 @@ public class HomeActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+        mFiltersFragment = (FiltersFragment)
+                getSupportFragmentManager().findFragmentById(R.id.filters_drawer);
+
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         mDbHelper = new EventDatabaseHelper(getApplicationContext());
         eventList = new ArrayList<>();
@@ -115,11 +123,14 @@ public class HomeActivity extends ActionBarActivity
             }
         });
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+
         mTitle = getTitle();
 
         // Set up the drawer.
+
+        mFiltersFragment.setUp(
+                R.id.filters_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -178,7 +189,7 @@ public class HomeActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        if (!mNavigationDrawerFragment.isDrawerOpen() && !mFiltersFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -220,12 +231,30 @@ public class HomeActivity extends ActionBarActivity
             case (R.id.action_refresh):
                 new GetEventsTask().execute(null, null, null);
                 break;
-
+            case  (R.id.action_filters) :
+                if(mFiltersFragment.isDrawerOpen())
+                {
+                    mFiltersFragment.closeFilters();
+                }else{
+                    if(mNavigationDrawerFragment.isDrawerOpen())
+                    {
+                        mNavigationDrawerFragment.closeDrawer();
+                    }
+                    mFiltersFragment.openFilters();
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void onDateButtonClicked(View v){
+        mFiltersFragment.onDateButtonClicked(v);
+    }
+
+    public void onHourButtonClicked(View v){mFiltersFragment.onHourButtonClicked(v);}
+
+    public void onCheckBoxClicked(View v)  {mFiltersFragment.onCheckBoxClicked(v); }
 
     private void notifyListChanged() {
         for (OnListChangedListener list : mListeners) {

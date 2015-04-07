@@ -1,9 +1,8 @@
 package fr.insa.whatodo.utils.JSonParser;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import fr.insa.whatodo.models.Tag;
+import fr.insa.whatodo.model.Tag;
 
 /**
  * Created by William on 29/03/2015.
