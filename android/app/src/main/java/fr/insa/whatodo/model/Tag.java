@@ -2,6 +2,8 @@ package fr.insa.whatodo.model;
 
 import java.io.Serializable;
 
+import java.io.Serializable;
+
 /**
  * Created by Benjamin on 26/03/2015.
  */

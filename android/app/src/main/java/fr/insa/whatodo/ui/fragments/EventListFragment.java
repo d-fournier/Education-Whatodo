@@ -1,21 +1,26 @@
 package fr.insa.whatodo.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.insa.whatodo.R;
-import fr.insa.whatodo.model.Event;
-import fr.insa.whatodo.ui.adapters.EventAdapter;
+import fr.insa.whatodo.models.Event;
+import fr.insa.whatodo.models.EventAdapter;
+import fr.insa.whatodo.ui.activities.DetailsActivity;
 import fr.insa.whatodo.ui.activities.HomeActivity;
 import fr.insa.whatodo.utils.OnListChangedListener;
 
@@ -61,6 +66,7 @@ public class EventListFragment extends Fragment implements OnListChangedListener
         View rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
 
         eventList = (ArrayList<Event>) getArguments().getSerializable("EventList");
+        getArguments().remove("EventList");
 
         //Initialiser l'adapter
         adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, eventList);
@@ -68,11 +74,22 @@ public class EventListFragment extends Fragment implements OnListChangedListener
         //L'appliquer sur la listView
         eventListView.setAdapter(adapter);
 
+        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event e = (Event) parent.getItemAtPosition(position);
+                Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                intent.putExtra("event", e);
+                String transitionName = getString(R.string.event_details_transition);
+                ActivityOptionsCompat options =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                                view,   // The view which starts the transition
+                                transitionName    // The transitionName of the view we’re transitioning to
+                        );
+                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+            }
+        });
         return rootView;
-    }
-
-    public ArrayList<Event> getEventList() {
-        return eventList;
     }
 
     @Override
