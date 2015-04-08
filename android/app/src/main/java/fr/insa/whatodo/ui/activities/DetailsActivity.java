@@ -3,17 +3,16 @@ package fr.insa.whatodo.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.ParseException;
 
 import fr.insa.whatodo.R;
-import fr.insa.whatodo.models.Category;
-import fr.insa.whatodo.models.Event;
-import fr.insa.whatodo.models.Tag;
+import fr.insa.whatodo.model.Category;
+import fr.insa.whatodo.model.Event;
+import fr.insa.whatodo.model.Tag;
 
 /**
  * Created by Benjamin on 03/04/2015.
@@ -60,14 +59,24 @@ public class DetailsActivity extends ActionBarActivity {
         {
             sCategories += c.getName()+ ", ";
         }
-        sCategories = sCategories.substring(0, sCategories.lastIndexOf(","));
+        try{
+            sCategories = sCategories.substring(0, sCategories.lastIndexOf(","));
+        }catch(StringIndexOutOfBoundsException e)
+        {
+            sCategories = "Aucune";
+        }
 
         String sTags = "";
         for(Tag t : event.getTags())
         {
             sTags += t.getName()+ ", ";
         }
-        sTags = sTags.substring(0,sTags.lastIndexOf(","));
+       try{
+           sTags = sTags.substring(0,sTags.lastIndexOf(","));
+       }catch(StringIndexOutOfBoundsException e)
+       {
+           sTags = "Aucun";
+       }
 
         categories.setText("Catégories : " + sCategories);
         tags.setText("Tags : " + sTags);
