@@ -41,6 +41,7 @@ import fr.insa.whatodo.model.HourFilter;
 import fr.insa.whatodo.model.PlaceFilter;
 import fr.insa.whatodo.model.PriceFilter;
 import fr.insa.whatodo.model.TagFilter;
+import fr.insa.whatodo.ui.activities.HomeActivity;
 import fr.insa.whatodo.ui.adapters.FiltersListAdapter;
 
 /**
@@ -172,7 +173,7 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
                 selectItem(position);
             }
         });
-        mFiltersListAdapter=new FiltersListAdapter(getActivity(), this);
+        mFiltersListAdapter=new FiltersListAdapter((HomeActivity)getActivity(), this);
         mDrawerListView.setAdapter(mFiltersListAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 

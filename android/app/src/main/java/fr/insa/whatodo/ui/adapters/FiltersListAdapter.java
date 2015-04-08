@@ -26,8 +26,11 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.services.DatabaseServices;
+import fr.insa.whatodo.ui.activities.HomeActivity;
 import fr.insa.whatodo.ui.fragments.FiltersFragment;
 import fr.insa.whatodo.model.CategoryFilter;
 import fr.insa.whatodo.model.DateFilter;
@@ -38,20 +41,20 @@ import fr.insa.whatodo.model.HourFilter;
 public class FiltersListAdapter extends BaseExpandableListAdapter implements ExpandableListAdapter {
 
     //context variable
-    private Context context;
+    private HomeActivity activity;
     private FiltersFragment fragment;
 
     public LayoutInflater inflater;
 
 
-    private static String[] existingTags={"tag1","atag","tag2"};
-    private static String[] existingTowns={"Lyon", "Paris", "St Etienne"};
+//    private static String[] existingTags={"tag1","atag","tag2"};
+//    private static String[] existingTowns={"Lyon", "Paris", "St Etienne"};
 
 
-    public FiltersListAdapter(Context c, FiltersFragment fr) {
-        context = c;
+    public FiltersListAdapter(HomeActivity act, FiltersFragment fr) {
+        activity = act;
         fragment=fr;
-        inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater=(LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
 
@@ -159,8 +162,11 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                 tv.setText(R.string.hours);
                 break;
         }
-
-        tv.setPadding(55,15,0,15);
+//
+        final float scale = fragment.getActivity().getResources().getDisplayMetrics().density;
+        int paddingLeft = (int) (40 * scale + 0.5f);
+        int paddingVertical = (int) (6 * scale + 0.5f);
+        tv.setPadding(paddingLeft,paddingVertical,0,paddingVertical);
 //        tv.setTextColor(Color.WHITE);
         return tv;
     }
@@ -218,7 +224,14 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
             case 1 :
                 convertView=inflater.inflate(R.layout.fragment_tag_filter,null);
                 MultiAutoCompleteTextView tagsView=(MultiAutoCompleteTextView) convertView.findViewById(R.id.TagsTextView);
-                ArrayAdapter<String> tagsAdapter = new ArrayAdapter<String>(fragment.getActivity(),android.R.layout.simple_dropdown_item_1line, existingTags);
+
+                List<String> existingTags=activity.getTagNamesList();
+                ArrayAdapter<String> tagsAdapter;
+                if(existingTags!=null){
+                    tagsAdapter=new ArrayAdapter<String>(fragment.getActivity(),android.R.layout.simple_dropdown_item_1line,existingTags);
+                }else{
+                    tagsAdapter=new ArrayAdapter<String>(fragment.getActivity(),android.R.layout.simple_dropdown_item_1line);
+                }
                 tagsView.setAdapter(tagsAdapter);
                 tagsView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
@@ -251,7 +264,14 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
             case 2:
                 convertView=inflater.inflate(R.layout.fragment_place_filter,null);
                 AutoCompleteTextView placeTextView=(AutoCompleteTextView)convertView.findViewById(R.id.PlaceTextField);
-                ArrayAdapter<String> placeAdapter = new ArrayAdapter<String>(fragment.getActivity(), android.R.layout.simple_dropdown_item_1line, existingTowns);
+                List<String> existingTowns = activity.getCityNamesList();
+                ArrayAdapter<String> placeAdapter;
+                if(existingTowns!=null){
+                    placeAdapter = new ArrayAdapter<String>(fragment.getActivity(), android.R.layout.simple_dropdown_item_1line,existingTowns);
+                }else{
+                    placeAdapter = new ArrayAdapter<String>(fragment.getActivity(), android.R.layout.simple_dropdown_item_1line);
+                }
+
                 placeTextView.setAdapter(placeAdapter);
                 ImageButton myLocation= (ImageButton) convertView.findViewById(R.id.imageMyLocation);
                 placeTextView.addTextChangedListener(new TextWatcher() {
@@ -273,7 +293,7 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                 myLocation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+                        LocationManager lm = (LocationManager)activity.getSystemService(Context.LOCATION_SERVICE);
                         try{
                             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                             fragment.getPlaceFilter().setLocation(location.getLongitude(),location.getLatitude());

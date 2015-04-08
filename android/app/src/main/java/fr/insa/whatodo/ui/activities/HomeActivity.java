@@ -273,6 +273,7 @@ public class HomeActivity extends ActionBarActivity
     public List<String> getCityNamesList() {
         return cityNamesList;
     }
+    public List<String> getTagNamesList(){return tagNamesList;}
 
     public class GetEventsTask extends AsyncTask<Void, Void, Void> {
 
