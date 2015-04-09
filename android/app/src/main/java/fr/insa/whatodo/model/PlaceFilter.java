@@ -6,20 +6,20 @@ package fr.insa.whatodo.model;
 public class PlaceFilter  extends Filter {
 
     protected String place;
-    protected boolean isMyLocation;
+    protected boolean sendMyPosition;
     protected double latitude;
     protected double longitude;
 
     public PlaceFilter() {
         super(FilterType.LIEU);
         place="";
-        isMyLocation=true;
+        sendMyPosition=false;
         longitude = 0;
         latitude = 0;
     }
 
-    public boolean isMyLocation() {
-        return isMyLocation;
+    public boolean isSendMyPosition() {
+        return sendMyPosition;
     }
 
     public String getTown() {
@@ -39,13 +39,11 @@ public class PlaceFilter  extends Filter {
         place=town;
         longitude=0;
         latitude=0;
-        isMyLocation=false;
     }
 
     public void setLocation(double longitude, double latitude){
         this.longitude=longitude;
         this.latitude=latitude;
         place="";
-        isMyLocation=true;
     }
 }

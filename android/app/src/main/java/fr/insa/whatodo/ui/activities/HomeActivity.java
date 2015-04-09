@@ -22,11 +22,21 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.model.AgeFilter;
+import fr.insa.whatodo.model.CategoryFilter;
+import fr.insa.whatodo.model.DateFilter;
+import fr.insa.whatodo.model.DistanceFilter;
+import fr.insa.whatodo.model.HourFilter;
+import fr.insa.whatodo.model.PlaceFilter;
+import fr.insa.whatodo.model.PriceFilter;
+import fr.insa.whatodo.model.TagFilter;
 import fr.insa.whatodo.model.User;
 import fr.insa.whatodo.model.Category;
 import fr.insa.whatodo.model.Event;
@@ -381,6 +391,28 @@ public class HomeActivity extends ActionBarActivity
                 }
             }
         }
-
     }
+
+    public void updateEventList(CategoryFilter categoryFilter, TagFilter tagFilter, PlaceFilter placeFilter,
+                                DistanceFilter distanceFilter, PriceFilter priceFilter, DateFilter dateFilter,AgeFilter ageFilter, HourFilter hourFilter){
+        InputStream inputStreamEvents;
+        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        String dateMin=format.format(dateFilter.getDates()[0]);
+        String dateMax=format.format(dateFilter.getDates()[1]);
+        try{
+            URL event_url = new URL(DOWNLOAD_EVENTS_URL+"?distance="+distanceFilter.getValue()+"&min_price="+priceFilter.getValue()+
+                    "&min_date="+dateMin+"&max_date="+dateMax+"&legal_age="+ageFilter.is18orMore());
+            HttpURLConnection urlConnection = (HttpURLConnection) event_url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+            inputStreamEvents = urlConnection.getInputStream();
+        }catch (Exception e){
+            return;
+        }
+
+        JSonParser parser = new JSonParser();
+        eventList = parser.parseEvents(inputStreamEvents);
+        eventListFragment.onListChanged(eventList);
+    }
+
 }

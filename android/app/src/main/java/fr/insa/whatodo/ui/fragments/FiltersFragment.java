@@ -28,15 +28,20 @@ import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.TimePicker;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.model.AgeFilter;
 import fr.insa.whatodo.model.CategoryFilter;
 import fr.insa.whatodo.model.DateFilter;
 import fr.insa.whatodo.model.DistanceFilter;
+import fr.insa.whatodo.model.Event;
 import fr.insa.whatodo.model.HourFilter;
 import fr.insa.whatodo.model.PlaceFilter;
 import fr.insa.whatodo.model.PriceFilter;
@@ -225,6 +230,9 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
                 }
 
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+
+                HomeActivity act=(HomeActivity)getActivity();
+                act.updateEventList(categoryFilter,tagFilter,placeFilter,distanceFilter,priceFilter,dateFilter,ageFilter,hourFilter);
             }
 
             @Override
@@ -250,9 +258,9 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
-        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
-            mDrawerLayout.openDrawer(mFragmentContainerView);
-        }
+//        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
+//            mDrawerLayout.openDrawer(mFragmentContainerView);
+//        }
 
         // Defer code dependent on restoration of previous instance state.
         mDrawerLayout.post(new Runnable() {
