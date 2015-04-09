@@ -427,8 +427,8 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                 Button firstHourButton=(Button)convertView.findViewById(R.id.firstHourText);
                 Button lastHourButton=(Button)convertView.findViewById(R.id.lastHourText);
                 HourFilter hf=fragment.getHourFilter();
-                firstHourButton.setText(hf.getBeginHours()+" : "+hf.getBeginMinutes());
-                lastHourButton.setText(hf.getEndHours()+" : "+hf.getEndMinutes());
+                firstHourButton.setText(String.format("%2d", hf.getBeginHours())+" : "+String.format("%2d", hf.getBeginMinutes()));
+                lastHourButton.setText(String.format("%2d", hf.getEndHours())+" : "+String.format("%2d",hf.getEndMinutes()));
                 break;
         }
         return convertView;

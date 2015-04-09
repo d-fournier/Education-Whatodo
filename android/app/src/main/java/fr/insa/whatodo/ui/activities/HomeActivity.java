@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -399,14 +401,51 @@ public class HomeActivity extends ActionBarActivity
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
         String dateMin=format.format(dateFilter.getDates()[0]);
         String dateMax=format.format(dateFilter.getDates()[1]);
+        String hourMin=String.format("%2d:%2d:00", hourFilter.getBeginHours(),hourFilter.getBeginMinutes());
+        String hourMax=String.format("%2d:%2d:00", hourFilter.getEndHours(),hourFilter.getEndMinutes());
+
+
+        //TODO : catégories, tags,  ma position
+        String filtersUrl="?distance="+distanceFilter.getValue()+"&min_date="+dateMin+"&max_date="+dateMax
+                +"&legal_age="+ageFilter.is18orMore()+"&min_hour="+hourMin+"&max_hour="+hourMax;
+        if(priceFilter.getValue()!=-1){
+            filtersUrl+="&min_price=" + priceFilter.getValue();
+        }
+
+        String place=placeFilter.getTown();
+
+        if(place.isEmpty()&& placeFilter.getLatitude()!=0 && placeFilter.getLongitude()!=0) //L'utilisateur a sélectionné "ma position"
+        {
+            if(placeFilter.isSendMyPosition()){
+                //TODO ma position
+            }else{
+                Geocoder gc=new Geocoder(this);
+
+                try {
+                    List<Address> addrList=gc.getFromLocation(placeFilter.getLatitude(),placeFilter.getLongitude(),1);
+                    if(addrList.size()>0){
+                        place=addrList.get(0).getLocality();
+                        filtersUrl+="&city="; // TODO pK ville
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }else if(!place.isEmpty()) //L'utilisateur a sélectionné une ville
+        {
+            filtersUrl+="&city="; // TODO pK ville
+        }
+
+
         try{
-            URL event_url = new URL(DOWNLOAD_EVENTS_URL+"?distance="+distanceFilter.getValue()+"&min_price="+priceFilter.getValue()+
-                    "&min_date="+dateMin+"&max_date="+dateMax+"&legal_age="+ageFilter.is18orMore());
+            URL event_url = new URL(DOWNLOAD_EVENTS_URL+filtersUrl);
             HttpURLConnection urlConnection = (HttpURLConnection) event_url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
             inputStreamEvents = urlConnection.getInputStream();
         }catch (Exception e){
+            e.printStackTrace();
             return;
         }
 
