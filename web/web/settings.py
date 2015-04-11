@@ -82,7 +82,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, "static"),
@@ -92,8 +92,12 @@ REST_FRAMEWORK = {
 	# Use Django's standard `django.contrib.auth` permissions,
 	# or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
-	'PAGE_SIZE' : 100
+	'PAGE_SIZE' : 100,
+	'DEFAULT_PARSER_CLASSES': (
+		'rest_framework.parsers.MultiPartParser',
+		'rest_framework.parsers.FormParser',
+		'rest_framework.parsers.JSONParser'
+	)
 }
 
-IMAGES_URL = STATIC_URL + 'images/'
- 
+IMAGES_URL = STATIC_URL + 'images'
