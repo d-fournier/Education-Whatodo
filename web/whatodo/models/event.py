@@ -12,7 +12,7 @@ class Event(models.Model):
 	name = models.CharField(max_length = 30)
 	description = models.CharField (max_length = 200)
 	url = models.URLField()
-	imageEvent = models.ImageField(upload_to = settings.IMAGES_URL, default='../../static/images/jeanDujardin.jpg')
+	imageEvent = models.ImageField(upload_to = settings.IMAGES_URL, default='/static/images/jeanDujardin.jpg')
 	#TODO: image or Video field, do we really require a model for that?
 	startTime = models.TimeField(auto_now = False, auto_now_add = False)
 	endTime = models.TimeField(auto_now = False, auto_now_add = False)
