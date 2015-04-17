@@ -544,10 +544,13 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
     }
 
     public void openFilters(){
+
         mDrawerLayout.openDrawer(Gravity.END);
+        mDrawerToggle.onDrawerOpened(getActivity().findViewById(R.id.filters_drawer));
     }
 
     public void closeFilters(){
         mDrawerLayout.closeDrawer(Gravity.END);
+        mDrawerToggle.onDrawerClosed(getActivity().findViewById(R.id.filters_drawer));
     }
 }

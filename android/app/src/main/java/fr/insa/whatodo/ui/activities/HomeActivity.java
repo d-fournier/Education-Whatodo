@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.model.AgeFilter;
@@ -395,9 +398,10 @@ public class HomeActivity extends ActionBarActivity
         }
     }
 
+
     public void updateEventList(CategoryFilter categoryFilter, TagFilter tagFilter, PlaceFilter placeFilter,
                                 DistanceFilter distanceFilter, PriceFilter priceFilter, DateFilter dateFilter,AgeFilter ageFilter, HourFilter hourFilter){
-        InputStream inputStreamEvents;
+
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
         String dateMin=format.format(dateFilter.getDates()[0]);
         String dateMax=format.format(dateFilter.getDates()[1]);
@@ -406,10 +410,10 @@ public class HomeActivity extends ActionBarActivity
 
 
         //TODO : catégories, tags,  ma position
-        String filtersUrl="?distance="+distanceFilter.getValue()+"&min_date="+dateMin+"&max_date="+dateMax
-                +"&legal_age="+ageFilter.is18orMore()+"&min_hour="+hourMin+"&max_hour="+hourMax;
+        String filtersUrl= DOWNLOAD_EVENTS_URL+"&distance="+distanceFilter.getValue()+"&min_date="+dateMin+"&max_date="+dateMax
+                +"&legal_age="+ageFilter.is18orMore(); //+"&min_hour="+hourMin+"&max_hour="+hourMax;
         if(priceFilter.getValue()!=-1){
-            filtersUrl+="&min_price=" + priceFilter.getValue();
+            filtersUrl+="&max_price=" + priceFilter.getValue();
         }
 
         String place=placeFilter.getTown();
@@ -425,7 +429,7 @@ public class HomeActivity extends ActionBarActivity
                     List<Address> addrList=gc.getFromLocation(placeFilter.getLatitude(),placeFilter.getLongitude(),1);
                     if(addrList.size()>0){
                         place=addrList.get(0).getLocality();
-                        filtersUrl+="&city="; // TODO pK ville
+//                        filtersUrl+="&city="; // TODO pK ville
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -437,21 +441,44 @@ public class HomeActivity extends ActionBarActivity
             filtersUrl+="&city="; // TODO pK ville
         }
 
+        AsyncTask<String,Integer,ArrayList<Event>> task=new AsyncTask<String, Integer, ArrayList<Event>>() {
+            @Override
+            protected ArrayList<Event> doInBackground(String...filtersUrl) {
+                Log.d("DEBUT", "debut doInBackground");
+                InputStream inputStreamEvents;
+                HttpURLConnection urlConnection=null;
+                ArrayList<Event> liste=null;
+                try{
+                    URL event_url = new URL(filtersUrl[0]);
+                    urlConnection = (HttpURLConnection) event_url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.connect();
+                    inputStreamEvents = urlConnection.getInputStream();
+                    JSonParser parser = new JSonParser();
+                    liste=parser.parseEvents(inputStreamEvents);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.d("ERREUR",e.getMessage());
+                    return null;
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                 }
 
-        try{
-            URL event_url = new URL(DOWNLOAD_EVENTS_URL+filtersUrl);
-            HttpURLConnection urlConnection = (HttpURLConnection) event_url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-            inputStreamEvents = urlConnection.getInputStream();
-        }catch (Exception e){
-            e.printStackTrace();
-            return;
-        }
+                return liste;
+            }
 
-        JSonParser parser = new JSonParser();
-        eventList = parser.parseEvents(inputStreamEvents);
-        eventListFragment.onListChanged(eventList);
+            protected void onPostExecute(ArrayList<Event> list){
+                eventList=list;
+                eventListFragment.onListChanged(eventList);
+            }
+        };
+
+            task.execute(filtersUrl);
+
+
+
     }
 
 }
