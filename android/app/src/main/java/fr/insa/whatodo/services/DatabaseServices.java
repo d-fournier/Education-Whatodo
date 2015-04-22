@@ -254,7 +254,7 @@ public class DatabaseServices {
 
         if (c.moveToFirst()) {
             do {
-                listNames.add(c.getString(0));
+                listNames.add(c.getString(0)+" "+c.getString(1));
             } while (c.moveToNext());
         }
         return listNames;

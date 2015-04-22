@@ -225,14 +225,12 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+                HomeActivity act=(HomeActivity)getActivity();
+                act.updateEventList(categoryFilter,tagFilter,placeFilter,distanceFilter,priceFilter,dateFilter,ageFilter,hourFilter);
                 if (!isAdded()) {
                     return;
                 }
-
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-
-                HomeActivity act=(HomeActivity)getActivity();
-                act.updateEventList(categoryFilter,tagFilter,placeFilter,distanceFilter,priceFilter,dateFilter,ageFilter,hourFilter);
             }
 
             @Override

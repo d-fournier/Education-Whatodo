@@ -1,5 +1,11 @@
 package fr.insa.whatodo.model;
 
+import android.location.Address;
+import android.location.Geocoder;
+
+import java.util.List;
+import java.util.Locale;
+
 /**
  * Created by Segolene on 13/03/2015.
  */
@@ -35,15 +41,11 @@ public class PlaceFilter  extends Filter {
     }
 
     public void setTown(String town){
-
-        place=town;
-        longitude=0;
-        latitude=0;
+        place=town.toUpperCase();
     }
 
     public void setLocation(double longitude, double latitude){
         this.longitude=longitude;
         this.latitude=latitude;
-        place="";
     }
 }

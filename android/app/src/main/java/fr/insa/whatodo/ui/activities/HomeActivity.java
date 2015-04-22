@@ -405,46 +405,32 @@ public class HomeActivity extends ActionBarActivity
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
         String dateMin=format.format(dateFilter.getDates()[0]);
         String dateMax=format.format(dateFilter.getDates()[1]);
-        String hourMin=String.format("%2d:%2d:00", hourFilter.getBeginHours(),hourFilter.getBeginMinutes());
-        String hourMax=String.format("%2d:%2d:00", hourFilter.getEndHours(),hourFilter.getEndMinutes());
+        String hourMin=String.format("%02d:%02d:00", hourFilter.getBeginHours(),hourFilter.getBeginMinutes());
+        String hourMax=String.format("%02d:%02d:00", hourFilter.getEndHours(),hourFilter.getEndMinutes());
 
 
         //TODO : catégories, tags,  ma position
         String filtersUrl= DOWNLOAD_EVENTS_URL+"&distance="+distanceFilter.getValue()+"&min_date="+dateMin+"&max_date="+dateMax
-                +"&legal_age="+ageFilter.is18orMore(); //+"&min_hour="+hourMin+"&max_hour="+hourMax;
+                +"&legal_age="+ageFilter.is18orMore()+"&min_hour="+hourMin+"&max_hour="+hourMax;
         if(priceFilter.getValue()!=-1){
             filtersUrl+="&max_price=" + priceFilter.getValue();
         }
 
-        String place=placeFilter.getTown();
 
-        if(place.isEmpty()&& placeFilter.getLatitude()!=0 && placeFilter.getLongitude()!=0) //L'utilisateur a sélectionné "ma position"
-        {
-            if(placeFilter.isSendMyPosition()){
-                //TODO ma position
-            }else{
-                Geocoder gc=new Geocoder(this);
-
-                try {
-                    List<Address> addrList=gc.getFromLocation(placeFilter.getLatitude(),placeFilter.getLongitude(),1);
-                    if(addrList.size()>0){
-                        place=addrList.get(0).getLocality();
-//                        filtersUrl+="&city="; // TODO pK ville
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }else if(!place.isEmpty()) //L'utilisateur a sélectionné une ville
-        {
-            filtersUrl+="&city="; // TODO pK ville
+        if(placeFilter.isSendMyPosition() && (placeFilter.getLatitude()!=0 || placeFilter.getLongitude()!=0) ){
+            // Envoi des coordonnées
+            // TODO : ajouter quand le côté serveur est fait
+           // filtersUrl+="&longitude="+placeFilter.getLongitude()+"&latitude="+placeFilter.getLatitude();
+        }else if(!placeFilter.getTown().isEmpty()){
+            // Envoi de la ville
+           // filtersUrl+="&city="+placeFilter.getTown(); // TODO pK ville
         }
+
 
         AsyncTask<String,Integer,ArrayList<Event>> task=new AsyncTask<String, Integer, ArrayList<Event>>() {
             @Override
             protected ArrayList<Event> doInBackground(String...filtersUrl) {
-                Log.d("DEBUT", "debut doInBackground");
+               // Log.d("DEBUT", "debut doInBackground"); -> permet de débugger, allez savoir pourquoi...
                 InputStream inputStreamEvents;
                 HttpURLConnection urlConnection=null;
                 ArrayList<Event> liste=null;
@@ -458,7 +444,6 @@ public class HomeActivity extends ActionBarActivity
                     liste=parser.parseEvents(inputStreamEvents);
                 }catch (Exception e){
                     e.printStackTrace();
-                    Log.d("ERREUR",e.getMessage());
                     return null;
                 } finally {
                     if (urlConnection != null) {
