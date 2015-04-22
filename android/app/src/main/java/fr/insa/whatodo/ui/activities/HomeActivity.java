@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -15,7 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,27 +23,24 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.model.AgeFilter;
+import fr.insa.whatodo.model.Category;
 import fr.insa.whatodo.model.CategoryFilter;
 import fr.insa.whatodo.model.DateFilter;
 import fr.insa.whatodo.model.DistanceFilter;
+import fr.insa.whatodo.model.Event;
 import fr.insa.whatodo.model.HourFilter;
 import fr.insa.whatodo.model.PlaceFilter;
 import fr.insa.whatodo.model.PriceFilter;
+import fr.insa.whatodo.model.Tag;
 import fr.insa.whatodo.model.TagFilter;
 import fr.insa.whatodo.model.User;
-import fr.insa.whatodo.model.Category;
-import fr.insa.whatodo.model.Event;
-import fr.insa.whatodo.model.Tag;
 import fr.insa.whatodo.services.DatabaseServices;
 import fr.insa.whatodo.ui.fragments.CustomMapFragment;
 import fr.insa.whatodo.ui.fragments.DownloadFragment;
@@ -247,15 +242,12 @@ public class HomeActivity extends ActionBarActivity
                 new GetEventsTask().execute(null, null, null);
                 break;
             case  (R.id.action_filters) :
-                if(mFiltersFragment.isDrawerOpen())
+                DrawerLayout drawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
+                if(drawerLayout.isDrawerOpen(Gravity.END))
                 {
-                    mFiltersFragment.closeFilters();
+                    drawerLayout.closeDrawer(Gravity.END);
                 }else{
-                    if(mNavigationDrawerFragment.isDrawerOpen())
-                    {
-                        mNavigationDrawerFragment.closeDrawer();
-                    }
-                    mFiltersFragment.openFilters();
+                    drawerLayout.openDrawer(Gravity.END);
                 }
                 break;
         }
@@ -399,8 +391,16 @@ public class HomeActivity extends ActionBarActivity
     }
 
 
-    public void updateEventList(CategoryFilter categoryFilter, TagFilter tagFilter, PlaceFilter placeFilter,
-                                DistanceFilter distanceFilter, PriceFilter priceFilter, DateFilter dateFilter,AgeFilter ageFilter, HourFilter hourFilter){
+    public void updateEventList(){
+
+        CategoryFilter categoryFilter=mFiltersFragment.getCategoryFilter();
+        TagFilter tagFilter=mFiltersFragment.getTagFilter();
+        PlaceFilter placeFilter=mFiltersFragment.getPlaceFilter();
+        DistanceFilter distanceFilter=mFiltersFragment.getDistanceFilter();
+        PriceFilter priceFilter=mFiltersFragment.getPriceFilter();
+        DateFilter dateFilter=mFiltersFragment.getDateFilter();
+        AgeFilter ageFilter=mFiltersFragment.getAgeFilter();
+        HourFilter hourFilter=mFiltersFragment.getHourFilter();
 
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
         String dateMin=format.format(dateFilter.getDates()[0]);
@@ -420,17 +420,16 @@ public class HomeActivity extends ActionBarActivity
         if(placeFilter.isSendMyPosition() && (placeFilter.getLatitude()!=0 || placeFilter.getLongitude()!=0) ){
             // Envoi des coordonnées
             // TODO : ajouter quand le côté serveur est fait
-           // filtersUrl+="&longitude="+placeFilter.getLongitude()+"&latitude="+placeFilter.getLatitude();
+            // filtersUrl+="&longitude="+placeFilter.getLongitude()+"&latitude="+placeFilter.getLatitude();
         }else if(!placeFilter.getTown().isEmpty()){
             // Envoi de la ville
-           // filtersUrl+="&city="+placeFilter.getTown(); // TODO pK ville
+            // filtersUrl+="&city="+placeFilter.getTown(); // TODO pK ville
         }
-
 
         AsyncTask<String,Integer,ArrayList<Event>> task=new AsyncTask<String, Integer, ArrayList<Event>>() {
             @Override
             protected ArrayList<Event> doInBackground(String...filtersUrl) {
-               // Log.d("DEBUT", "debut doInBackground"); -> permet de débugger, allez savoir pourquoi...
+                // Log.d("DEBUT", "debut doInBackground"); -> permet de débugger, allez savoir pourquoi...
                 InputStream inputStreamEvents;
                 HttpURLConnection urlConnection=null;
                 ArrayList<Event> liste=null;
@@ -449,7 +448,7 @@ public class HomeActivity extends ActionBarActivity
                     if (urlConnection != null) {
                         urlConnection.disconnect();
                     }
-                 }
+                }
 
                 return liste;
             }
@@ -460,7 +459,7 @@ public class HomeActivity extends ActionBarActivity
             }
         };
 
-            task.execute(filtersUrl);
+        task.execute(filtersUrl);
 
 
 
