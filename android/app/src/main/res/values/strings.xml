@@ -35,5 +35,9 @@
     <string name="age">Age</string>
     <string name="hours">Horaires</string>
     <string name="action_filters">Filtres</string>
+    <string name="max_date_before_min_date">La date de fin doit être après la date de début</string>
+    <string name="max_hour_before_min_hour">L\'heure de fin doit être après l\'heure de début</string>
+    <string name="location_issue">Impossible de localiser l\'appareil</string>
+    <string name="location_not_available">Service de localisation non disponible</string>
 
 </resources>

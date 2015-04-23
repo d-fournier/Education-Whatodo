@@ -7,6 +7,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,6 +27,7 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -305,16 +307,16 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                 myLocation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        try{
+                        LocationManager locationManager= (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
 
-                            LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+                        if(locationManager!=null){
                             AutoCompleteTextView placeTextView=(AutoCompleteTextView)activity.findViewById(R.id.PlaceTextField);
                             placeTextView.setText("Calcul...");
                             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
                                 @Override
                                 public void onLocationChanged(Location location) {
                                     if(location !=null)
-                                    fragment.getPlaceFilter().setLocation(location.getLongitude(),location.getLatitude());
+                                        fragment.getPlaceFilter().setLocation(location.getLongitude(),location.getLatitude());
                                     Geocoder gcd = new Geocoder(activity, Locale.getDefault());
                                     try {
                                         List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
@@ -332,7 +334,7 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                                             @Override
                                             public void run() {
                                                 AutoCompleteTextView placeTextView=(AutoCompleteTextView)activity.findViewById(R.id.PlaceTextField);
-                                                placeTextView.setText(fragment.getPlaceFilter().getTown().toUpperCase());
+                                                placeTextView.setText(fragment.getPlaceFilter().getTown());
                                             }
                                         });
 
@@ -342,28 +344,33 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
 
                                 @Override
                                 public void onStatusChanged(String provider, int status, Bundle extras) {
-
+                                    if(status != LocationProvider.AVAILABLE){
+                                        Toast.makeText(activity, activity.getResources().getString(R.string.location_not_available), Toast.LENGTH_SHORT).show();
+                                        activity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                AutoCompleteTextView placeTextView=(AutoCompleteTextView)activity.findViewById(R.id.PlaceTextField);
+                                                placeTextView.setText(fragment.getPlaceFilter().getTown());
+                                            }
+                                        });
+                                    }
                                 }
 
                                 @Override
-                                public void onProviderEnabled(String provider) {
-
-                                }
+                                public void onProviderEnabled(String provider) {}
 
                                 @Override
-                                public void onProviderDisabled(String provider) {
-
-                                }
+                                public void onProviderDisabled(String provider) {}
                             });
-
-                        }catch(Exception e){
-                            e.printStackTrace();
-                            //TODO : message d'erreur
+                        }else{ //locationManager==null
+                            Toast.makeText(activity, activity.getResources().getString(R.string.location_issue), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-                placeTextView.setText(fragment.getPlaceFilter().getTown());
-                break;
+
+            placeTextView.setText(fragment.getPlaceFilter().getTown());
+            break;
+
             case 3:
                 convertView=inflater.inflate(R.layout.fragment_distance_filter,null);
 

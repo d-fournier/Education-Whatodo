@@ -61,7 +61,7 @@ public class WhatodoDrawerToggle extends ActionBarDrawerToggle {
             mDrawerLayout.closeDrawer(Gravity.START);
         }
 
-        if (!mUserLearnedNavDrawer) {
+        if (!mUserLearnedNavDrawer && drawerView.getId()==R.id.navigation_drawer) {
             // The user manually opened the drawer; store this flag to prevent auto-showing
             // the navigation drawer automatically in the future.
             mUserLearnedNavDrawer = true;

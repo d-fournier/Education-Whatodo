@@ -23,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -311,19 +312,18 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
             GregorianCalendar gc=new GregorianCalendar(selectedYear,selectedMonth,selectedDay);
-            if(dateFilter.setDateMax(gc.getTime()))
+            if(!dateFilter.setDateMax(gc.getTime()))
             {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Button lastDateButton = (Button) getActivity().findViewById(R.id.lastDateText);
-                        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
-                        lastDateButton.setText(format.format(dateFilter.getDates()[1]));
-                    }
-                });
-            } else{
-            //TODO : message d'erreur
+                Toast.makeText(getActivity(), getResources().getString(R.string.max_date_before_min_date), Toast.LENGTH_SHORT).show();
             }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Button lastDateButton = (Button) getActivity().findViewById(R.id.lastDateText);
+                    SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+                    lastDateButton.setText(format.format(dateFilter.getDates()[1]));
+                }
+            });
         }
     };
 
@@ -344,17 +344,16 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
     private TimePickerDialog.OnTimeSetListener lastTimePickerListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            if(hourFilter.setEndHours(hourOfDay, minute)){
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Button lastHourButton=(Button)getActivity().findViewById(R.id.lastHourText);
-                        lastHourButton.setText(hourFilter.getEndHours()+" : "+hourFilter.getEndMinutes());
-                    }
-                });
-            }else{
-                //TODO : message d'erreur
+            if(!hourFilter.setEndHours(hourOfDay, minute)){
+                Toast.makeText(getActivity(), getResources().getString(R.string.max_hour_before_min_hour), Toast.LENGTH_SHORT).show();
             }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Button lastHourButton=(Button)getActivity().findViewById(R.id.lastHourText);
+                    lastHourButton.setText(hourFilter.getEndHours()+" : "+hourFilter.getEndMinutes());
+                }
+            });
         }
     };
 

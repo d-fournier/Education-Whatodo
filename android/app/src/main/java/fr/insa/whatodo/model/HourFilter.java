@@ -5,49 +5,56 @@ package fr.insa.whatodo.model;
  */
 public class HourFilter extends Filter {
 
-    protected int beginHours;
-    protected int beginMinutes;
-    protected int endHours;
-    protected int endMinutes;
+    protected int mBeginHours;
+    protected int mBeginMinutes;
+    protected int mEndHours;
+    protected int mEndMinutes;
 
     public HourFilter() {
         super(FilterType.AGE);
-        beginHours=0;
-        beginMinutes=0;
-        endHours=23;
-        endMinutes=59;
+        mBeginHours =0;
+        mBeginMinutes =0;
+        mEndHours =23;
+        mEndMinutes =59;
     }
 
 
     public int getBeginHours() {
-        return beginHours;
+        return mBeginHours;
     }
 
     public int getBeginMinutes() {
-        return beginMinutes;
+        return mBeginMinutes;
     }
 
     public int getEndHours() {
-        return endHours;
+        return mEndHours;
     }
 
     public int getEndMinutes() {
-        return endMinutes;
+        return mEndMinutes;
     }
 
     public void setBeginHours(int beginHours, int beginMinutes) {
 
-        this.beginHours = beginHours;
-        this.beginMinutes = beginMinutes;
+        mBeginHours = beginHours;
+        mBeginMinutes = beginMinutes;
+
+        if(mEndHours < mBeginHours || (mEndHours == mBeginHours && mEndMinutes < mBeginMinutes)){
+            mEndHours = mBeginHours;
+            mEndMinutes = mBeginMinutes;
+        }
     }
 
 
 
     public boolean setEndHours(int endHours, int endMinutes) {
-        if(endHours>beginHours || (endHours==beginHours && endMinutes >beginMinutes)){
-            this.endHours = endHours;
+        if(endHours> mBeginHours || (endHours== mBeginHours && endMinutes > mBeginMinutes)){
+            mEndHours = endHours;
             return true;
         }
+        mEndHours= mBeginHours;
+        mEndMinutes= mBeginMinutes;
         return false;
     }
 
