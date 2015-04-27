@@ -240,6 +240,7 @@ public class HomeActivity extends ActionBarActivity
                 break;
             case (R.id.action_refresh):
                 new GetEventsTask().execute(null, null, null);
+                updateEventList();
                 break;
             case  (R.id.action_filters) :
                 DrawerLayout drawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);

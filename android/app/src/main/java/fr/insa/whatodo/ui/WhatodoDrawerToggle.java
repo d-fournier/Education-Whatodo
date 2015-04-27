@@ -55,19 +55,26 @@ public class WhatodoDrawerToggle extends ActionBarDrawerToggle {
     public void onDrawerOpened(View drawerView) {
         super.onDrawerOpened(drawerView);
 
-        if(mDrawerLayout.isDrawerOpen(Gravity.END)){
-            mDrawerLayout.closeDrawer(Gravity.END);
-        }else if(mDrawerLayout.isDrawerOpen(Gravity.START)){
-            mDrawerLayout.closeDrawer(Gravity.START);
-        }
+        switch (drawerView.getId()){
+            case R.id.navigation_drawer :
+                if(mDrawerLayout.isDrawerOpen(Gravity.END)){
+                    mDrawerLayout.closeDrawer(Gravity.END);
+                }
+                if (!mUserLearnedNavDrawer) {
+                    // The user manually opened the drawer; store this flag to prevent auto-showing
+                    // the navigation drawer automatically in the future.
+                    mUserLearnedNavDrawer = true;
+                    SharedPreferences sp = PreferenceManager
+                            .getDefaultSharedPreferences(mActivity);
+                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
+                }
+                break;
 
-        if (!mUserLearnedNavDrawer && drawerView.getId()==R.id.navigation_drawer) {
-            // The user manually opened the drawer; store this flag to prevent auto-showing
-            // the navigation drawer automatically in the future.
-            mUserLearnedNavDrawer = true;
-            SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(mActivity);
-            sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
+            case R.id.filters_drawer :
+                if(mDrawerLayout.isDrawerOpen(Gravity.START)){
+                    mDrawerLayout.closeDrawer(Gravity.START);
+                }
+                break;
         }
 
         mActivity.supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()

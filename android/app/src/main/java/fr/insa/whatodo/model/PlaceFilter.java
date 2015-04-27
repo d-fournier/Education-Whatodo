@@ -41,6 +41,7 @@ public class PlaceFilter  extends Filter {
     }
 
     public void setTown(String town){
+        if(town.equalsIgnoreCase("Calcul...")) return; // Annonce de calcul lors de la localisation
         place=town.toUpperCase();
     }
 
