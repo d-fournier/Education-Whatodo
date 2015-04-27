@@ -155,7 +155,7 @@ public class DatabaseServices {
             }
         }
 
-        db.execSQL("INSERT INTO City SELECT city_db.whatodo_city.name, city_db.whatodo_city.ZIPcode FROM city_db.whatodo_city");
+        db.execSQL("INSERT INTO City SELECT city_db.whatodo_city.name, city_db.whatodo_city.ZIPcode, city_db.whatodo_city.id FROM city_db.whatodo_city");
 
     }
 
@@ -217,6 +217,28 @@ public class DatabaseServices {
             values.put(EventDatabaseContract.EventCategoryTable.COLUMN_NAME_ID_CATEGORY, c.getId());
             db.insert(EventDatabaseContract.EventCategoryTable.TABLE_NAME, null, values);
         }
+    }
+
+    public static String getCityId(String cityName, String postCode,SQLiteDatabase db) {
+        String query = "SELECT * FROM City WHERE code = ?";
+        Cursor c;
+       if(postCode!=null && !postCode.isEmpty()){
+           c= db.rawQuery(query, new String[] {postCode});
+       }else{
+           c= db.rawQuery(query, null);
+       }
+
+       String id=null;
+        if (c.moveToFirst()) {
+            do {
+                if(c.getString(0).equalsIgnoreCase(cityName)){
+                    id=c.getString(2);
+                    return id;
+                }
+
+            } while (c.moveToNext());
+        }
+        return id;
     }
 
     public static List<Event> getAllEvents(SQLiteDatabase db) {

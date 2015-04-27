@@ -338,7 +338,7 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                                 @Override
                                 public void onLocationChanged(Location location) {
                                     if (location != null) {
-                                        handleTimeOut.removeCallbacksAndMessages(null);//.removeCallbacks(runTimeOut);
+                                        handleTimeOut.removeCallbacksAndMessages(null);
                                         fragment.getPlaceFilter().setLocation(location.getLongitude(), location.getLatitude());
                                         Geocoder gcd = new Geocoder(activity, Locale.getDefault());
                                         try {
@@ -359,7 +359,7 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                                             activity.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    Toast.makeText(activity, activity.getResources().getString(R.string.location_issue), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(activity, R.string.location_issue, Toast.LENGTH_SHORT).show();
                                                     AutoCompleteTextView placeTextView = (AutoCompleteTextView) activity.findViewById(R.id.PlaceTextField);
                                                     placeTextView.setText(fragment.getPlaceFilter().getTown());
                                                 }
@@ -371,7 +371,7 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                                 @Override
                                 public void onStatusChanged(String provider, int status, Bundle extras) {
                                     if(status != LocationProvider.AVAILABLE){
-                                        Toast.makeText(activity, activity.getResources().getString(R.string.location_not_available), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity, R.string.location_not_available, Toast.LENGTH_SHORT).show();
                                         activity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
