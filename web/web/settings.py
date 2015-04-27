@@ -38,6 +38,7 @@ INSTALLED_APPS = (
 	'django.contrib.staticfiles',
 	'rest_framework',
 	'whatodo',
+	'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -48,12 +49,17 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 )
 
 ROOT_URLCONF = 'web.urls'
 
 WSGI_APPLICATION = 'web.wsgi.application'
 
+CORS_ORIGIN_WHITELIST = (
+        'dfournier.ovh'
+    )
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases

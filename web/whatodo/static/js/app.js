@@ -4,10 +4,11 @@
 //   \ V / | |  __/\ V  V /
 //    \_/  |_|\___| \_/\_/
 Mustache.tags = ['[[', ']]'];
+
 var showEvents = function(events) {
   var grid = $('#grid');
   var eventTemplate = $('#eventTemplate').html();
-  
+
   var items = events.map(function(e) {
     return Mustache.render(eventTemplate, e);
   });
@@ -78,9 +79,9 @@ var getEndpoint = function(endpoint) {
   };
 };
 
-//var getEvents = getEndpoint('/event/');
+var getEvents = getEndpoint('/event/');
 // Mocked while CORS are not available
-var getEvents = function() {
+/*var getEvents = function() {
   var results = {
     "count": 3,
     "next": null,
@@ -194,6 +195,7 @@ var getEvents = function() {
     }
   };
 };
+*/
 var getCategories = getEndpoint('/category/');
 var getTags = getEndpoint('/tag/');
 var getCities = getEndpoint('/city/');
