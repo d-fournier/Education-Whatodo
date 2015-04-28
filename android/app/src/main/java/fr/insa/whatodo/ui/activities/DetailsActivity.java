@@ -1,11 +1,18 @@
 package fr.insa.whatodo.ui.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.transition.TransitionInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.text.ParseException;
 
@@ -19,9 +26,19 @@ import fr.insa.whatodo.model.Tag;
  */
 public class DetailsActivity extends ActionBarActivity {
 
+    ImageLoader imageLoader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        imageLoader = ImageLoader.getInstance();
+
+        if(Build.VERSION.SDK_INT >= 21)
+        {
+            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.transition_home));
+        }
+
         setContentView(R.layout.event_details);
         Intent intent = getIntent();
         Event event = (Event) intent.getSerializableExtra("event");
@@ -41,6 +58,7 @@ public class DetailsActivity extends ActionBarActivity {
         TextView tags = (TextView) findViewById(R.id.tags_details);
 
         //TODO image avec ImageLoader
+        imageLoader.displayImage("http://www.sosiphone.com/blogiphone/wp-content/uploads//2011/02/Pac-Man-banniere.jpg", image, null, null);
         title.setText(event.getName());
         try {
             date.setText("Date : " + event.getDateAsString());

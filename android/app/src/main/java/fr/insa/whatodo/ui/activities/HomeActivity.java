@@ -7,12 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,8 +87,13 @@ public class HomeActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
 
+        if(Build.VERSION.SDK_INT >= 21)
+        {
+            getWindow().setSharedElementExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.transition_home));
+        }
+
+        setContentView(R.layout.activity_home);
 
         mFiltersFragment = (FiltersFragment)
                 getSupportFragmentManager().findFragmentById(R.id.filters_drawer);
@@ -189,7 +196,7 @@ public class HomeActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen() && !mFiltersFragment.isDrawerOpen()) {
+        if (!mNavigationDrawerFragment.isDrawerOpen() && !mFiltersFragment.isDrawerOpen() && !profileFragment.isVisible()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -208,9 +215,6 @@ public class HomeActivity extends ActionBarActivity
         int id = item.getItemId();
 
         switch (id) {
-            case (R.id.action_settings):
-                //TODO Il faut mettre les settings ici !
-                break;
             case (R.id.action_earth):
                 // update the main content by replacing fragments
                 ConnectivityManager connMgr = (ConnectivityManager)

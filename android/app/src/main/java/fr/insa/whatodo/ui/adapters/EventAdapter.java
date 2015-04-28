@@ -1,15 +1,19 @@
 package fr.insa.whatodo.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.text.ParseException;
 import java.util.List;
@@ -27,13 +31,14 @@ public class EventAdapter<T> extends ArrayAdapter {
     public EventAdapter(Context context, int resource, List<T> objects) {
         super(context, resource, objects);
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        if(!imageLoader.isInited())
+        {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-
         // Get the data item for this position
         Event event = (Event) getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
@@ -41,25 +46,48 @@ public class EventAdapter<T> extends ArrayAdapter {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.event_list_item, parent, false);
         }
         // Lookup view for data population
-        TextView textNoImage = (TextView) convertView.findViewById(R.id.event_list_item_no_image);
-        ImageView imageItem = (ImageView) convertView.findViewById(R.id.event_list_item_picture);
+        final TextView  textNoImage = (TextView) convertView.findViewById(R.id.event_list_item_no_image);
+        final ImageView imageItem = (ImageView) convertView.findViewById(R.id.event_list_item_picture);
+        final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.download_progress_bar);
         TextView textItemTitle = (TextView) convertView.findViewById(R.id.event_list_item_title);
         TextView textItemDate = (TextView) convertView.findViewById(R.id.event_list_item_date);
         TextView textItemPrice = (TextView) convertView.findViewById(R.id.event_list_item_price);
         TextView textItemPlace = (TextView) convertView.findViewById(R.id.event_list_item_place);
         TextView textItemSummary = (TextView) convertView.findViewById(R.id.event_list_item_summary);
 
-        // Populate the data into the template view using the data object
-       /*  if(event.getImage() == null) {
+        if (event.getImageEvent() == null) {
             imageItem.setVisibility(View.GONE);
-        }else{
-            textNoImage.setVisibility(View.GONE);
-        }
-            imageItem.setImageDrawable(event.getImage());
-            imageItem.setVisibility(View.GONE);// TODO A MODIFIER AVEC IMAGELOADER !*/
+            textNoImage.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        } else {
+            imageLoader.displayImage(event.getImageEvent(), imageItem, null, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                    imageItem.setVisibility(View.GONE);
+                    textNoImage.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
+                }
 
-        imageItem.setVisibility(View.GONE);
-        textNoImage.setVisibility(View.VISIBLE);// TODO A MODIFIER AVEC IMAGELOADER !
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                    imageItem.setVisibility(View.GONE);
+                    textNoImage.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    imageItem.setVisibility(View.VISIBLE);
+                    textNoImage.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onLoadingCancelled(String imageUri, View view) {
+
+                }
+            });
+        }
         textItemTitle.setText(event.getName());
         try {
             textItemDate.setText(event.getDateAsString());

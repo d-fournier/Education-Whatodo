@@ -90,7 +90,7 @@ public class DatabaseServices {
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_ADDRESS, e.getAddress());
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_CITY_CODE, e.getCity().getCode());
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_CITY_NAME, e.getCity().getName());
-            values.put(EventDatabaseContract.EventTable.COLUMN_NAME_IMAGE_URL, e.getImageURL());
+            values.put(EventDatabaseContract.EventTable.COLUMN_NAME_IMAGE_URL, e.getImageEvent());
             db.insert(EventDatabaseContract.EventTable.TABLE_NAME, null, values);
 
             putCategoryAssociationInDatabase(e, db);
