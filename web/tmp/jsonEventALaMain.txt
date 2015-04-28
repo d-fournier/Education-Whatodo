@@ -1,0 +1,1 @@
+{"id":1,"name":"24H de l'INSA","description":"Concert trop cool !","url":"https://www.24heures.org","startTime":"18:00:00","endTime":"03:00:00","startDate":"2015-05-22","endDate":"2015-05-24","price":"15.00","min_age":0,"address":"11 Avenue Albert Einstein","city":"1","categories":"1","tags":"1"}

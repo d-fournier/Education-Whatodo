@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:columnCount="2" android:rowCount="2" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="De : "
+        android:id="@+id/textDe"
+        android:layout_marginLeft="5dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/firstHourText"
+        android:layout_marginRight="40dp"
+        android:onClick="onHourButtonClicked"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="A : "
+        android:id="@+id/textA"
+        android:layout_marginLeft="5dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lastHourText"
+        android:onClick="onHourButtonClicked"
+        android:layout_marginRight="40dp"/>
+
+</GridLayout>

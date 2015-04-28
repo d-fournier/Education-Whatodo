@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_margin="5dp">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/MaxPrice"
+        android:hint="Prix maximum"
+        android:textColorHint="@color/wallet_hint_foreground_holo_dark"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:lines="1"
+        />
+</FrameLayout>

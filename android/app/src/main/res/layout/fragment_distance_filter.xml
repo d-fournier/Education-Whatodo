@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/radioGroupDistance">
+        <RadioButton android:id="@+id/moinsDe5km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Moins de 5 km"/>
+        <RadioButton android:id="@+id/moinsDe30km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Moins de 30 km" />
+        <RadioButton android:id="@+id/moinsDe50km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Moins de 50 km" />
+    </RadioGroup>
+
+</FrameLayout>

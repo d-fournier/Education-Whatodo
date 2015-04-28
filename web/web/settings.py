@@ -40,6 +40,7 @@ INSTALLED_APPS = (
 	'rest_framework.authtoken',
 	'djoser',
 	'whatodo',
+	'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -50,12 +51,17 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 )
 
 ROOT_URLCONF = 'web.urls'
 
 WSGI_APPLICATION = 'web.wsgi.application'
 
+CORS_ORIGIN_WHITELIST = (
+        'dfournier.ovh'
+    )
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -84,7 +90,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, "static"),
@@ -97,8 +103,15 @@ REST_FRAMEWORK = {
 		'rest_framework.authentication.TokenAuthentication',
 	),
 	'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
-	'PAGE_SIZE' : 10
-	
+	'PAGE_SIZE' : 100,
+	'DEFAULT_PARSER_CLASSES': (
+		'rest_framework.parsers.MultiPartParser',
+		'rest_framework.parsers.FormParser',
+		'rest_framework.parsers.JSONParser'
+	),
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
 }
 
 AUTH_USER_MODEL = 'whatodo.WhatodoUser'
+
+IMAGES_URL = STATIC_URL + 'images'
