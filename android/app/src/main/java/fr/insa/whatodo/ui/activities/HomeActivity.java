@@ -410,7 +410,7 @@ public class HomeActivity extends ActionBarActivity
         String hourMax=String.format("%02d:%02d:00", hourFilter.getEndHours(),hourFilter.getEndMinutes());
 
 
-        //TODO : catégories, tags,  ma position
+        //TODO : catégories, tags
         String filtersUrl= DOWNLOAD_EVENTS_URL+"&distance="+distanceFilter.getValue()+"&min_date="+dateMin+"&max_date="+dateMax
                 +"&legal_age="+ageFilter.is18orMore()+"&min_hour="+hourMin+"&max_hour="+hourMax;
         if(priceFilter.getValue()!=-1){
@@ -420,7 +420,7 @@ public class HomeActivity extends ActionBarActivity
 
         if(placeFilter.isSendMyPosition() && (placeFilter.getLatitude()!=0 || placeFilter.getLongitude()!=0) ){
             // Envoi des coordonnées
-            // TODO : ajouter quand le côté serveur est fait
+            // TODO : envoi position
             // filtersUrl+="&longitude="+placeFilter.getLongitude()+"&latitude="+placeFilter.getLatitude();
         }else if(!placeFilter.getTown().isEmpty()){
             // Envoi de la ville
