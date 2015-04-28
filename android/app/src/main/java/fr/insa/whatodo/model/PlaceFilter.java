@@ -1,9 +1,5 @@
 package fr.insa.whatodo.model;
 
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
-
 /**
  * Created by Segolene on 13/03/2015.
  */

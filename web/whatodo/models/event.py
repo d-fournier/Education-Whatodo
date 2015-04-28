@@ -24,6 +24,9 @@ class Event(models.Model):
 
 	address = models.CharField (max_length = 500)
 	city = models.ForeignKey(City)
+	latitude = models.DecimalField(max_digits=10, decimal_places=7)
+	longitude = models.DecimalField(max_digits=10, decimal_places=7)
+	
 	categories = models.ManyToManyField(Category)
 	#organizer = models.ForeignKey(User) 
 	tags = models.ManyToManyField(Tag)
