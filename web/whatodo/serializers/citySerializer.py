@@ -5,4 +5,4 @@ from whatodo.models.city import City
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
-        fields = ('name', 'ZIPcode',)
+        fields = ('name', 'ZIPcode','latitude','longitude',)
