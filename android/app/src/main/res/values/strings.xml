@@ -2,15 +2,13 @@
 <resources>
 
     <string name="app_name">Whatodo</string>
-    <string name="title_section1">Section A1</string>
-    <string name="title_section2">Section B1</string>
-    <string name="title_section3">Section C1</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
-    <string name="filters_drawer_close">Fermer les filtres</string>
-    <string name="filters_open">Ouvrir les filtres</string>
     <string name="profile_view_places_header">Lieux favoris</string>
     <string name="profile_view_interests_header">Centres d\'intérêt</string>
     <string name="profile_view_your_events_header">Vos évènements</string>
@@ -26,6 +24,7 @@
     <string name="parse">Traitement des événements</string>
     <string name="download_failed_txt">Aucun événement disponible</string>
     <string name="download_failed_btn">Réessayer</string>
+    <string name="event_details_transition">details_transition</string>
     <string name="categories">Catégories</string>
     <string name="tags">Tags</string>
     <string name="place">Lieu</string>
@@ -39,5 +38,6 @@
     <string name="max_hour_before_min_hour">L\'heure de fin doit être après l\'heure de début</string>
     <string name="location_issue">Difficultés pour localiser l\'appareil</string>
     <string name="location_not_available">Service de localisation non disponible</string>
-
+    <string name="filters_drawer_close">Fermer les filtres</string>
+    <string name="filters_open">Ouvrir les filtres</string>
 </resources>
