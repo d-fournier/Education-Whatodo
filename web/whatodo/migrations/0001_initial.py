@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.conf import settings
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
@@ -11,10 +13,27 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='WhatodoUser',
+            fields=[
+                ('password', models.CharField(max_length=128, verbose_name='password')),
+                ('last_login', models.DateTimeField(verbose_name='last login', default=django.utils.timezone.now)),
+                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('email', models.EmailField(unique=True, max_length=254)),
+                ('username', models.CharField(unique=True, max_length=30)),
+                ('is_admin', models.BooleanField(help_text='Designates whether the user can log into this admin site.', default=False)),
+                ('is_active', models.BooleanField(help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', default=True)),
+                ('date_joined', models.DateTimeField(default=django.utils.timezone.now)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='Category',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True)),
+                ('name', models.CharField(unique=True, max_length=255)),
             ],
             options={
             },
@@ -26,6 +45,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=50)),
                 ('ZIPcode', models.CharField(max_length=10)),
+                ('latitude', models.DecimalField(max_digits=10, decimal_places=7)),
+                ('longitude', models.DecimalField(max_digits=10, decimal_places=7)),
             ],
             options={
             },
@@ -34,7 +55,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Comment',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
             ],
             options={
             },
@@ -47,6 +68,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=30)),
                 ('description', models.CharField(max_length=200)),
                 ('url', models.URLField()),
+                ('imageEvent', models.ImageField(upload_to='static/images', default='/static/images/jeanDujardin.jpg')),
                 ('startTime', models.TimeField()),
                 ('endTime', models.TimeField()),
                 ('startDate', models.DateField()),
@@ -54,6 +76,8 @@ class Migration(migrations.Migration):
                 ('price', models.DecimalField(max_digits=5, decimal_places=2)),
                 ('min_age', models.IntegerField()),
                 ('address', models.CharField(max_length=500)),
+                ('latitude', models.DecimalField(max_digits=10, decimal_places=7)),
+                ('longitude', models.DecimalField(max_digits=10, decimal_places=7)),
                 ('categories', models.ManyToManyField(to='whatodo.Category')),
                 ('city', models.ForeignKey(to='whatodo.City')),
             ],
@@ -65,21 +89,7 @@ class Migration(migrations.Migration):
             name='Tag',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True)),
-            ],
-            options={
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='User',
-            fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=30)),
-                ('email', models.EmailField(max_length=254)),
-                ('categories', models.ManyToManyField(to='whatodo.Category')),
-                ('cities', models.ManyToManyField(to='whatodo.City')),
-                ('events', models.ManyToManyField(to='whatodo.Event')),
+                ('name', models.CharField(unique=True, max_length=255)),
             ],
             options={
             },
@@ -100,7 +110,25 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='comment',
             name='user',
-            field=models.ForeignKey(to='whatodo.User'),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='whatodouser',
+            name='categories',
+            field=models.ManyToManyField(to='whatodo.Category'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='whatodouser',
+            name='cities',
+            field=models.ManyToManyField(to='whatodo.City'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='whatodouser',
+            name='events',
+            field=models.ManyToManyField(to='whatodo.Event'),
             preserve_default=True,
         ),
     ]
