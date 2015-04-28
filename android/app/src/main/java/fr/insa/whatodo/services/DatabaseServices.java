@@ -1,9 +1,15 @@
 package fr.insa.whatodo.services;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +45,27 @@ public class DatabaseServices {
                     EventDatabaseContract.EventTable.COLUMN_NAME_CITY_NAME + TEXT_TYPE + COMMA_SEP +
                     EventDatabaseContract.EventTable.COLUMN_NAME_IMAGE_URL + TEXT_TYPE +
                     " )";
+    private static final String SQL_CREATE_ENTRIES_TAG =
+            "CREATE TABLE " + EventDatabaseContract.TagTable.TABLE_NAME + " (" +
+                    EventDatabaseContract.TagTable.COLUMN_NAME_ID + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.TagTable.COLUMN_NAME_NAME + TEXT_TYPE +
+                    " )";
+    private static final String SQL_CREATE_ENTRIES_CATEGORY =
+            "CREATE TABLE " + EventDatabaseContract.CategoryTable.TABLE_NAME + " (" +
+                    EventDatabaseContract.CategoryTable.COLUMN_NAME_ID + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.CategoryTable.COLUMN_NAME_NAME + TEXT_TYPE +
+                    " )";
+
+    private static final String SQL_CREATE_ENTRIES_EVENT_CATEGORY =
+            "CREATE TABLE " + EventDatabaseContract.EventCategoryTable.TABLE_NAME + " (" +
+                    EventDatabaseContract.EventCategoryTable.COLUMN_NAME_ID_EVENT + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.EventCategoryTable.COLUMN_NAME_ID_CATEGORY + TEXT_TYPE +
+                    " )";
+    private static final String SQL_CREATE_ENTRIES_EVENT_TAG =
+            "CREATE TABLE " + EventDatabaseContract.EventTagTable.TABLE_NAME + " (" +
+                    EventDatabaseContract.EventTagTable.COLUMN_NAME_ID_EVENT + TEXT_TYPE + COMMA_SEP +
+                    EventDatabaseContract.EventTagTable.COLUMN_NAME_ID_TAG + TEXT_TYPE +
+                    " )";
 
     private static SimpleDateFormat df_date = new SimpleDateFormat("yyyy-MM-dd");
     private static SimpleDateFormat df_time = new SimpleDateFormat("HH:mm:ss");
@@ -48,7 +75,7 @@ public class DatabaseServices {
             ContentValues values = new ContentValues();
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_ID, e.getId());
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_NAME, e.getName());
-            values.put(EventDatabaseContract.EventTable.COLUMN_NAME_SUMMARY, e.getSummary());
+            values.put(EventDatabaseContract.EventTable.COLUMN_NAME_SUMMARY, e.getDescription());
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_URL, e.getUrl());
             try {
                 values.put(EventDatabaseContract.EventTable.COLUMN_NAME_START_TIME, df_time.format(e.getStartTime()));
@@ -65,26 +92,131 @@ public class DatabaseServices {
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_CITY_NAME, e.getCity().getName());
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_IMAGE_URL, e.getImageURL());
             db.insert(EventDatabaseContract.EventTable.TABLE_NAME, null, values);
+
+            putCategoryAssociationInDatabase(e, db);
+            putTagAssociationInDatabase(e, db);
         }
     }
 
-    public static void putCategoryInDatabase(Category c, SQLiteDatabase db) {
-        ContentValues values = new ContentValues();
-        values.put(EventDatabaseContract.CategoryTable.COLUMN_NAME_ID, c.getId());
-        values.put(EventDatabaseContract.CategoryTable.COLUMN_NAME_NAME, c.getName());
-        db.insert(EventDatabaseContract.CategoryTable.TABLE_NAME, null, values);
+    public static void putAllCategoriesInDatabase(List<Category> list, SQLiteDatabase db) {
+        for (Category c : list) {
+            ContentValues values = new ContentValues();
+            values.put(EventDatabaseContract.CategoryTable.COLUMN_NAME_ID, c.getId());
+            values.put(EventDatabaseContract.CategoryTable.COLUMN_NAME_NAME, c.getName());
+            db.insert(EventDatabaseContract.CategoryTable.TABLE_NAME, null, values);
+        }
     }
 
-    public static void putTagInDatabase(Tag t, SQLiteDatabase db) {
+    public static void putAllCitiesInDatabase(Context ctx, SQLiteDatabase db) {
+        //Open your local db as the input stream
+        InputStream myInput = null;
+        try {
+            myInput = ctx.getAssets().open("cities.db");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Path to the just created empty db
+        String outFileName = "/data/data/fr.insa.whatodo/databases/" + "cities.db";
+
+        //Open the empty db as the output stream
+        OutputStream myOutput = null;
+        try {
+            myOutput = new FileOutputStream(outFileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        //transfer bytes from the inputfile to the outputfile
+        byte[] buffer = new byte[1024];
+        int length;
+        try {
+            while ((length = myInput.read(buffer))>0){
+                myOutput.write(buffer, 0, length);
+            }
+            //Close the streams
+            myOutput.flush();
+            myOutput.close();
+            myInput.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+        db.execSQL("ATTACH DATABASE ? AS city_db",new String[]{outFileName});
+
+        Cursor c1 = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+
+        if (c1.moveToFirst()) {
+            while ( !c1.isAfterLast() ) {
+                System.out.println(c1.getString(0));
+                c1.moveToNext();
+            }
+        }
+
+        db.execSQL("INSERT INTO City SELECT city_db.whatodo_city.name, city_db.whatodo_city.ZIPcode FROM city_db.whatodo_city");
 
     }
 
-    public static void putTagAssociationInDatabase(Tag t, Event e, SQLiteDatabase db) {
 
+    public static void putAllTagsInDatabase(List<Tag> list, SQLiteDatabase db) {
+        for (Tag t : list) {
+            ContentValues values = new ContentValues();
+            values.put(EventDatabaseContract.TagTable.COLUMN_NAME_ID, t.getId());
+            values.put(EventDatabaseContract.TagTable.COLUMN_NAME_NAME, t.getName());
+            db.insert(EventDatabaseContract.TagTable.TABLE_NAME, null, values);
+        }
     }
 
-    public static void putCategoryAssociationInDatabase(Category t, Event e, SQLiteDatabase db) {
+    public static void putTagAssociationInDatabase(Event e, SQLiteDatabase db) {
+        for (Tag t : e.getTags()) {
+            ContentValues values = new ContentValues();
+            values.put(EventDatabaseContract.EventTagTable.COLUMN_NAME_ID_EVENT, e.getId());
+            values.put(EventDatabaseContract.EventTagTable.COLUMN_NAME_ID_TAG, t.getId());
+            db.insert(EventDatabaseContract.EventTagTable.TABLE_NAME, null, values);
+        }
+    }
 
+    public static List<Tag> findTagsByEvent(int id, SQLiteDatabase db) {
+        List<Tag> listT = new ArrayList<>();
+        String query = "SELECT Tag."+EventDatabaseContract.TagTable.COLUMN_NAME_ID+", Tag."+EventDatabaseContract.TagTable.COLUMN_NAME_NAME+" "+
+                "FROM Tag, " +
+                "(SELECT * FROM EventTag WHERE EventTag."+EventDatabaseContract.EventTagTable.COLUMN_NAME_ID_EVENT+" = "+id+") AS Tab " +
+                "WHERE Tag."+EventDatabaseContract.TagTable.COLUMN_NAME_ID+" = "+"Tab."+EventDatabaseContract.EventTagTable.COLUMN_NAME_ID_TAG;
+
+        Cursor c = db.rawQuery(query, null);
+        if (c.moveToFirst()) {
+            do {
+                listT.add(new Tag(c.getInt(0), c.getString(1)));
+            } while (c.moveToNext());
+        }
+        return listT;
+    }
+
+    public static List<Category> findCategoriesByEvent(int id, SQLiteDatabase db) {
+        List<Category> listC = new ArrayList<>();
+        String query = "SELECT Category."+EventDatabaseContract.CategoryTable.COLUMN_NAME_ID+", Category."+EventDatabaseContract.CategoryTable.COLUMN_NAME_NAME+" "+
+                "FROM Category, " +
+                    "(SELECT * FROM EventCategory WHERE EventCategory."+EventDatabaseContract.EventCategoryTable.COLUMN_NAME_ID_EVENT+" = "+id+") AS Tab " +
+                "WHERE Category."+EventDatabaseContract.CategoryTable.COLUMN_NAME_ID+" = "+"Tab."+EventDatabaseContract.EventCategoryTable.COLUMN_NAME_ID_CATEGORY;
+
+      Cursor c = db.rawQuery(query, null);
+        if (c.moveToFirst()) {
+            do {
+                listC.add(new Category(c.getInt(0), c.getString(1)));
+            } while (c.moveToNext());
+        }
+        return listC;
+    }
+
+    public static void putCategoryAssociationInDatabase(Event e, SQLiteDatabase db) {
+        for (Category c : e.getCategories()) {
+            ContentValues values = new ContentValues();
+            values.put(EventDatabaseContract.EventCategoryTable.COLUMN_NAME_ID_EVENT, e.getId());
+            values.put(EventDatabaseContract.EventCategoryTable.COLUMN_NAME_ID_CATEGORY, c.getId());
+            db.insert(EventDatabaseContract.EventCategoryTable.TABLE_NAME, null, values);
+        }
     }
 
     public static List<Event> getAllEvents(SQLiteDatabase db) {
@@ -96,14 +228,14 @@ public class DatabaseServices {
 
         Cursor c = db.rawQuery(query, null);
 
-        //TODO récuperer toutes les references aux catégories et tags et changer les null dans le constructeur
-
         Event e = null;
         if (c.moveToFirst()) {
             do {
                 try {
+                    listCategories = findCategoriesByEvent(c.getInt(0), db);
+                    listTags = findTagsByEvent(c.getInt(0), db);
                     e = new Event(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6),
-                            c.getString(7), c.getString(8), c.getInt(9), c.getString(10), new City(c.getString(11), c.getString(12)), null, null, c.getString(13));
+                            c.getString(7), c.getString(8), c.getInt(9), c.getString(10), new City(c.getString(11), c.getString(12)), listTags, listCategories, c.getString(13));
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
@@ -115,11 +247,54 @@ public class DatabaseServices {
         return listEvents;
     }
 
-    public static void updateEventTable(List<Event> list, SQLiteDatabase db)
-    {
+    public static List<String> getAllCityNames(SQLiteDatabase db) {
+        String query = "SELECT * FROM City";
+        List<String> listNames = new ArrayList<>();
+        Cursor c = db.rawQuery(query, null);
+
+        if (c.moveToFirst()) {
+            do {
+                listNames.add(c.getString(0));
+            } while (c.moveToNext());
+        }
+        return listNames;
+    }
+
+    public static List<String> getAllTagsNames(SQLiteDatabase db) {
+        String query = "SELECT * FROM " + EventDatabaseContract.TagTable.TABLE_NAME;
+        List<String> listNames = new ArrayList<>();
+        Cursor c = db.rawQuery(query, null);
+
+        if (c.moveToFirst()) {
+            do {
+                listNames.add(c.getString(1));
+            } while (c.moveToNext());
+        }
+        return listNames;
+    }
+
+    public static void updateEventTable(List<Event> list, SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + EventDatabaseContract.EventTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EventDatabaseContract.EventCategoryTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EventDatabaseContract.EventTagTable.TABLE_NAME);
         db.execSQL(SQL_CREATE_ENTRIES_EVENT);
+        db.execSQL(SQL_CREATE_ENTRIES_EVENT_CATEGORY);
+        db.execSQL(SQL_CREATE_ENTRIES_EVENT_TAG);
         putAllEventsInDatabase(list, db);
     }
+
+    public static void updateTagTable(List<Tag> list, SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + EventDatabaseContract.TagTable.TABLE_NAME);
+        db.execSQL(SQL_CREATE_ENTRIES_TAG);
+        putAllTagsInDatabase(list, db);
+    }
+
+    public static void updateCategoryTable(List<Category> list, SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + EventDatabaseContract.CategoryTable.TABLE_NAME);
+        db.execSQL(SQL_CREATE_ENTRIES_CATEGORY);
+        putAllCategoriesInDatabase(list, db);
+    }
+
+
 
 }

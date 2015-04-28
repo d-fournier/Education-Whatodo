@@ -1,20 +1,14 @@
 package fr.insa.whatodo.ui.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.Image;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseExpandableListAdapter;
@@ -24,28 +18,21 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.ui.fragments.FiltersFragment;
-import fr.insa.whatodo.model.AgeFilter;
 import fr.insa.whatodo.model.CategoryFilter;
 import fr.insa.whatodo.model.DateFilter;
-import fr.insa.whatodo.model.DistanceFilter;
 import fr.insa.whatodo.model.Filter;
 import fr.insa.whatodo.model.HourFilter;
-import fr.insa.whatodo.model.PlaceFilter;
-import fr.insa.whatodo.model.PriceFilter;
-import fr.insa.whatodo.model.TagFilter;
 
 
 public class FiltersListAdapter extends BaseExpandableListAdapter implements ExpandableListAdapter {

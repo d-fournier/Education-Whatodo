@@ -8,6 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
 import java.text.ParseException;
 import java.util.List;
 
@@ -19,15 +22,17 @@ import fr.insa.whatodo.model.Event;
  */
 public class EventAdapter<T> extends ArrayAdapter {
 
+    ImageLoader imageLoader;
 
-
-    public EventAdapter(Context context, int resource, List<T> objects)
-    {
+    public EventAdapter(Context context, int resource, List<T> objects) {
         super(context, resource, objects);
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
 
         // Get the data item for this position
         Event event = (Event) getItem(position);
@@ -50,20 +55,20 @@ public class EventAdapter<T> extends ArrayAdapter {
         }else{
             textNoImage.setVisibility(View.GONE);
         }
-            imageItem.setImageDrawable(event.getImage());*/
-            imageItem.setVisibility(View.GONE);// TODO A MODIFIER AVEC IMAGELOADER !
-            textItemTitle.setText(event.getName());
+            imageItem.setImageDrawable(event.getImage());
+            imageItem.setVisibility(View.GONE);// TODO A MODIFIER AVEC IMAGELOADER !*/
+
+        imageItem.setVisibility(View.GONE);
+        textNoImage.setVisibility(View.VISIBLE);// TODO A MODIFIER AVEC IMAGELOADER !
+        textItemTitle.setText(event.getName());
         try {
             textItemDate.setText(event.getDateAsString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
         textItemPrice.setText(event.getPrice());
-            textItemPlace.setText(event.getFullAddress());
-            textItemSummary.setText(event.getSummary());
-
-
-
+        textItemPlace.setText(event.getFullAddress());
+        textItemSummary.setText(event.getDescription());
         // Return the completed view to render on screen
         return convertView;
     }
