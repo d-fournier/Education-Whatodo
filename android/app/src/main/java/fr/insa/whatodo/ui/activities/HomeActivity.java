@@ -416,6 +416,15 @@ public class HomeActivity extends ActionBarActivity
         if(priceFilter.getValue()!=-1){
             filtersUrl+="&max_price=" + priceFilter.getValue();
         }
+        if(categoryFilter.getValue().size()>0){
+            filtersUrl+="&categories=";
+           for(int i=0; i<categoryFilter.getValue().size(); i++){
+                if(i!=0){
+                    filtersUrl+=",";
+                }
+                filtersUrl+= categoryFilter.getValue().get(i).ordinal()+1;
+            }
+        }
 
 
         if(placeFilter.isSendMyPosition() && (placeFilter.getLatitude()!=0 || placeFilter.getLongitude()!=0) ){

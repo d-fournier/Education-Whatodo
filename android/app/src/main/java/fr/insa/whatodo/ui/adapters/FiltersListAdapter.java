@@ -228,10 +228,6 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                             CheckBox cb8=(CheckBox)convertView.findViewById(R.id.checkBoxSport);
                             cb8.setChecked(true);
                             break;
-                        case PROJECTIONVIDEO :
-                            CheckBox cb9=(CheckBox)convertView.findViewById(R.id.checkBoxProjection);
-                            cb9.setChecked(true);
-                            break;
                     }
                 }
                 break;

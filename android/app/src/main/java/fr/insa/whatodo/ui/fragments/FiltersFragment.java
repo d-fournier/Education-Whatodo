@@ -421,9 +421,6 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
                 case R.id.checkBoxSport :
                     categoryFilter.addCategory(CategoryFilter.Category.SPORT);
                     break;
-                case R.id.checkBoxProjection :
-                    categoryFilter.addCategory(CategoryFilter.Category.PROJECTIONVIDEO);
-                    break;
             }
         }
         else
@@ -453,9 +450,6 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
                     break;
                 case R.id.checkBoxSport :
                     categoryFilter.removeCategory(CategoryFilter.Category.SPORT);
-                    break;
-                case R.id.checkBoxProjection :
-                    categoryFilter.removeCategory(CategoryFilter.Category.PROJECTIONVIDEO);
                     break;
             }
         }
