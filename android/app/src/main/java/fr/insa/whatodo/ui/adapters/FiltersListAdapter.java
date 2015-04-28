@@ -2,8 +2,14 @@ package fr.insa.whatodo.ui.adapters;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
+import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,12 +28,24 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.services.DatabaseServices;
+import fr.insa.whatodo.ui.activities.HomeActivity;
 import fr.insa.whatodo.ui.fragments.FiltersFragment;
 import fr.insa.whatodo.model.CategoryFilter;
 import fr.insa.whatodo.model.DateFilter;
@@ -38,20 +56,19 @@ import fr.insa.whatodo.model.HourFilter;
 public class FiltersListAdapter extends BaseExpandableListAdapter implements ExpandableListAdapter {
 
     //context variable
-    private Context context;
+    private HomeActivity activity;
     private FiltersFragment fragment;
 
     public LayoutInflater inflater;
 
-
-    private static String[] existingTags={"tag1","atag","tag2"};
-    private static String[] existingTowns={"Lyon", "Paris", "St Etienne"};
+    private GoogleApiClient mGoogleApiClient;
 
 
-    public FiltersListAdapter(Context c, FiltersFragment fr) {
-        context = c;
+
+    public FiltersListAdapter(HomeActivity act, FiltersFragment fr) {
+        activity = act;
         fragment=fr;
-        inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater=(LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
 
@@ -159,8 +176,11 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                 tv.setText(R.string.hours);
                 break;
         }
-
-        tv.setPadding(55,15,0,15);
+//
+        final float scale = fragment.getActivity().getResources().getDisplayMetrics().density;
+        int paddingLeft = (int) (40 * scale + 0.5f);
+        int paddingVertical = (int) (6 * scale + 0.5f);
+        tv.setPadding(paddingLeft,paddingVertical,0,paddingVertical);
 //        tv.setTextColor(Color.WHITE);
         return tv;
     }
@@ -218,7 +238,14 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
             case 1 :
                 convertView=inflater.inflate(R.layout.fragment_tag_filter,null);
                 MultiAutoCompleteTextView tagsView=(MultiAutoCompleteTextView) convertView.findViewById(R.id.TagsTextView);
-                ArrayAdapter<String> tagsAdapter = new ArrayAdapter<String>(fragment.getActivity(),android.R.layout.simple_dropdown_item_1line, existingTags);
+
+                List<String> existingTags=activity.getTagNamesList();
+                ArrayAdapter<String> tagsAdapter;
+                if(existingTags!=null){
+                    tagsAdapter=new ArrayAdapter<String>(fragment.getActivity(),android.R.layout.simple_dropdown_item_1line,existingTags);
+                }else{
+                    tagsAdapter=new ArrayAdapter<String>(fragment.getActivity(),android.R.layout.simple_dropdown_item_1line);
+                }
                 tagsView.setAdapter(tagsAdapter);
                 tagsView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
@@ -251,7 +278,14 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
             case 2:
                 convertView=inflater.inflate(R.layout.fragment_place_filter,null);
                 AutoCompleteTextView placeTextView=(AutoCompleteTextView)convertView.findViewById(R.id.PlaceTextField);
-                ArrayAdapter<String> placeAdapter = new ArrayAdapter<String>(fragment.getActivity(), android.R.layout.simple_dropdown_item_1line, existingTowns);
+                List<String> existingTowns = activity.getCityNamesList();
+                ArrayAdapter<String> placeAdapter;
+                if(existingTowns!=null){
+                    placeAdapter = new ArrayAdapter<String>(fragment.getActivity(), android.R.layout.simple_dropdown_item_1line,existingTowns);
+                }else{
+                    placeAdapter = new ArrayAdapter<String>(fragment.getActivity(), android.R.layout.simple_dropdown_item_1line);
+                }
+
                 placeTextView.setAdapter(placeAdapter);
                 ImageButton myLocation= (ImageButton) convertView.findViewById(R.id.imageMyLocation);
                 placeTextView.addTextChangedListener(new TextWatcher() {
@@ -268,22 +302,101 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                     @Override
                     public void afterTextChanged(Editable s) {
                         fragment.getPlaceFilter().setTown(s.toString());
+                        fragment.getPlaceFilter().setLocation(0,0);
                     }
                 });
+
+                // Ma position
                 myLocation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-                        try{
-                            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            fragment.getPlaceFilter().setLocation(location.getLongitude(),location.getLatitude());
-                        }catch(Exception e){
-                            //TODO : message d'erreur
+                        LocationManager locationManager= (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+
+                        if(locationManager!=null){
+                            AutoCompleteTextView placeTextView=(AutoCompleteTextView)activity.findViewById(R.id.PlaceTextField);
+                            placeTextView.setText("Calcul...");
+
+                            final Runnable runTimeOut = new Runnable() {
+                                @Override
+                                public void run() {
+                                    activity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(activity, activity.getResources().getString(R.string.location_issue), Toast.LENGTH_SHORT).show();
+                                            AutoCompleteTextView placeTextView = (AutoCompleteTextView) activity.findViewById(R.id.PlaceTextField);
+                                            placeTextView.setText(fragment.getPlaceFilter().getTown());
+                                        }
+                                    });
+                                }
+                            };
+
+                            final Handler handleTimeOut = new Handler();
+                            handleTimeOut.postDelayed(runTimeOut, 2000);
+
+
+                            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+                                @Override
+                                public void onLocationChanged(Location location) {
+                                    if (location != null) {
+                                        handleTimeOut.removeCallbacksAndMessages(null);
+                                        fragment.getPlaceFilter().setLocation(location.getLongitude(), location.getLatitude());
+                                        Geocoder gcd = new Geocoder(activity, Locale.getDefault());
+                                        try {
+                                            List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                            fragment.getPlaceFilter().setTown(addresses.get(0).getLocality() + " " + addresses.get(0).getPostalCode());
+
+                                            activity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    AutoCompleteTextView placeTextView = (AutoCompleteTextView) activity.findViewById(R.id.PlaceTextField);
+                                                    placeTextView.setText(fragment.getPlaceFilter().getTown());
+                                                }
+                                            });
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            fragment.getPlaceFilter().setTown("");
+                                            activity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(activity, R.string.location_issue, Toast.LENGTH_SHORT).show();
+                                                    AutoCompleteTextView placeTextView = (AutoCompleteTextView) activity.findViewById(R.id.PlaceTextField);
+                                                    placeTextView.setText(fragment.getPlaceFilter().getTown());
+                                                }
+                                            });
+
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onStatusChanged(String provider, int status, Bundle extras) {
+                                    if(status != LocationProvider.AVAILABLE){
+                                        Toast.makeText(activity, R.string.location_not_available, Toast.LENGTH_SHORT).show();
+                                        activity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                AutoCompleteTextView placeTextView=(AutoCompleteTextView)activity.findViewById(R.id.PlaceTextField);
+                                                placeTextView.setText(fragment.getPlaceFilter().getTown());
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onProviderEnabled(String provider) {}
+
+                                @Override
+                                public void onProviderDisabled(String provider) {}
+                            });
+                        }else{ //locationManager==null
+                            Toast.makeText(activity, activity.getResources().getString(R.string.location_issue), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+
                 placeTextView.setText(fragment.getPlaceFilter().getTown());
                 break;
+
             case 3:
                 convertView=inflater.inflate(R.layout.fragment_distance_filter,null);
 
@@ -337,7 +450,12 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        fragment.getPriceFilter().setValue(Float.parseFloat(s.toString()));
+                        if(!s.toString().isEmpty()){
+                            fragment.getPriceFilter().setValue(Float.parseFloat(s.toString()));
+                        }else{
+                            fragment.getPriceFilter().setValue(-1);
+                        }
+
                     }
                 });
                 float maxPrice= fragment.getPriceFilter().getValue();
@@ -407,8 +525,8 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                 Button firstHourButton=(Button)convertView.findViewById(R.id.firstHourText);
                 Button lastHourButton=(Button)convertView.findViewById(R.id.lastHourText);
                 HourFilter hf=fragment.getHourFilter();
-                firstHourButton.setText(hf.getBeginHours()+" : "+hf.getBeginMinutes());
-                lastHourButton.setText(hf.getEndHours()+" : "+hf.getEndMinutes());
+                firstHourButton.setText(String.format("%02d", hf.getBeginHours())+" : "+String.format("%02d", hf.getBeginMinutes()));
+                lastHourButton.setText(String.format("%02d", hf.getEndHours())+" : "+String.format("%02d",hf.getEndMinutes()));
                 break;
         }
         return convertView;

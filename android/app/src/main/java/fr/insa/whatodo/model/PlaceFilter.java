@@ -1,25 +1,31 @@
 package fr.insa.whatodo.model;
 
+import android.location.Address;
+import android.location.Geocoder;
+
+import java.util.List;
+import java.util.Locale;
+
 /**
  * Created by Segolene on 13/03/2015.
  */
 public class PlaceFilter  extends Filter {
 
     protected String place;
-    protected boolean isMyLocation;
+    protected boolean sendMyPosition;
     protected double latitude;
     protected double longitude;
 
     public PlaceFilter() {
         super(FilterType.LIEU);
         place="";
-        isMyLocation=true;
+        sendMyPosition=false;
         longitude = 0;
         latitude = 0;
     }
 
-    public boolean isMyLocation() {
-        return isMyLocation;
+    public boolean isSendMyPosition() {
+        return sendMyPosition;
     }
 
     public String getTown() {
@@ -35,17 +41,12 @@ public class PlaceFilter  extends Filter {
     }
 
     public void setTown(String town){
-
-        place=town;
-        longitude=0;
-        latitude=0;
-        isMyLocation=false;
+        if(town.equalsIgnoreCase("Calcul...")) return; // Annonce de calcul lors de la localisation
+        place=town.toUpperCase();
     }
 
     public void setLocation(double longitude, double latitude){
         this.longitude=longitude;
         this.latitude=latitude;
-        place="";
-        isMyLocation=true;
     }
 }

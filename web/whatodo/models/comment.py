@@ -1,8 +1,8 @@
 from django.db import models
-from .user import User
+from .whatodoUser import WhatodoUser
 from .event import Event
 
 class Comment(models.Model):
-	user = models.ForeignKey(User)
+	user = models.ForeignKey(WhatodoUser)
 	event = models.ForeignKey(Event)
 	

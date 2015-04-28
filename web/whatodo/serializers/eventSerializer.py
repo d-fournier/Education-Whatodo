@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from whatodo.models.event import Event
 from whatodo.models.category import Category
+from whatodo.models.city import City
 from whatodo.models.tag import Tag
 from whatodo.serializers.tagSerializer import TagSerializer
 from whatodo.serializers.categorySerializer import CategorySerializer
@@ -13,7 +14,7 @@ class EventReadSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Event
-		fields = ('id', 'name', 'description', 'url', 'startTime', 'endTime', 'startDate', 'endDate', 'price', 'min_age', 'address', 'city', 'latitude', 'longitude', 'categories', 'tags')
+		fields = ('id', 'name', 'description', 'url', 'imageEvent', 'startTime', 'endTime', 'startDate', 'endDate', 'price', 'min_age', 'address', 'city', 'latitude', 'longitude',  'categories', 'tags')
 
 
 class EventCreateSerializer(serializers.ModelSerializer):
@@ -22,4 +23,4 @@ class EventCreateSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Event
-		fields = ('id', 'name', 'description', 'url', 'startTime', 'endTime', 'startDate', 'endDate', 'price', 'min_age', 'address', 'city', 'latitude', 'longitude', 'categories', 'tags')
+		fields = ('id', 'name', 'description', 'url', 'imageEvent', 'startTime', 'endTime', 'startDate', 'endDate', 'price', 'min_age', 'address', 'city', 'latitude', 'longitude', 'categories', 'tags')

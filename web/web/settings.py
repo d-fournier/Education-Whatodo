@@ -37,7 +37,10 @@ INSTALLED_APPS = (
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'rest_framework',
+	'rest_framework.authtoken',
+	'djoser',
 	'whatodo',
+	'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -48,12 +51,17 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 )
 
 ROOT_URLCONF = 'web.urls'
 
 WSGI_APPLICATION = 'web.wsgi.application'
 
+CORS_ORIGIN_WHITELIST = (
+        'dfournier.ovh'
+    )
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -93,7 +101,19 @@ STATIC_ROOT = '/var/www/dfournier.ovh/whatodo/static'
 REST_FRAMEWORK = {
 	# Use Django's standard `django.contrib.auth` permissions,
 	# or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
+	'DEFAULT_AUTHENTICATION_CLASSES': (
+		'rest_framework.authentication.TokenAuthentication',
+	),
+	'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
 	'PAGE_SIZE' : 100,
+	'DEFAULT_PARSER_CLASSES': (
+		'rest_framework.parsers.MultiPartParser',
+		'rest_framework.parsers.FormParser',
+		'rest_framework.parsers.JSONParser'
+	),
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
 }
+
+AUTH_USER_MODEL = 'whatodo.WhatodoUser'
+
+IMAGES_URL = STATIC_URL + 'images'
