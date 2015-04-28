@@ -92,6 +92,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+IMAGES_URL = '/var/www/dfournier.ovh/whatodo/media'
+
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, "static"),
 )
@@ -117,4 +119,3 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = 'whatodo.WhatodoUser'
 
-IMAGES_URL = STATIC_URL + 'images'
