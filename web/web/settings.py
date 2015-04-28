@@ -66,7 +66,7 @@ CORS_ORIGIN_WHITELIST = (
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-DATABASES = {
+ATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.sqlite3',
 		'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
@@ -92,11 +92,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-IMAGES_URL = '/var/www/dfournier.ovh/whatodo/media'
+MEDIA_URL = 'media/'
 
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, "static"),
 )
+
+MEDIA_ROOT = '/var/www/dfournier.ovh/whatodo/media'
 
 STATIC_ROOT = '/var/www/dfournier.ovh/whatodo/static'
 
