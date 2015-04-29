@@ -10,7 +10,8 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:layout_marginLeft="5dp"
-        android:imeOptions="actionDone"/>
+        android:imeOptions="actionDone"
+        android:inputType="textAutoComplete"/>
 
     <ImageButton
         android:layout_width="40dp"

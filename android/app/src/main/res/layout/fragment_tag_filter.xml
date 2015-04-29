@@ -9,5 +9,7 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        android:imeOptions="actionDone"
+        android:inputType="textAutoComplete"/>
 </FrameLayout>

@@ -443,17 +443,16 @@ public class HomeActivity extends ActionBarActivity
             // filtersUrl+="&longitude="+placeFilter.getLongitude()+"&latitude="+placeFilter.getLatitude();
         }else if(!placeFilter.getTown().isEmpty()){
             // Envoi de la ville
-            String townAndPostCode=placeFilter.getTown();
-            int lastSpace=townAndPostCode.lastIndexOf(" ");
-            String town= new String(townAndPostCode.substring(0, lastSpace));
-            String postCode= new String(townAndPostCode.substring(lastSpace+1));
+            String place=placeFilter.getTown();
             String id;
             try{
+                int lastSpace=place.lastIndexOf(" ");
+                String town= new String(place.substring(0, lastSpace));
+                String postCode= new String(place.substring(lastSpace+1));
                 Integer.parseInt(postCode);
                 id=DatabaseServices.getCityId(town,postCode, read_db);
-            }catch(NumberFormatException e){
-                town=townAndPostCode;
-                id=DatabaseServices.getCityId(town,null, read_db);
+            }catch(Exception e){
+                id=DatabaseServices.getCityId(place,null, read_db);
             }
             if(id!=null) filtersUrl+="&city="+id;
         }
