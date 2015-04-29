@@ -85,7 +85,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, O
         }
         s_mapFragment.getMapAsync(this);
         listEvent = (ArrayList<Event>) getArguments().getSerializable("EventList");
-        getArguments().remove("EventList");
     }
 
     @Override
@@ -104,9 +103,13 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, O
 
     public void putPinsOnMap(List<Event> l, GoogleMap map) {
         for (Event e : l) {
-            map.addMarker(new MarkerOptions()
-                    .position(getEventCoordinates(e))
-                    .title(e.getName()));
+            try {
+                map.addMarker(new MarkerOptions()
+                        .position(getEventCoordinates(e))
+                        .title(e.getName()));
+            } catch (IllegalArgumentException e1) {
+
+            }
         }
     }
 
@@ -121,6 +124,8 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, O
             lat_lng = new LatLng(location.getLatitude(), location.getLongitude());
         } catch (IOException e1) {
             e1.printStackTrace();
+        } catch (IndexOutOfBoundsException e2) {
+            return lat_lng;
         }
         return lat_lng;
     }

@@ -199,7 +199,7 @@ public class HomeActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen() && !mFiltersFragment.isDrawerOpen()) {
+        if (!mNavigationDrawerFragment.isDrawerOpen() && !mFiltersFragment.isDrawerOpen() && !profileFragment.isVisible()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -218,9 +218,6 @@ public class HomeActivity extends ActionBarActivity
         int id = item.getItemId();
 
         switch (id) {
-            case (R.id.action_settings):
-                //TODO Il faut mettre les settings ici !
-                break;
             case (R.id.action_earth):
                 // update the main content by replacing fragments
                 ConnectivityManager connMgr = (ConnectivityManager)
