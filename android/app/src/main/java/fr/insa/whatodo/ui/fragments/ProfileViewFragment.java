@@ -70,7 +70,6 @@ public class ProfileViewFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        int i = menu.size();
         inflater.inflate(R.menu.profile, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
