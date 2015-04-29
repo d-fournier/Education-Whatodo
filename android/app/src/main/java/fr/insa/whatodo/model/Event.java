@@ -29,9 +29,9 @@ public class Event implements Serializable {
     protected City city;
     protected List<Category> categories;
     protected List<Tag> tags;
-    protected String imageURL;
+    protected String imageEvent;
 
-    public Event(int id, String name, String description, String url, String startTime, String endTime, String startDate, String endDate, String price, int minAge, String address, City city, List<Tag> tags, List<Category> categories, String imageURL) throws ParseException {
+    public Event(int id, String name, String description, String url, String startTime, String endTime, String startDate, String endDate, String price, int minAge, String address, City city, List<Tag> tags, List<Category> categories, String imageEvent) throws ParseException {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -46,11 +46,11 @@ public class Event implements Serializable {
         this.city = city;
         this.tags = tags;
         this.categories = categories;
-        this.imageURL = imageURL;
+        this.imageEvent = imageEvent;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageEvent() {
+        return imageEvent;
     }
 
     public String getDateAsString() throws ParseException {

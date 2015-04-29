@@ -20,9 +20,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '&t!@4jh*-tiddyx+ob!0_u6f_)9n%(@*lj#!(lee7zx59&pqhj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1',]
 
@@ -37,6 +37,8 @@ INSTALLED_APPS = (
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'rest_framework',
+	'rest_framework.authtoken',
+	'djoser',
 	'whatodo',
 	'corsheaders',
 )
@@ -88,16 +90,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+IMAGES_URL = '/var/www/dfournier.ovh/whatodo/media'
 
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, "static"),
 )
 
+STATIC_ROOT = '/var/www/dfournier.ovh/whatodo/static'
+
 REST_FRAMEWORK = {
 	# Use Django's standard `django.contrib.auth` permissions,
 	# or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
+	'DEFAULT_AUTHENTICATION_CLASSES': (
+		'rest_framework.authentication.TokenAuthentication',
+		'rest_framework.authentication.SessionAuthentication',
+	),
+	'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
 	'PAGE_SIZE' : 100,
 	'DEFAULT_PARSER_CLASSES': (
 		'rest_framework.parsers.MultiPartParser',
@@ -107,4 +117,5 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
 }
 
-IMAGES_URL = STATIC_URL + 'images'
+AUTH_USER_MODEL = 'whatodo.WhatodoUser'
+
