@@ -19,6 +19,7 @@ public class TagFilter extends Filter {
     }
 
     public void setValues(ArrayList<String> tagsList){
+        tagsList.remove(" ");
         tags=tagsList;
     }
 }

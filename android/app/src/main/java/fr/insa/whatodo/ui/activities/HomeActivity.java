@@ -426,6 +426,16 @@ public class HomeActivity extends ActionBarActivity
             }
         }
 
+        if(tagFilter.getValues().size()>0){
+            filtersUrl+="&tags=";
+            for(int i=0; i<tagFilter.getValues().size(); i++){
+                if(i!=0){
+                    filtersUrl+=",";
+                }
+                filtersUrl+= DatabaseServices.getTagId(tagFilter.getValues().get(i), read_db);
+            }
+        }
+
 
         if(placeFilter.isSendMyPosition() && (placeFilter.getLatitude()!=0 || placeFilter.getLongitude()!=0) ){
             // Envoi des coordonnées
