@@ -48,6 +48,7 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES_CITY =
             "CREATE TABLE " + EventDatabaseContract.CityTable.TABLE_NAME + " (" +
+                    EventDatabaseContract.CityTable.COLUMN_NAME_CITY_ID + TEXT_TYPE + COMMA_SEP +
                     EventDatabaseContract.CityTable.COLUMN_NAME_CODE + TEXT_TYPE + COMMA_SEP +
                     EventDatabaseContract.CityTable.COLUMN_NAME_NAME + TEXT_TYPE +
                     " )";

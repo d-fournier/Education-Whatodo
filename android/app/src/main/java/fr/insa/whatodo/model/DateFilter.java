@@ -51,6 +51,9 @@ public class DateFilter extends Filter {
     public void setDateMin(Date d)
     {
         dateMin=d;
+        if(dateMin.after(dateMax)){
+            dateMax=dateMin;
+        }
     }
 
     public boolean setDateMax(Date d){
@@ -58,6 +61,7 @@ public class DateFilter extends Filter {
             dateMax=d;
             return true;
         }
+        dateMax=dateMin;
         return false;
     }
 }
