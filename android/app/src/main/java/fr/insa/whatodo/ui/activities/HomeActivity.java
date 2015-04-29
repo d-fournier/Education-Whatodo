@@ -218,9 +218,6 @@ public class HomeActivity extends ActionBarActivity
         int id = item.getItemId();
 
         switch (id) {
-            case (R.id.action_settings):
-                //TODO Il faut mettre les settings ici !
-                break;
             case (R.id.action_earth):
                 // update the main content by replacing fragments
                 ConnectivityManager connMgr = (ConnectivityManager)
