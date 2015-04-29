@@ -112,7 +112,15 @@ public class HomeActivity extends ActionBarActivity
         eventListFragment = EventListFragment.newInstance(eventList);
         mapFragment = CustomMapFragment.newInstance(eventList);
 
+        mFiltersFragment.setUp(
+                R.id.filters_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+
         new GetEventsTask().execute(null, null, null);
+        updateEventList();
 
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -136,14 +144,7 @@ public class HomeActivity extends ActionBarActivity
 
         mTitle = getTitle();
 
-        // Set up the drawer.
 
-        mFiltersFragment.setUp(
-                R.id.filters_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     @Override
@@ -390,7 +391,43 @@ public class HomeActivity extends ActionBarActivity
 
 
     public void updateEventList(){
+        AsyncTask<String,Integer,ArrayList<Event>> task=new AsyncTask<String, Integer, ArrayList<Event>>() {
+            @Override
+            protected ArrayList<Event> doInBackground(String...filtersUrl) {
+                // Log.d("DEBUT", "debut doInBackground"); -> permet de débugger, allez savoir pourquoi...
+                InputStream inputStreamEvents;
+                HttpURLConnection urlConnection=null;
+                ArrayList<Event> liste=null;
+                try{
+                    URL event_url = new URL(filtersUrl[0]);
+                    urlConnection = (HttpURLConnection) event_url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.connect();
+                    inputStreamEvents = urlConnection.getInputStream();
+                    JSonParser parser = new JSonParser();
+                    liste=parser.parseEvents(inputStreamEvents);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return null;
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                }
 
+                return liste;
+            }
+
+            protected void onPostExecute(ArrayList<Event> list){
+                eventList=list;
+                eventListFragment.onListChanged(eventList);
+            }
+        };
+
+        task.execute(getFilteringUrl());
+    }
+
+    public String getFilteringUrl(){
         CategoryFilter categoryFilter=mFiltersFragment.getCategoryFilter();
         TagFilter tagFilter=mFiltersFragment.getTagFilter();
         PlaceFilter placeFilter=mFiltersFragment.getPlaceFilter();
@@ -407,7 +444,6 @@ public class HomeActivity extends ActionBarActivity
         String hourMax=String.format("%02d:%02d:00", hourFilter.getEndHours(),hourFilter.getEndMinutes());
 
 
-        //TODO : catégories, tags
         String filtersUrl= DOWNLOAD_EVENTS_URL+"&distance="+distanceFilter.getValue()+"&min_date="+dateMin+"&max_date="+dateMax
                 +"&legal_age="+ageFilter.is18orMore()+"&min_hour="+hourMin+"&max_hour="+hourMax;
         if(priceFilter.getValue()!=-1){
@@ -415,7 +451,7 @@ public class HomeActivity extends ActionBarActivity
         }
         if(categoryFilter.getValue().size()>0){
             filtersUrl+="&categories=";
-           for(int i=0; i<categoryFilter.getValue().size(); i++){
+            for(int i=0; i<categoryFilter.getValue().size(); i++){
                 if(i!=0){
                     filtersUrl+=",";
                 }
@@ -454,43 +490,7 @@ public class HomeActivity extends ActionBarActivity
             if(id!=null) filtersUrl+="&city="+id;
         }
 
-        AsyncTask<String,Integer,ArrayList<Event>> task=new AsyncTask<String, Integer, ArrayList<Event>>() {
-            @Override
-            protected ArrayList<Event> doInBackground(String...filtersUrl) {
-                // Log.d("DEBUT", "debut doInBackground"); -> permet de débugger, allez savoir pourquoi...
-                InputStream inputStreamEvents;
-                HttpURLConnection urlConnection=null;
-                ArrayList<Event> liste=null;
-                try{
-                    URL event_url = new URL(filtersUrl[0]);
-                    urlConnection = (HttpURLConnection) event_url.openConnection();
-                    urlConnection.setRequestMethod("GET");
-                    urlConnection.connect();
-                    inputStreamEvents = urlConnection.getInputStream();
-                    JSonParser parser = new JSonParser();
-                    liste=parser.parseEvents(inputStreamEvents);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    return null;
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                }
-
-                return liste;
-            }
-
-            protected void onPostExecute(ArrayList<Event> list){
-                eventList=list;
-                eventListFragment.onListChanged(eventList);
-            }
-        };
-
-        task.execute(filtersUrl);
-
-
-
+        return filtersUrl;
     }
 
 }
