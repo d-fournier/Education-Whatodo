@@ -60,7 +60,7 @@ public class EventAdapter<T> extends ArrayAdapter {
             textNoImage.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         } else {
-            imageLoader.displayImage(event.getImageEvent(), imageItem, null, new ImageLoadingListener() {
+            imageLoader.displayImage(event.getImageEvent().replace("127.0.0.1:8001","dfournier.ovh"), imageItem, null, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
                     imageItem.setVisibility(View.GONE);

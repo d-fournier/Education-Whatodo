@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:scaleType="centerInside"
+        android:adjustViewBounds="true"
         android:transitionName="@string/event_details_transition"/>
 
     <TextView
@@ -35,7 +36,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:text="Title"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <LinearLayout

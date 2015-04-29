@@ -2,17 +2,15 @@ package fr.insa.whatodo.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.transition.TransitionInflater;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.text.ParseException;
 
@@ -42,7 +40,6 @@ public class DetailsActivity extends ActionBarActivity {
         setContentView(R.layout.event_details);
         Intent intent = getIntent();
         Event event = (Event) intent.getSerializableExtra("event");
-        intent.removeExtra("event");
 
         ImageView image = (ImageView) findViewById(R.id.image_details);
         TextView title = (TextView) findViewById(R.id.title_details);
@@ -57,8 +54,13 @@ public class DetailsActivity extends ActionBarActivity {
         TextView agemin = (TextView) findViewById(R.id.agemin_details);
         TextView tags = (TextView) findViewById(R.id.tags_details);
 
-        //TODO image avec ImageLoader
-        imageLoader.displayImage("http://www.sosiphone.com/blogiphone/wp-content/uploads//2011/02/Pac-Man-banniere.jpg", image, null, null);
+        try {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(
+                    getIntent().getByteArrayExtra("bitmap"), 0, getIntent().getByteArrayExtra("bitmap").length);
+            image.setImageBitmap(bitmap);
+        } catch (Exception e) {
+        }
+
         title.setText(event.getName());
         try {
             date.setText("Date : " + event.getDateAsString());
@@ -73,28 +75,24 @@ public class DetailsActivity extends ActionBarActivity {
         agemin.setText("Age Minimum : " + event.getMinAge());
 
         String sCategories = "";
-        for(Category c : event.getCategories())
-        {
-            sCategories += c.getName()+ ", ";
+        for (Category c : event.getCategories()) {
+            sCategories += c.getName() + ", ";
         }
-        try{
+        try {
             sCategories = sCategories.substring(0, sCategories.lastIndexOf(","));
-        }catch(StringIndexOutOfBoundsException e)
-        {
+        } catch (StringIndexOutOfBoundsException e) {
             sCategories = "Aucune";
         }
 
         String sTags = "";
-        for(Tag t : event.getTags())
-        {
-            sTags += t.getName()+ ", ";
+        for (Tag t : event.getTags()) {
+            sTags += t.getName() + ", ";
         }
-       try{
-           sTags = sTags.substring(0,sTags.lastIndexOf(","));
-       }catch(StringIndexOutOfBoundsException e)
-       {
-           sTags = "Aucun";
-       }
+        try {
+            sTags = sTags.substring(0, sTags.lastIndexOf(","));
+        } catch (StringIndexOutOfBoundsException e) {
+            sTags = "Aucun";
+        }
 
         categories.setText("Catégories : " + sCategories);
         tags.setText("Tags : " + sTags);
