@@ -92,7 +92,7 @@ public class NavigationDrawerFragment extends Fragment {
                 new String[]{
                         getString(R.string.principal_view),
                         getString(R.string.profile_view),
-                        getString(R.string.title_section3),
+                        getString(R.string.login),
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
@@ -144,7 +144,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    private void selectItem(int position) {
+    public void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);

@@ -40,4 +40,9 @@
     <string name="location_not_available">Service de localisation non disponible</string>
     <string name="filters_drawer_close">Fermer les filtres</string>
     <string name="filters_open">Ouvrir les filtres</string>
+    <string name="username">E-mail</string>
+    <string name="password">Mot de passe</string>
+    <string name="login">Connexion</string>
+    <string name="no_login">Identifiants incorrects</string>
+    <string name="login_ok">Connexion réussie</string>
 </resources>

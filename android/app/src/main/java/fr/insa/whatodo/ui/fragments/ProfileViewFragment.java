@@ -31,7 +31,6 @@ public class ProfileViewFragment extends Fragment {
         args.putSerializable("user", user);
         f.setArguments(args);
 
-
         return f;
     }
 
