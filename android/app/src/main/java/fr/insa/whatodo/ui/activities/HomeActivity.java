@@ -124,8 +124,7 @@ public class HomeActivity extends ActionBarActivity
         mFiltersFragment.setUp(R.id.filters_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        new GetEventsTask().execute(null, null, null);
-        updateEventList();
+        new GetEventsTask().execute(getFilteringUrl());
 
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -242,8 +241,7 @@ public class HomeActivity extends ActionBarActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, eventListFragment).commit();
                 break;
             case (R.id.action_refresh):
-                new GetEventsTask().execute(null, null, null);
-                updateEventList();
+                new GetEventsTask().execute(getFilteringUrl());
                 break;
             case (R.id.action_filters):
                 DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -292,7 +290,7 @@ public class HomeActivity extends ActionBarActivity
         return tagNamesList;
     }
 
-    public class GetEventsTask extends AsyncTask<Void, Void, Void> {
+    public class GetEventsTask extends AsyncTask<String, Void, Void> {
 
         ProgressDialog dialog;
 
@@ -334,7 +332,7 @@ public class HomeActivity extends ActionBarActivity
             dialog.dismiss();
         }
 
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -343,7 +341,7 @@ public class HomeActivity extends ActionBarActivity
 
             try {
                 // Construct the URL for the server query
-                URL event_url = new URL(DOWNLOAD_EVENTS_URL);
+                URL event_url = new URL(getFilteringUrl());
                 URL categories_url = new URL(DOWNLOAD_CATEGORIES_URL);
                 URL tags_url = new URL(DOWNLOAD_TAGS_URL);
 
@@ -391,44 +389,6 @@ public class HomeActivity extends ActionBarActivity
                 }
             }
         }
-    }
-
-
-    public void updateEventList() {
-        AsyncTask<String, Integer, ArrayList<Event>> task = new AsyncTask<String, Integer, ArrayList<Event>>() {
-            @Override
-            protected ArrayList<Event> doInBackground(String... filtersUrl) {
-                // Log.d("DEBUT", "debut doInBackground"); -> permet de débugger, allez savoir pourquoi...
-                InputStream inputStreamEvents;
-                HttpURLConnection urlConnection = null;
-                ArrayList<Event> liste = null;
-                try {
-                    URL event_url = new URL(filtersUrl[0]);
-                    urlConnection = (HttpURLConnection) event_url.openConnection();
-                    urlConnection.setRequestMethod("GET");
-                    urlConnection.connect();
-                    inputStreamEvents = urlConnection.getInputStream();
-                    JSonParser parser = new JSonParser();
-                    liste = parser.parseEvents(inputStreamEvents);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                }
-
-                return liste;
-            }
-
-            protected void onPostExecute(ArrayList<Event> list) {
-                eventList = list;
-                eventListFragment.onListChanged(eventList);
-            }
-        };
-
-        task.execute(getFilteringUrl());
     }
 
     public String getFilteringUrl() {

@@ -57,7 +57,7 @@ public class EventAdapter<T> extends ArrayAdapter {
             e.printStackTrace();
         }
         vh.textItemPrice.setText(event.getPrice());
-        vh.textItemPlace.setText(event.getFullAddress());
+        vh.textItemPlace.setText(event.getCity().getCode()+" "+event.getCity().getName());
         vh.textItemSummary.setText(event.getDescription());
 
         // Return the completed view to render on screen

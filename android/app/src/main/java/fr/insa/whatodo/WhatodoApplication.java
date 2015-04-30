@@ -32,7 +32,6 @@ public class WhatodoApplication extends Application {
                 .diskCacheSize(10 * 1024 * 1024) // 10 Mb
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .defaultDisplayImageOptions(defaultOptions)
-
                 .build();
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
