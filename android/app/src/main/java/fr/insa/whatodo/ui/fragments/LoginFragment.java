@@ -20,9 +20,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.interfaces.RSAPublicKey;
+import java.util.ArrayList;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.model.User;
 import fr.insa.whatodo.ui.activities.HomeActivity;
+import fr.insa.whatodo.utils.JSonParser.JSonParser;
 import fr.insa.whatodo.utils.Utils;
 
 /**
@@ -90,7 +93,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
 
                 @Override
                 protected String doInBackground(Void... params) {
-                    HttpURLConnection urlConnection = null;
+                    HttpURLConnection urlConnection;
                     //J'envoie la requete au serveur
                     try {
                         URL login_url = new URL(LOGIN_URL);
@@ -118,7 +121,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                             is.close();
                             String token = new String(buffer);
                             token = token.substring(token.indexOf(":") + 2, token.lastIndexOf("\""));
-                            System.out.println(token);
+                            urlConnection.disconnect();
                             return token;
                         }
 

@@ -90,6 +90,7 @@ public class HomeActivity extends ActionBarActivity
     private List<OnListChangedListener> mListeners;
     private List<Event> mDisplayedEvents;
     private EventDatabaseHelper mDbHelper;
+    private SharedPreferences prefs;
     SQLiteDatabase write_db = null;
     SQLiteDatabase read_db = null;
 
@@ -98,6 +99,7 @@ public class HomeActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setSharedElementExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.transition_home));
@@ -115,7 +117,7 @@ public class HomeActivity extends ActionBarActivity
 
         loginFragment = new LoginFragment();
         downloadFragment = new DownloadFragment();
-        profileFragment = ProfileViewFragment.newInstance(new User("Nom", "passwd", "email@email.com", null, 24));
+        profileFragment = new ProfileViewFragment();
         eventListFragment = EventListFragment.newInstance(eventList);
         mapFragment = CustomMapFragment.newInstance(eventList);
 
@@ -171,11 +173,13 @@ public class HomeActivity extends ActionBarActivity
                     break;
                 case (1):
                     searchBar.setVisibility(View.GONE);
-                    fragmentManager.beginTransaction().replace(R.id.fragment_home_container, profileFragment).commit();
-                    break;
-                case (2):
-                    searchBar.setVisibility(View.GONE);
-                    fragmentManager.beginTransaction().replace(R.id.fragment_home_container, loginFragment).commit();
+                    if(!prefs.getString("token", "no_token").equals("no_token"))
+                    {
+                        fragmentManager.beginTransaction().replace(R.id.fragment_home_container, profileFragment).commit();
+                    }else
+                    {
+                        fragmentManager.beginTransaction().replace(R.id.fragment_home_container, loginFragment).commit();
+                    }
                     break;
             }
         } catch (NullPointerException e) {
@@ -494,11 +498,10 @@ public class HomeActivity extends ActionBarActivity
     }
 
     public void updateLoginFragment() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if(loginFragment.isVisible() && !prefs.getString("token", "no_token").equals("no_token")) {
+        if(!prefs.getString("token", "no_token").equals("no_token")) {
             //On a cliqué sur connexion avec des bons identifiants
-           // profileFragment = ProfileViewFragment.newInstance(new User());
+            profileFragment = ProfileViewFragment.newInstance();
             this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, profileFragment).commit();
             mNavigationDrawerFragment.selectItem(1);
         }
