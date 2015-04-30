@@ -90,7 +90,7 @@ public class DatabaseServices {
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_ADDRESS, e.getAddress());
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_CITY_CODE, e.getCity().getCode());
             values.put(EventDatabaseContract.EventTable.COLUMN_NAME_CITY_NAME, e.getCity().getName());
-            values.put(EventDatabaseContract.EventTable.COLUMN_NAME_IMAGE_URL, e.getImageURL());
+            values.put(EventDatabaseContract.EventTable.COLUMN_NAME_IMAGE_URL, e.getImageEvent());
             db.insert(EventDatabaseContract.EventTable.TABLE_NAME, null, values);
 
             putCategoryAssociationInDatabase(e, db);
@@ -220,9 +220,10 @@ public class DatabaseServices {
     }
 
     public static String getCityId(String cityName, String postCode,SQLiteDatabase db) {
-        String query = "SELECT * FROM City WHERE code = ?";
+        String query = "SELECT * FROM City";
         Cursor c;
        if(postCode!=null && !postCode.isEmpty()){
+           query+=" WHERE "+ EventDatabaseContract.CityTable.COLUMN_NAME_CODE  +" = ?";
            c= db.rawQuery(query, new String[] {postCode});
        }else{
            c= db.rawQuery(query, null);
@@ -235,11 +236,27 @@ public class DatabaseServices {
                     id=c.getString(2);
                     return id;
                 }
+            } while (c.moveToNext());
+        }
+        return id;
+    }
+
+    public static String getTagId(String tagName, SQLiteDatabase db) {
+        String query = "SELECT * FROM Tag WHERE "+EventDatabaseContract.TagTable.COLUMN_NAME_NAME +" = ?";
+        Cursor c= db.rawQuery(query, new String[] {tagName});
+
+
+        String id=null;
+        if (c.moveToFirst()) {
+            do {
+                    id=c.getString(0);
+                    return id;
 
             } while (c.moveToNext());
         }
         return id;
     }
+
 
     public static List<Event> getAllEvents(SQLiteDatabase db) {
 

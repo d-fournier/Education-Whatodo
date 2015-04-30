@@ -6,29 +6,19 @@
     android:orientation="vertical"
     android:padding="5dp">
 
-    <TextView
-        android:id="@+id/event_list_item_no_image"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:gravity="center"
-        android:background="#33333333"
-        android:text="@string/no_image"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
     <ImageView
         android:id="@+id/event_list_item_picture"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:transitionName="@string/event_details_transition"
-        android:elevation="3dp"/>
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:transitionName="@string/event_details_transition"/>
 
     <TextView
         android:id="@+id/event_list_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:text="Title"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <LinearLayout
@@ -66,5 +56,12 @@
         android:layout_height="wrap_content"
         android:text="Summary"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <View
+        android:id="@+id/space_1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="3dp"
+        android:background="#BDBDBD" />
 
 </LinearLayout>

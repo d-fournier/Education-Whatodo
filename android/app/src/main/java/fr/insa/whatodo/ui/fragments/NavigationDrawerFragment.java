@@ -8,7 +8,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -88,8 +87,8 @@ public class NavigationDrawerFragment extends Fragment {
         });
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
+                R.layout.drawer_item,
+                R.id.text1,
                 new String[]{
                         getString(R.string.principal_view),
                         getString(R.string.profile_view),
@@ -124,7 +123,6 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerToggle=new WhatodoDrawerToggle(
                 (HomeActivity)getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         );
@@ -132,7 +130,7 @@ public class NavigationDrawerFragment extends Fragment {
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
         if (!mFromSavedInstanceState) {
-            mDrawerToggle.openNavDrawerIfNotLearned();
+            mDrawerToggle.openFilterDrawerIfNotLearned();
         }
 
         // Defer code dependent on restoration of previous instance state.

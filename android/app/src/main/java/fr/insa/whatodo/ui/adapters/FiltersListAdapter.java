@@ -15,6 +15,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseExpandableListAdapter;
@@ -228,10 +229,6 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                             CheckBox cb8=(CheckBox)convertView.findViewById(R.id.checkBoxSport);
                             cb8.setChecked(true);
                             break;
-                        case PROJECTIONVIDEO :
-                            CheckBox cb9=(CheckBox)convertView.findViewById(R.id.checkBoxProjection);
-                            cb9.setChecked(true);
-                            break;
                     }
                 }
                 break;
@@ -263,16 +260,21 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                     @Override
                     public void afterTextChanged(Editable s) {
                         String[] tagsTab=s.toString().split(",");
-                        ArrayList<String> tagsList= new ArrayList<String>(Arrays.asList(tagsTab));
-                        fragment.getTagFilter().setValues(tagsList);
+                        ArrayList<String> tagsList= new ArrayList<String>();
+                        for(int i=0; i<tagsTab.length; i++){
+                            tagsList.add(new String(tagsTab[i]));
+                        }
+                       fragment.getTagFilter().setValues(tagsList);
                     }
                 });
                 String tags="";
-                for(String tag : fragment.getTagFilter().getValues())
+                for(int i=0;  i<fragment.getTagFilter().getValues().size(); i++)
                 {
-                    tags+=","+tag;
+                    if(i!=0){
+                        tags+=",";
+                    }
+                    tags+=fragment.getTagFilter().getValues().get(i);
                 }
-                tags=tags.replaceFirst(",","");
                 tagsView.setText(tags);
                 break;
             case 2:

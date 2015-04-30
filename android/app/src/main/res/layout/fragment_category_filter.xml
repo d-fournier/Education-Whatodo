@@ -63,12 +63,5 @@
         android:id="@+id/checkBoxSport"
         android:onClick="onCheckBoxClicked"/>
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Projection vidéo"
-        android:id="@+id/checkBoxProjection"
-        android:onClick="onCheckBoxClicked"/>
-
 
 </LinearLayout>

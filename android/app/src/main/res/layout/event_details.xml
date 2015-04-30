@@ -6,12 +6,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/image_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
             android:transitionName="@string/event_details_transition" />
 
         <TextView

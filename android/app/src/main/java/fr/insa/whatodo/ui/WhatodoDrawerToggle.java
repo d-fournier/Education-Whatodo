@@ -2,9 +2,9 @@ package fr.insa.whatodo.ui;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
 
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
 import android.view.View;
 
@@ -24,11 +24,11 @@ public class WhatodoDrawerToggle extends ActionBarDrawerToggle {
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
     private HomeActivity mActivity;
-    private boolean mUserLearnedNavDrawer;
+    private boolean mUserLearnedFilterDrawer;
     DrawerLayout mDrawerLayout;
 
-    public WhatodoDrawerToggle(HomeActivity activity, DrawerLayout drawerLayout, int drawerImageRes, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
-        super(activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes);
+    public WhatodoDrawerToggle(HomeActivity activity, DrawerLayout drawerLayout, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
+        super(activity, drawerLayout, openDrawerContentDescRes, closeDrawerContentDescRes);
 
         mActivity=activity;
         mDrawerLayout=drawerLayout;
@@ -36,7 +36,7 @@ public class WhatodoDrawerToggle extends ActionBarDrawerToggle {
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
-        mUserLearnedNavDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
+        mUserLearnedFilterDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
     }
 
 
@@ -60,19 +60,20 @@ public class WhatodoDrawerToggle extends ActionBarDrawerToggle {
                 if(mDrawerLayout.isDrawerOpen(Gravity.END)){
                     mDrawerLayout.closeDrawer(Gravity.END);
                 }
-                if (!mUserLearnedNavDrawer) {
-                    // The user manually opened the drawer; store this flag to prevent auto-showing
-                    // the navigation drawer automatically in the future.
-                    mUserLearnedNavDrawer = true;
-                    SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(mActivity);
-                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
-                }
                 break;
 
             case R.id.filters_drawer :
                 if(mDrawerLayout.isDrawerOpen(Gravity.START)){
                     mDrawerLayout.closeDrawer(Gravity.START);
+                }
+
+                if (!mUserLearnedFilterDrawer) {
+                    // The user manually opened the drawer; store this flag to prevent auto-showing
+                    // the navigation drawer automatically in the future.
+                    mUserLearnedFilterDrawer = true;
+                    SharedPreferences sp = PreferenceManager
+                            .getDefaultSharedPreferences(mActivity);
+                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
                 break;
         }
@@ -80,9 +81,9 @@ public class WhatodoDrawerToggle extends ActionBarDrawerToggle {
         mActivity.supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
     }
 
-public void openNavDrawerIfNotLearned(){
-    if (!mUserLearnedNavDrawer) {
-        mDrawerLayout.openDrawer(Gravity.START);
+public void openFilterDrawerIfNotLearned(){
+    if (!mUserLearnedFilterDrawer) {
+        mDrawerLayout.openDrawer(Gravity.END);
     }
 }
 

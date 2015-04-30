@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.text.ParseException;
 import java.util.List;
@@ -27,50 +27,50 @@ public class EventAdapter<T> extends ArrayAdapter {
     public EventAdapter(Context context, int resource, List<T> objects) {
         super(context, resource, objects);
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-
         // Get the data item for this position
-        Event event = (Event) getItem(position);
+        final Event event = (Event) getItem(position);
+        final ViewHolder vh;
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.event_list_item, parent, false);
+            vh = new ViewHolder();
+            vh.imageItem = (ImageView) convertView.findViewById(R.id.event_list_item_picture);
+            vh.textItemTitle = (TextView) convertView.findViewById(R.id.event_list_item_title);
+            vh.textItemDate = (TextView) convertView.findViewById(R.id.event_list_item_date);
+            vh.textItemPrice = (TextView) convertView.findViewById(R.id.event_list_item_price);
+            vh.textItemPlace = (TextView) convertView.findViewById(R.id.event_list_item_place);
+            vh.textItemSummary = (TextView) convertView.findViewById(R.id.event_list_item_summary);
+            convertView.setTag(vh);
+        } else {
+            vh = (ViewHolder) convertView.getTag();
         }
-        // Lookup view for data population
-        TextView textNoImage = (TextView) convertView.findViewById(R.id.event_list_item_no_image);
-        ImageView imageItem = (ImageView) convertView.findViewById(R.id.event_list_item_picture);
-        TextView textItemTitle = (TextView) convertView.findViewById(R.id.event_list_item_title);
-        TextView textItemDate = (TextView) convertView.findViewById(R.id.event_list_item_date);
-        TextView textItemPrice = (TextView) convertView.findViewById(R.id.event_list_item_price);
-        TextView textItemPlace = (TextView) convertView.findViewById(R.id.event_list_item_place);
-        TextView textItemSummary = (TextView) convertView.findViewById(R.id.event_list_item_summary);
 
-        // Populate the data into the template view using the data object
-       /*  if(event.getImage() == null) {
-            imageItem.setVisibility(View.GONE);
-        }else{
-            textNoImage.setVisibility(View.GONE);
-        }
-            imageItem.setImageDrawable(event.getImage());
-            imageItem.setVisibility(View.GONE);// TODO A MODIFIER AVEC IMAGELOADER !*/
-
-        imageItem.setVisibility(View.GONE);
-        textNoImage.setVisibility(View.VISIBLE);// TODO A MODIFIER AVEC IMAGELOADER !
-        textItemTitle.setText(event.getName());
+        imageLoader.displayImage(event.getImageEvent().replace("127.0.0.1:8001", "dfournier.ovh"), vh.imageItem);
+        vh.textItemTitle.setText(event.getName());
         try {
-            textItemDate.setText(event.getDateAsString());
+            vh.textItemDate.setText(event.getDateAsString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        textItemPrice.setText(event.getPrice());
-        textItemPlace.setText(event.getFullAddress());
-        textItemSummary.setText(event.getDescription());
+        vh.textItemPrice.setText(event.getPrice());
+        vh.textItemPlace.setText(event.getFullAddress());
+        vh.textItemSummary.setText(event.getDescription());
+
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    static class ViewHolder {
+        ImageView imageItem;
+        TextView textItemTitle;
+        TextView textItemDate;
+        TextView textItemPrice;
+        TextView textItemPlace;
+        TextView textItemSummary;
     }
 }
 

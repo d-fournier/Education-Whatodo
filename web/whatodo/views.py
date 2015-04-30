@@ -24,6 +24,8 @@ class EventViewSet(viewsets.ModelViewSet):
 		queryset = Event.objects.all()
 		legal_age_param = self.request.QUERY_PARAMS.get('legal_age', None)
 		city_param = self.request.QUERY_PARAMS.get('city', None)
+		lat_param = self.request.QUERY_PARAMS.get('lat', None)
+		long_param = self.request.QUERY_PARAMS.get('long', None)
 		distance_param = self.request.QUERY_PARAMS.get('distance', None)
 		categories_param = self.request.QUERY_PARAMS.get('categories', None)
 		tags_param = self.request.QUERY_PARAMS.get('tags', None)
@@ -36,17 +38,28 @@ class EventViewSet(viewsets.ModelViewSet):
 		if tags_param is not None:
 			tags_list = categories_param.split(',')
 			queryset = queryset.filter(tags__in=tags_list)
-		if city_param is not None and distance_param is not None:
-			try:
-				city = City.objects.get(id=city_param)
-			except City.DoesNotExist:
-				pass
+		if (city_param is not None or lat_param is not None and long_param is not None) and distance_param is not None:
+			lat = 0;
+			long = 0;
+			if city_param is not None:
+				try:
+					city = City.objects.get(id=city_param)
+					lat = city.latitude
+					long = city.longitude
+				except City.DoesNotExist:
+					pass
+			else:
+				try:
+					lat = int(lat_param)
+					long = int(long_param)
+				except ValueError:
+					pass
 			lat_dist = change_in_latitude_km(distance_param)
 			long_dist = change_in_longitude_km(lat_dist, distance_param)
-			max_lat = float(city.latitude) + lat_dist
-			min_lat = float(city.latitude) - lat_dist
-			max_long = float(city.longitude) + long_dist
-			min_long = float(city.longitude) - long_dist
+			max_lat = float(lat) + lat_dist
+			min_lat = float(lat) - lat_dist
+			max_long = float(long) + long_dist
+			min_long = float(long) - long_dist
 			queryset = queryset.filter(latitude__lte=max_lat)
 			queryset = queryset.filter(latitude__gte=min_lat)
 			queryset = queryset.filter(longitude__gte=min_long)

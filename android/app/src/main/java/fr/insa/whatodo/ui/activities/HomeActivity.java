@@ -7,12 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.transition.TransitionInflater;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -97,6 +99,10 @@ public class HomeActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        if(Build.VERSION.SDK_INT >= 21)
+        {
+            getWindow().setSharedElementExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.transition_home));
+        }
 
         mFiltersFragment = (FiltersFragment)
                 getSupportFragmentManager().findFragmentById(R.id.filters_drawer);
@@ -112,7 +118,15 @@ public class HomeActivity extends ActionBarActivity
         eventListFragment = EventListFragment.newInstance(eventList);
         mapFragment = CustomMapFragment.newInstance(eventList);
 
+        mFiltersFragment.setUp(
+                R.id.filters_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+
         new GetEventsTask().execute(null, null, null);
+        updateEventList();
 
         searchBar = (SearchView) findViewById(R.id.home_search_bar);
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -136,14 +150,7 @@ public class HomeActivity extends ActionBarActivity
 
         mTitle = getTitle();
 
-        // Set up the drawer.
 
-        mFiltersFragment.setUp(
-                R.id.filters_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     @Override
@@ -199,7 +206,7 @@ public class HomeActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen() && !mFiltersFragment.isDrawerOpen()) {
+        if (!mNavigationDrawerFragment.isDrawerOpen() && !mFiltersFragment.isDrawerOpen() && !profileFragment.isVisible()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -218,9 +225,6 @@ public class HomeActivity extends ActionBarActivity
         int id = item.getItemId();
 
         switch (id) {
-            case (R.id.action_settings):
-                //TODO Il faut mettre les settings ici !
-                break;
             case (R.id.action_earth):
                 // update the main content by replacing fragments
                 ConnectivityManager connMgr = (ConnectivityManager)
@@ -393,52 +397,6 @@ public class HomeActivity extends ActionBarActivity
 
 
     public void updateEventList(){
-
-        CategoryFilter categoryFilter=mFiltersFragment.getCategoryFilter();
-        TagFilter tagFilter=mFiltersFragment.getTagFilter();
-        PlaceFilter placeFilter=mFiltersFragment.getPlaceFilter();
-        DistanceFilter distanceFilter=mFiltersFragment.getDistanceFilter();
-        PriceFilter priceFilter=mFiltersFragment.getPriceFilter();
-        DateFilter dateFilter=mFiltersFragment.getDateFilter();
-        AgeFilter ageFilter=mFiltersFragment.getAgeFilter();
-        HourFilter hourFilter=mFiltersFragment.getHourFilter();
-
-        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
-        String dateMin=format.format(dateFilter.getDates()[0]);
-        String dateMax=format.format(dateFilter.getDates()[1]);
-        String hourMin=String.format("%02d:%02d:00", hourFilter.getBeginHours(),hourFilter.getBeginMinutes());
-        String hourMax=String.format("%02d:%02d:00", hourFilter.getEndHours(),hourFilter.getEndMinutes());
-
-
-        //TODO : catégories, tags
-        String filtersUrl= DOWNLOAD_EVENTS_URL+"&distance="+distanceFilter.getValue()+"&min_date="+dateMin+"&max_date="+dateMax
-                +"&legal_age="+ageFilter.is18orMore()+"&min_hour="+hourMin+"&max_hour="+hourMax;
-        if(priceFilter.getValue()!=-1){
-            filtersUrl+="&max_price=" + priceFilter.getValue();
-        }
-
-
-        if(placeFilter.isSendMyPosition() && (placeFilter.getLatitude()!=0 || placeFilter.getLongitude()!=0) ){
-            // Envoi des coordonnées
-            // TODO : envoi position
-            // filtersUrl+="&longitude="+placeFilter.getLongitude()+"&latitude="+placeFilter.getLatitude();
-        }else if(!placeFilter.getTown().isEmpty()){
-            // Envoi de la ville
-            String townAndPostCode=placeFilter.getTown();
-            int lastSpace=townAndPostCode.lastIndexOf(" ");
-            String town= new String(townAndPostCode.substring(0, lastSpace));
-            String postCode= new String(townAndPostCode.substring(lastSpace+1));
-            String id;
-            try{
-                Integer.parseInt(postCode);
-                id=DatabaseServices.getCityId(town,postCode, read_db);
-            }catch(NumberFormatException e){
-                town=townAndPostCode;
-                id=DatabaseServices.getCityId(town,null, read_db);
-            }
-            if(id!=null) filtersUrl+="&city="+id;
-        }
-
         AsyncTask<String,Integer,ArrayList<Event>> task=new AsyncTask<String, Integer, ArrayList<Event>>() {
             @Override
             protected ArrayList<Event> doInBackground(String...filtersUrl) {
@@ -472,10 +430,73 @@ public class HomeActivity extends ActionBarActivity
             }
         };
 
-        task.execute(filtersUrl);
+        task.execute(getFilteringUrl());
+    }
+
+    public String getFilteringUrl(){
+        CategoryFilter categoryFilter=mFiltersFragment.getCategoryFilter();
+        TagFilter tagFilter=mFiltersFragment.getTagFilter();
+        PlaceFilter placeFilter=mFiltersFragment.getPlaceFilter();
+        DistanceFilter distanceFilter=mFiltersFragment.getDistanceFilter();
+        PriceFilter priceFilter=mFiltersFragment.getPriceFilter();
+        DateFilter dateFilter=mFiltersFragment.getDateFilter();
+        AgeFilter ageFilter=mFiltersFragment.getAgeFilter();
+        HourFilter hourFilter=mFiltersFragment.getHourFilter();
+
+        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        String dateMin=format.format(dateFilter.getDates()[0]);
+        String dateMax=format.format(dateFilter.getDates()[1]);
+        String hourMin=String.format("%02d:%02d:00", hourFilter.getBeginHours(),hourFilter.getBeginMinutes());
+        String hourMax=String.format("%02d:%02d:00", hourFilter.getEndHours(),hourFilter.getEndMinutes());
 
 
+        String filtersUrl= DOWNLOAD_EVENTS_URL+"&distance="+distanceFilter.getValue()+"&min_date="+dateMin+"&max_date="+dateMax
+                +"&legal_age="+ageFilter.is18orMore()+"&min_hour="+hourMin+"&max_hour="+hourMax;
+        if(priceFilter.getValue()!=-1){
+            filtersUrl+="&max_price=" + priceFilter.getValue();
+        }
+        if(categoryFilter.getValue().size()>0){
+            filtersUrl+="&categories=";
+            for(int i=0; i<categoryFilter.getValue().size(); i++){
+                if(i!=0){
+                    filtersUrl+=",";
+                }
+                filtersUrl+= categoryFilter.getValue().get(i).ordinal()+1;
+            }
+        }
 
+        if(tagFilter.getValues().size()>0){
+            filtersUrl+="&tags=";
+            for(int i=0; i<tagFilter.getValues().size(); i++){
+                if(i!=0){
+                    filtersUrl+=",";
+                }
+                filtersUrl+= DatabaseServices.getTagId(tagFilter.getValues().get(i), read_db);
+            }
+        }
+
+
+        if(placeFilter.isSendMyPosition() && (placeFilter.getLatitude()!=0 || placeFilter.getLongitude()!=0) ){
+            // Envoi des coordonnées
+            // TODO : envoi position
+            // filtersUrl+="&longitude="+placeFilter.getLongitude()+"&latitude="+placeFilter.getLatitude();
+        }else if(!placeFilter.getTown().isEmpty()){
+            // Envoi de la ville
+            String place=placeFilter.getTown();
+            String id;
+            try{
+                int lastSpace=place.lastIndexOf(" ");
+                String town= new String(place.substring(0, lastSpace));
+                String postCode= new String(place.substring(lastSpace+1));
+                Integer.parseInt(postCode);
+                id=DatabaseServices.getCityId(town,postCode, read_db);
+            }catch(Exception e){
+                id=DatabaseServices.getCityId(place,null, read_db);
+            }
+            if(id!=null) filtersUrl+="&city="+id;
+        }
+
+        return filtersUrl;
     }
 
 }
