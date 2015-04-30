@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".FiltersFragment">
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Semaine"
-        android:id="@+id/checkBoxSemaine"/>
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Week end"
-        android:id="@+id/checkBoxWeekEnd"
-        android:layout_below="@id/checkBoxSemaine"/>
-
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,8 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Du : "
-            android:id="@+id/textDu"
-            android:layout_below="@+id/checkBoxWeekEnd"/>
+            android:id="@+id/textDu" />
 
         <Button
             android:layout_width="match_parent"
