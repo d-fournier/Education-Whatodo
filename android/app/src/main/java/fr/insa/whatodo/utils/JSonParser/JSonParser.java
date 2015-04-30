@@ -13,6 +13,7 @@ import fr.insa.whatodo.model.Category;
 import fr.insa.whatodo.model.City;
 import fr.insa.whatodo.model.Event;
 import fr.insa.whatodo.model.Tag;
+import fr.insa.whatodo.model.User;
 
 /**
  * Created by William on 29/03/2015.
@@ -67,19 +68,12 @@ public class JSonParser{
 
     }
 
-    public ArrayList<City> parseCities(InputStream source) {
-
-
+    public User parseUser(InputStream source){
         Gson gson = new Gson();
-
         Reader reader = new InputStreamReader(source);
-
-        JSonCitiesAnswer response = gson.fromJson(reader, JSonCitiesAnswer.class);
-
-        System.out.println("Il y a "+response.getCount()+" villes !");
-
-        return response.getResults();
+        return gson.fromJson(reader, User.class);
 
     }
+
 
 }

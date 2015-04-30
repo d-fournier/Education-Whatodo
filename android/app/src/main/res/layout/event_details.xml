@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/image_details"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#FFFFFFFF"/>
+            android:textColor="#FFFFFFFF" />
 
         <LinearLayout
             android:id="@+id/first_details_item"
