@@ -2,9 +2,9 @@ package fr.insa.whatodo.ui;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
 
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
 import android.view.View;
 
@@ -27,8 +27,8 @@ public class WhatodoDrawerToggle extends ActionBarDrawerToggle {
     private boolean mUserLearnedFilterDrawer;
     DrawerLayout mDrawerLayout;
 
-    public WhatodoDrawerToggle(HomeActivity activity, DrawerLayout drawerLayout, int drawerImageRes, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
-        super(activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes);
+    public WhatodoDrawerToggle(HomeActivity activity, DrawerLayout drawerLayout, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
+        super(activity, drawerLayout, openDrawerContentDescRes, closeDrawerContentDescRes);
 
         mActivity=activity;
         mDrawerLayout=drawerLayout;

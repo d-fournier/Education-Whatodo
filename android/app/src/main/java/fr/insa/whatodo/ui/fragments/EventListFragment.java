@@ -84,14 +84,6 @@ public class EventListFragment extends Fragment implements OnListChangedListener
                 ImageView image = (ImageView) view.findViewById(R.id.event_list_item_picture);
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.putExtra("event", e);
-//                try {
-//                    Bitmap b = ((BitmapDrawable) image.getDrawable()).getBitmap();
-//                    ByteArrayOutputStream bs = new ByteArrayOutputStream();
-//                    b.compress(Bitmap.CompressFormat.JPEG, 80, bs);
-//                    intent.putExtra("bitmap", bs.toByteArray());
-//                } catch (Exception e1) {
-//
-//                }
 
                 String transitionName = getString(R.string.event_details_transition);
                 ActivityOptionsCompat options =

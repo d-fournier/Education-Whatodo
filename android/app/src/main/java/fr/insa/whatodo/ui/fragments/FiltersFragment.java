@@ -197,7 +197,6 @@ public class FiltersFragment extends Fragment implements View.OnClickListener {
         mDrawerToggle=new WhatodoDrawerToggle(
                 (HomeActivity)getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_filters,             /* nav drawer image to replace 'Up' caret */
                 R.string.filters_open,  /* "open drawer" description for accessibility */
                 R.string.filters_drawer_close  /* "close drawer" description for accessibility */
         );

@@ -87,8 +87,8 @@ public class NavigationDrawerFragment extends Fragment {
         });
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
+                R.layout.drawer_item,
+                R.id.text1,
                 new String[]{
                         getString(R.string.principal_view),
                         getString(R.string.profile_view),
@@ -123,7 +123,6 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerToggle=new WhatodoDrawerToggle(
                 (HomeActivity)getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         );
