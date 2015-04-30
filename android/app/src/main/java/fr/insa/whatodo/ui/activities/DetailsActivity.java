@@ -54,12 +54,13 @@ public class DetailsActivity extends ActionBarActivity {
         TextView agemin = (TextView) findViewById(R.id.agemin_details);
         TextView tags = (TextView) findViewById(R.id.tags_details);
 
-        try {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(
-                    getIntent().getByteArrayExtra("bitmap"), 0, getIntent().getByteArrayExtra("bitmap").length);
-            image.setImageBitmap(bitmap);
-        } catch (Exception e) {
-        }
+        imageLoader.displayImage(event.getImageEvent().replace("127.0.0.1:8001", "dfournier.ovh"), image);
+//        try {
+//            Bitmap bitmap = BitmapFactory.decodeByteArray(
+//                    getIntent().getByteArrayExtra("bitmap"), 0, getIntent().getByteArrayExtra("bitmap").length);
+//            image.setImageBitmap(bitmap);
+//        } catch (Exception e) {
+//        }
 
         title.setText(event.getName());
         try {

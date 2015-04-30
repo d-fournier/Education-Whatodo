@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -29,66 +30,59 @@ import fr.insa.whatodo.model.Event;
 public class EventAdapter<T> extends ArrayAdapter {
 
     ImageLoader imageLoader;
-    LruCache<String, Bitmap> bitmapCache;
 
     public EventAdapter(Context context, int resource, List<T> objects) {
         super(context, resource, objects);
-        bitmapCache = new LruCache<>(16*1024*1024);
         imageLoader = ImageLoader.getInstance();
-        if(!imageLoader.isInited())
-        {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        }
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         final Event event = (Event) getItem(position);
+        final ViewHolder vh;
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.event_list_item, parent, false);
+            vh = new ViewHolder();
+            vh.textNoImage = (TextView) convertView.findViewById(R.id.event_list_item_no_image);
+            vh. imageItem = (ImageView) convertView.findViewById(R.id.event_list_item_picture);
+            vh. progressBar = (ProgressBar) convertView.findViewById(R.id.download_progress_bar);
+            vh. textItemTitle = (TextView) convertView.findViewById(R.id.event_list_item_title);
+            vh. textItemDate = (TextView) convertView.findViewById(R.id.event_list_item_date);
+            vh. textItemPrice = (TextView) convertView.findViewById(R.id.event_list_item_price);
+            vh. textItemPlace = (TextView) convertView.findViewById(R.id.event_list_item_place);
+            vh. textItemSummary = (TextView) convertView.findViewById(R.id.event_list_item_summary);
+            convertView.setTag(vh);
+        } else {
+            vh = (ViewHolder) convertView.getTag();
         }
-        // Lookup view for data population
-        final TextView  textNoImage = (TextView) convertView.findViewById(R.id.event_list_item_no_image);
-        final ImageView imageItem = (ImageView) convertView.findViewById(R.id.event_list_item_picture);
-        final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.download_progress_bar);
-        TextView textItemTitle = (TextView) convertView.findViewById(R.id.event_list_item_title);
-        TextView textItemDate = (TextView) convertView.findViewById(R.id.event_list_item_date);
-        TextView textItemPrice = (TextView) convertView.findViewById(R.id.event_list_item_price);
-        TextView textItemPlace = (TextView) convertView.findViewById(R.id.event_list_item_place);
-        TextView textItemSummary = (TextView) convertView.findViewById(R.id.event_list_item_summary);
 
         if (event.getImageEvent() == null) {
-            imageItem.setVisibility(View.GONE);
-            textNoImage.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-        }else if(bitmapCache.get(""+event.getId())!=null){
-            imageItem.setImageBitmap(bitmapCache.get(""+event.getId()));
+            vh.imageItem.setVisibility(View.GONE);
+            vh.textNoImage.setVisibility(View.VISIBLE);
+            vh.progressBar.setVisibility(View.GONE);
         }else {
-
-            imageLoader.loadImage(event.getImageEvent().replace("127.0.0.1:8001", "dfournier.ovh"), new ImageLoadingListener() {
+            imageLoader.displayImage(event.getImageEvent().replace("127.0.0.1:8001", "dfournier.ovh"),  vh.imageItem, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
-                    imageItem.setVisibility(View.GONE);
-                    textNoImage.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.VISIBLE);
+                    vh.imageItem.setVisibility(View.GONE);
+                    vh.textNoImage.setVisibility(View.GONE);
+                    vh. progressBar.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                    imageItem.setVisibility(View.GONE);
-                    textNoImage.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.GONE);
+                    vh.imageItem.setVisibility(View.GONE);
+                    vh.textNoImage.setVisibility(View.VISIBLE);
+                    vh.progressBar.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    bitmapCache.put(""+event.getId(),loadedImage);
-                    imageItem.setImageBitmap(loadedImage);
-                    imageItem.setVisibility(View.VISIBLE);
-                    textNoImage.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
+                    vh.imageItem.setVisibility(View.VISIBLE);
+                    vh.textNoImage.setVisibility(View.GONE);
+                    vh. progressBar.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -97,18 +91,29 @@ public class EventAdapter<T> extends ArrayAdapter {
                 }
             });
         }
-        textItemTitle.setText(event.getName());
+        vh.textItemTitle.setText(event.getName());
         try {
-            textItemDate.setText(event.getDateAsString());
+            vh.textItemDate.setText(event.getDateAsString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        textItemPrice.setText(event.getPrice());
-        textItemPlace.setText(event.getFullAddress());
-        textItemSummary.setText(event.getDescription());
+        vh.textItemPrice.setText(event.getPrice());
+        vh.textItemPlace.setText(event.getFullAddress());
+        vh.textItemSummary.setText(event.getDescription());
 
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    static class ViewHolder {
+        TextView  textNoImage;
+        ImageView imageItem ;
+        ProgressBar progressBar ;
+        TextView textItemTitle;
+        TextView textItemDate;
+        TextView textItemPrice;
+        TextView textItemPlace;
+        TextView textItemSummary;
     }
 }
 
