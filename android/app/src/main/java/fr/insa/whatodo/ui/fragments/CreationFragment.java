@@ -97,7 +97,7 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
                 AsyncTask<String, Void, Integer> task = new AsyncTask<String, Void, Integer>() {
                     @Override
                     protected Integer doInBackground(String... params) {
-                        HttpResponse response = null;
+
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         try {
  /*                           HttpClient http = new DefaultHttpClient();
