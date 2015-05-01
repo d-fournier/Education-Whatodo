@@ -125,4 +125,5 @@ public class Event implements Serializable {
     public List<Tag> getTags() {
         return tags;
     }
+
 }

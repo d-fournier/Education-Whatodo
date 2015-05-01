@@ -41,6 +41,7 @@ import fr.insa.whatodo.model.Tag;
 import fr.insa.whatodo.model.TagFilter;
 import fr.insa.whatodo.model.User;
 import fr.insa.whatodo.services.DatabaseServices;
+import fr.insa.whatodo.ui.fragments.CreationFragment;
 import fr.insa.whatodo.ui.fragments.CustomMapFragment;
 import fr.insa.whatodo.ui.fragments.DownloadFragment;
 import fr.insa.whatodo.ui.fragments.EventListFragment;
@@ -77,6 +78,7 @@ public class HomeActivity extends ActionBarActivity
     /**
      * Fragments of the activity
      */
+    private CreationFragment creationFragment;
     private EventListFragment eventListFragment;
     private CustomMapFragment mapFragment;
     private DownloadFragment downloadFragment;
@@ -115,6 +117,7 @@ public class HomeActivity extends ActionBarActivity
         eventList = new ArrayList<>();
         mListeners = new ArrayList<>();
 
+        creationFragment = new CreationFragment();
         loginFragment = new LoginFragment();
         downloadFragment = new DownloadFragment();
         profileFragment = new ProfileViewFragment();
@@ -180,6 +183,16 @@ public class HomeActivity extends ActionBarActivity
                         fragmentManager.beginTransaction().replace(R.id.fragment_home_container, loginFragment).commit();
                     }
                     break;
+                case (2):
+                    searchBar.setVisibility(View.GONE);
+                    if(!prefs.getString("token", "no_token").equals("no_token"))
+                    {
+                        fragmentManager.beginTransaction().replace(R.id.fragment_home_container, creationFragment).commit();
+                    }else
+                    {
+                        fragmentManager.beginTransaction().replace(R.id.fragment_home_container, loginFragment).commit();
+                    }
+                    break;
             }
         } catch (NullPointerException e) {
             //On passe la première fois
@@ -192,10 +205,10 @@ public class HomeActivity extends ActionBarActivity
                 mTitle = getString(R.string.principal_view);
                 break;
             case 2:
-                mTitle = getString(R.string.profile_view);
+                mTitle = getString(R.string.login);
                 break;
             case 3:
-                mTitle = getString(R.string.login);
+                mTitle = getString(R.string.create_event);
                 break;
         }
     }

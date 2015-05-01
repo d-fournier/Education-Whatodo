@@ -19,7 +19,6 @@
     <string name="no_connection">Pas de connexion internet</string>
     <string name="no_image">Pas d\'image disponible</string>
     <string name="principal_view">Vue principale</string>
-    <string name="profile_view">Profil</string>
     <string name="download">Téléchargement des événements</string>
     <string name="parse">Traitement des événements</string>
     <string name="download_failed_txt">Aucun événement disponible</string>
@@ -46,4 +45,18 @@
     <string name="no_login">Identifiants incorrects</string>
     <string name="login_ok">Connexion réussie</string>
     <string name="no_user">Aucune information</string>
+    <string name="create_event">Créer événement</string>
+    <string name="select_image">Sélectionner image</string>
+
+    <string name="title">Titre</string>
+    <string name="description">Description</string>
+    <string name="url">URL</string>
+    <string name="image">Image</string>
+    <string name="time_begin">Heure début</string>
+    <string name="time_end">Heure fin</string>
+    <string name="date_begin">Date début</string>
+    <string name="date_end">Date fin</string>
+    <string name="min_age">Age minimum</string>
+    <string name="address">Adresse</string>
+    <string name="city">Ville</string>
 </resources>
