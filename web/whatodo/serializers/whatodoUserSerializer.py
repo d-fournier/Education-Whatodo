@@ -8,9 +8,9 @@ from whatodo.serializers.categorySerializer import CategorySerializer
 from whatodo.serializers.citySerializer import CitySerializer
 
 class WhatodoUserSerializer(serializers.ModelSerializer):
-	categories = CategorySerializer(many=True, read_only=True)
-	cities = CitySerializer(many=True, read_only=True)
-	events = EventReadSerializer(many=True, read_only=True)
+	categories = serializers.PrimaryKeyRelatedField(many=True, queryset=Category.objects.all())
+	cities = serializers.PrimaryKeyRelatedField(many=True, queryset=City.objects.all())
+	events = serializers.PrimaryKeyRelatedField(many=True, queryset=Event.objects.all())
 
 	class Meta:
 		model = WhatodoUser
