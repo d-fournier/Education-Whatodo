@@ -63,7 +63,7 @@ public class DetailsActivity extends ActionBarActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        place.setText("Lieu : " + event.getAddress());
+        place.setText("Lieu : " + event.getFullAddress());
         summary.setText("Description : " + event.getDescription());
         price.setText("Prix : " + event.getPrice());
         url.setText("Site : " + event.getUrl());

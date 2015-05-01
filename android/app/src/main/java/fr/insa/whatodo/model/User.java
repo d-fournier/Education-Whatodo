@@ -12,25 +12,21 @@ public class User implements Serializable{
 
     protected Drawable image;
     protected String name;
-    protected String password;
-    protected String mail;
+    protected String email;
     protected ArrayList<String> cities;
     protected int age;
 
-    public User(String name, String password, String mail, ArrayList<String> cities, int age) {
-        //this.image = defaultImage; //For users without image
+    public User(String name, String mail, ArrayList<String> cities, int age) {
         this.name = name;
-        this.password = password;
-        this.mail = mail;
+        this.email = mail;
         this.cities = cities;
         this.age = age;
     }
 
-    public User(Drawable image, String name, String password, String mail, ArrayList<String> cities, int age) {
+    public User(Drawable image, String name, String mail, ArrayList<String> cities, int age) {
         this.image = image;
         this.name = name;
-        this.password = password;
-        this.mail = mail;
+        this.email = mail;
         this.cities = cities;
         this.age = age;
     }
@@ -39,12 +35,8 @@ public class User implements Serializable{
         return name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getMail() {
-        return mail;
+        return email;
     }
 
     public ArrayList<String> getCities() {

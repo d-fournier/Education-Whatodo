@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-from django.conf import settings
 import django.utils.timezone
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -15,13 +15,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WhatodoUser',
             fields=[
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(verbose_name='last login', default=django.utils.timezone.now)),
+                ('password', models.CharField(verbose_name='password', max_length=128)),
+                ('last_login', models.DateTimeField(default=django.utils.timezone.now, verbose_name='last login')),
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('email', models.EmailField(unique=True, max_length=254)),
                 ('username', models.CharField(unique=True, max_length=30)),
-                ('is_admin', models.BooleanField(help_text='Designates whether the user can log into this admin site.', default=False)),
-                ('is_active', models.BooleanField(help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', default=True)),
+                ('age', models.IntegerField(default=0)),
+                ('is_admin', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.')),
+                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now)),
             ],
             options={
@@ -45,8 +46,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=50)),
                 ('ZIPcode', models.CharField(max_length=10)),
-                ('latitude', models.DecimalField(max_digits=10, decimal_places=7)),
-                ('longitude', models.DecimalField(max_digits=10, decimal_places=7)),
+                ('latitude', models.DecimalField(decimal_places=7, max_digits=10)),
+                ('longitude', models.DecimalField(decimal_places=7, max_digits=10)),
             ],
             options={
             },
@@ -55,7 +56,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Comment',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
             ],
             options={
             },
@@ -68,16 +69,16 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=30)),
                 ('description', models.CharField(max_length=200)),
                 ('url', models.URLField()),
-                ('imageEvent', models.ImageField(upload_to='static/images', default='/static/images/jeanDujardin.jpg')),
+                ('imageEvent', models.ImageField(default='/static/images/jeanDujardin.jpg', upload_to='/var/www/dfournier.ovh/whatodo/media')),
                 ('startTime', models.TimeField()),
                 ('endTime', models.TimeField()),
                 ('startDate', models.DateField()),
                 ('endDate', models.DateField()),
-                ('price', models.DecimalField(max_digits=5, decimal_places=2)),
+                ('price', models.DecimalField(decimal_places=2, max_digits=5)),
                 ('min_age', models.IntegerField()),
                 ('address', models.CharField(max_length=500)),
-                ('latitude', models.DecimalField(max_digits=10, decimal_places=7)),
-                ('longitude', models.DecimalField(max_digits=10, decimal_places=7)),
+                ('latitude', models.DecimalField(decimal_places=7, max_digits=10)),
+                ('longitude', models.DecimalField(decimal_places=7, max_digits=10)),
                 ('categories', models.ManyToManyField(to='whatodo.Category')),
                 ('city', models.ForeignKey(to='whatodo.City')),
             ],

@@ -45,7 +45,7 @@ public class WhatodoDrawerToggle extends ActionBarDrawerToggle {
         super.onDrawerClosed(drawerView);
 
         if(drawerView.getId()== R.id.filters_drawer){
-            mActivity.updateEventList();
+            mActivity.new GetEventsTask().execute(mActivity.getFilteringUrl());
         }
 
         mActivity.supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()

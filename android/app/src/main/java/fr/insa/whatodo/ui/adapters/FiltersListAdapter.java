@@ -471,28 +471,10 @@ public class FiltersListAdapter extends BaseExpandableListAdapter implements Exp
                 convertView=inflater.inflate(R.layout.fragment_date_filter,null);
                 Button firstDateButton=(Button)convertView.findViewById(R.id.firstDateText);
                 Button lastDateButton=(Button)convertView.findViewById(R.id.lastDateText);
-                CheckBox semaine=(CheckBox)convertView.findViewById(R.id.checkBoxSemaine);
-                CheckBox weekend=(CheckBox)convertView.findViewById(R.id.checkBoxWeekEnd);
-
                 DateFilter df=fragment.getDateFilter();
                 SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
                 firstDateButton.setText(format.format(df.getDates()[0]));
                 lastDateButton.setText(format.format(df.getDates()[1]));
-                semaine.setChecked(df.allowWeekDays());
-                weekend.setChecked(df.allowWeekEnds());
-
-                semaine.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            fragment.getDateFilter().setAllowWeekDays(isChecked);
-                    }
-                });
-                weekend.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        fragment.getDateFilter().setAllowWeekends(isChecked);
-                    }
-                });
                 break;
             case 6:
                 convertView=inflater.inflate(R.layout.fragment_age_filter,null);

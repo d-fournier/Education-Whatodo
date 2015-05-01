@@ -37,7 +37,8 @@ class WhatodoUserManager(BaseUserManager):
 class WhatodoUser(AbstractBaseUser):	
 	id = models.AutoField(primary_key=True)
 	email = models.EmailField(max_length = 254, unique = True)
-	username = models.CharField(max_length=30, unique = True)
+	username = models.CharField(max_length=30)
+	age = models.IntegerField(default = 0)
 
 	is_admin = models.BooleanField(default=False,
 		help_text=_('Designates whether the user can log into this admin '
