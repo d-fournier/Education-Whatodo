@@ -1,13 +1,18 @@
 from django.shortcuts import render
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import viewsets
 from .serializers.categorySerializer import CategorySerializer
 from .serializers.tagSerializer import TagSerializer
 from .serializers.eventSerializer import EventReadSerializer, EventCreateSerializer
 from .serializers.citySerializer import CitySerializer
+from .serializers.whatodoUserSerializer import WhatodoUserSerializer
 from .models.category import Category
 from .models.tag import Tag
 from .models.event import Event
 from .models.city import City
+from .models.whatodoUser import WhatodoUser
 from .filters import EventFilter
 from .utils import * 
 
@@ -81,7 +86,14 @@ class CityViewSet(viewsets.ReadOnlyModelViewSet):
 	queryset = City.objects.all()
 	serializer_class = CitySerializer
 
-	
+class UserViewSet(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+	serializer_class = WhatodoUserSerializer
+	def get_queryset(self):
+		user = self.request.user
+		return WhatodoUser.objects.filter(id=user.id)
+
+			
 # Create your views here.
 def home(request):
 	return render(request, 'whatodo/index.html')

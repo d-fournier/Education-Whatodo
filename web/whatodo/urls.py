@@ -9,7 +9,7 @@ router.register(r'event', EventViewSet)
 router.register(r'category', CategoryViewSet)
 router.register(r'tag', TagViewSet)
 router.register(r'city', CityViewSet)
-
+router.register(r'user', UserViewSet, base_name='user')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
