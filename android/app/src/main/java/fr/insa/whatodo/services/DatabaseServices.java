@@ -3,6 +3,7 @@ package fr.insa.whatodo.services;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.io.FileNotFoundException;
@@ -239,6 +240,16 @@ public class DatabaseServices {
             } while (c.moveToNext());
         }
         return id;
+    }
+
+    public static String findCityById(int id, SQLiteDatabase db) {
+        String query = "SELECT * FROM City WHERE "+ EventDatabaseContract.CityTable.COLUMN_NAME_CITY_ID +" = "+id;
+        Cursor c = db.rawQuery(query, null);
+
+        if (c.moveToFirst()) {
+            return c.getString(0);
+        }
+        return "";
     }
 
     public static String getTagId(String tagName, SQLiteDatabase db) {

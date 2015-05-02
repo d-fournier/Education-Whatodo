@@ -3,6 +3,7 @@ package fr.insa.whatodo.ui.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,12 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 
 import java.io.File;
+import java.util.List;
 
 import fr.insa.whatodo.R;
+import fr.insa.whatodo.services.DatabaseServices;
+import fr.insa.whatodo.ui.activities.HomeActivity;
+import fr.insa.whatodo.utils.EventDatabaseHelper;
 import fr.insa.whatodo.utils.MultipartUtility;
 
 
@@ -44,6 +50,9 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
     EditText city;
     EditText tags;
 
+    protected EventDatabaseHelper mDbHelper;
+    SQLiteDatabase read_db = null;
+
     String filePath;
 
     public CreationFragment() {
@@ -59,6 +68,8 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_creation, container, false);
+        mDbHelper = new EventDatabaseHelper(getActivity());
+        read_db = mDbHelper.getReadableDatabase();
         imageButton = (Button) rootView.findViewById(R.id.button_image);
         submitButton = (Button) rootView.findViewById(R.id.button_submit);
         title = (EditText) rootView.findViewById(R.id.edit_title);
@@ -94,42 +105,27 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
         {
             case(R.id.button_submit) :
                 //On lance le service d'upload du fichier
-                AsyncTask<String, Void, Integer> task = new AsyncTask<String, Void, Integer>() {
+                AsyncTask<String, Void, List<String>> task = new AsyncTask<String, Void, List<String>>() {
                     @Override
-                    protected Integer doInBackground(String... params) {
+                    protected void onPostExecute(List<String> response) {
+                        super.onPostExecute(response);
+                        if(response == null)
+                        {
+                            Toast.makeText(getActivity(), getResources().getString(R.string.no_creation), Toast.LENGTH_SHORT).show();
+                        }else
+                        {
+                            ((HomeActivity)getActivity()).updateCreationFragment();
+                        }
+
+                    }
+
+                    @Override
+                    protected List<String> doInBackground(String... params) {
 
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         try {
- /*                           HttpClient http = new DefaultHttpClient();
-                            HttpPost method = new HttpPost("http://dfournier.ovh/api/event/");
-                            method.addHeader("Authorization", "token "+prefs.getString("token",""));
-                            MultipartEntityBuilder entity = MultipartEntityBuilder.create();
-                            entity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-                            entity.addPart("name", new StringBody(title.getText().toString(), ContentType.TEXT_PLAIN));
-                            entity.addPart("description", new StringBody(description.getText().toString(), ContentType.TEXT_PLAIN));
-                            entity.addPart("url", new StringBody(url.getText().toString(), ContentType.TEXT_PLAIN));
-                           // entity.addPart("imageEvent", new FileBody((new File(filePath)) , ContentType.APPLICATION_OCTET_STREAM));
-                            entity.addPart("imageEvent", new ByteArrayBody(new byte[1024*1024], filePath));
-                            entity.addPart("startTime", new StringBody(startTime.getText().toString(), ContentType.TEXT_PLAIN));
-                            entity.addPart("endTime", new StringBody(endTime.getText().toString(), ContentType.TEXT_PLAIN));
-                            entity.addPart("startDate", new StringBody(startDate.getText().toString(), ContentType.TEXT_PLAIN));
-                            entity.addPart("endDate", new StringBody(endDate.getText().toString(), ContentType.TEXT_PLAIN));
-                            entity.addPart("price", new StringBody(price.getText().toString(), ContentType.TEXT_PLAIN));
-                            entity.addPart("min_age", new StringBody(minAge.getText().toString(), ContentType.TEXT_PLAIN));
-                            entity.addPart("address", new StringBody(address.getText().toString(), ContentType.TEXT_PLAIN));
-                            entity.addPart("city", new StringBody(city.getText().toString(), ContentType.TEXT_PLAIN));
-                            entity.addPart("categories", new StringBody(("2"), ContentType.TEXT_PLAIN));
-                            entity.addPart("tags", new StringBody(("2"), ContentType.TEXT_PLAIN));
-                            entity.addPart("latitude", new StringBody(("0"), ContentType.TEXT_PLAIN));
-                            entity.addPart("longitude", new StringBody(("0"), ContentType.TEXT_PLAIN));
-
-                            method.setEntity(entity.build());
-
-                            response = http.execute(method);*/
 
                             MultipartUtility multipart = new MultipartUtility("http://dfournier.ovh/api/event/", "UTF-8", "token "+prefs.getString("token",""));
-
 
                             multipart.addFormField("name", title.getText().toString());
                             multipart.addFormField("description", description.getText().toString());
@@ -141,20 +137,24 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
                             multipart.addFormField("price", price.getText().toString());
                             multipart.addFormField("min_age", minAge.getText().toString());
                             multipart.addFormField("address", address.getText().toString());
-                            multipart.addFormField("city", city.getText().toString());
+                            String s_city = (city.getText().toString());
+                            int space = s_city.indexOf(" ");
+                            String cityName = city.getText().toString().substring(space+1, s_city.length());
+                            String cityCode = city.getText().toString().substring(0, space);
+                            multipart.addFormField("city", DatabaseServices.getCityId(cityName, cityCode, read_db));
                             multipart.addFormField("categories", "2");
                             multipart.addFormField("tags", "2");
                             multipart.addFormField("latitude", "0");
                             multipart.addFormField("longitude", "0");
 
                             multipart.addFilePart("imageEvent", new File(filePath));
-                            multipart.finish();
 
-                            return 1;
+                           List<String> response = multipart.finish();
+                           return response;
                         }catch(Exception e)
                         {
                             e.printStackTrace();
-                            return 0;
+                            return null;
                         }
                     }
                 };

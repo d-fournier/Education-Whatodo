@@ -114,6 +114,7 @@ public class HomeActivity extends ActionBarActivity
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         mDbHelper = new EventDatabaseHelper(getApplicationContext());
+
         eventList = new ArrayList<>();
         mListeners = new ArrayList<>();
 
@@ -303,6 +304,8 @@ public class HomeActivity extends ActionBarActivity
         return tagNamesList;
     }
 
+
+
     public class GetEventsTask extends AsyncTask<String, Void, Void> {
 
         ProgressDialog dialog;
@@ -354,7 +357,7 @@ public class HomeActivity extends ActionBarActivity
 
             try {
                 // Construct the URL for the server query
-                URL event_url = new URL(getFilteringUrl());
+                URL event_url = new URL(params[0]);
                 URL categories_url = new URL(DOWNLOAD_CATEGORIES_URL);
                 URL tags_url = new URL(DOWNLOAD_TAGS_URL);
 
@@ -478,5 +481,10 @@ public class HomeActivity extends ActionBarActivity
             this.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container, profileFragment).commit();
             mNavigationDrawerFragment.selectItem(1);
         }
+    }
+
+    public void updateCreationFragment() {
+        new GetEventsTask().execute(getFilteringUrl());
+        mNavigationDrawerFragment.selectItem(0);
     }
 }

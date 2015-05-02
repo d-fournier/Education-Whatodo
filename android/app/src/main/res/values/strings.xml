@@ -47,6 +47,7 @@
     <string name="no_user">Aucune information</string>
     <string name="create_event">Créer événement</string>
     <string name="select_image">Sélectionner image</string>
+    <string name="no_creation">L\'événement ne peut être créé</string>
 
     <string name="title">Titre</string>
     <string name="description">Description</string>

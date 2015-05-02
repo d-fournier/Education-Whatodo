@@ -2,6 +2,7 @@ package fr.insa.whatodo.ui.fragments;
 
 
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,7 +24,9 @@ import java.net.URL;
 
 import fr.insa.whatodo.R;
 import fr.insa.whatodo.model.User;
+import fr.insa.whatodo.services.DatabaseServices;
 import fr.insa.whatodo.ui.activities.HomeActivity;
+import fr.insa.whatodo.utils.EventDatabaseHelper;
 import fr.insa.whatodo.utils.JSonParser.JSonParser;
 import fr.insa.whatodo.utils.Utils;
 
@@ -32,7 +35,8 @@ import fr.insa.whatodo.utils.Utils;
  */
 public class ProfileViewFragment extends Fragment {
 
-    private static final String USER_URL = "http://dfournier.ovh/auth/me?format=json";
+    private static final String USER_URL_ME = "http://dfournier.ovh/auth/me?format=json";
+    private static final String USER_URL = "http://dfournier.ovh/api/user/";
 
     protected ImageView imageItem;
     protected TextView textItemName;
@@ -41,16 +45,9 @@ public class ProfileViewFragment extends Fragment {
     protected TextView textItemPlaces;
     protected TextView textItemInterests;
     protected User user;
+    protected EventDatabaseHelper mDbHelper;
+    SQLiteDatabase read_db = null;
 
-/*    public static ProfileViewFragment newInstance(User user) {
-        ProfileViewFragment f = new ProfileViewFragment();
-        //Bundle allows you to
-        Bundle args = new Bundle();
-        args.putSerializable("user", user);
-        f.setArguments(args);
-        return f;
-    }
-*/
     public static ProfileViewFragment newInstance() {
 
         ProfileViewFragment f = new ProfileViewFragment();
@@ -64,6 +61,9 @@ public class ProfileViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile_view, container, false);
         Bundle args = this.getArguments();
+        mDbHelper = new EventDatabaseHelper(getActivity());
+        read_db = mDbHelper.getReadableDatabase();
+
         imageItem = (ImageView) rootView.findViewById(R.id.profile_view_picture);
         textItemName = (TextView) rootView.findViewById(R.id.profile_view_name);
         textItemMail = (TextView) rootView.findViewById(R.id.profile_view_mail);
@@ -111,12 +111,20 @@ public class ProfileViewFragment extends Fragment {
             //J'envoie la requete au serveur
             try {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                URL user_url = new URL(USER_URL);
+                URL user_url_me = new URL(USER_URL_ME);
+                urlConnection = (HttpURLConnection) user_url_me.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestProperty("Authorization", "token " + prefs.getString("token", ""));
+                InputStream is_user_me = urlConnection.getInputStream();
+                JSonParser parser = new JSonParser();
+                User u_me = parser.parseUser(is_user_me);
+
+                URL user_url = new URL(USER_URL+u_me.getId());
                 urlConnection = (HttpURLConnection) user_url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty("Authorization", "token " + prefs.getString("token", ""));
                 InputStream is_user = urlConnection.getInputStream();
-                JSonParser parser = new JSonParser();
+                parser = new JSonParser();
                 User u = parser.parseUser(is_user);
                 urlConnection.disconnect();
                 return u;
@@ -139,14 +147,14 @@ public class ProfileViewFragment extends Fragment {
             textItemInterests.setText("");
 
         }else{
-            imageItem.setImageDrawable(user.getImage());
+            //imageItem.setImageDrawable(user.getImage());
             textItemName.setText(user.getName());
             textItemMail.setText(user.getMail());
-            textItemAge.setText("" + user.getAge());
+            textItemAge.setText("" + user.getAge()+" ans");
             String cities = "";
             try {
                 for (String city : user.getCities()) {
-                    cities += city + ", ";
+                    cities += DatabaseServices.findCityById(Integer.parseInt(city), read_db) + ", ";
                 }
                 cities = cities.substring(0, cities.length() - 2);
             } catch (NullPointerException e) {

@@ -1,7 +1,5 @@
 package fr.insa.whatodo.model;
 
-import android.graphics.drawable.Drawable;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,29 +8,32 @@ import java.util.ArrayList;
  */
 public class User implements Serializable{
 
-    protected Drawable image;
-    protected String name;
+    protected int id;
+    protected String imageUrl;
+    protected String username;
     protected String email;
     protected ArrayList<String> cities;
     protected int age;
 
-    public User(String name, String mail, ArrayList<String> cities, int age) {
-        this.name = name;
+    public User(String name, String mail, ArrayList<String> cities, int age, int id) {
+        this.id = id;
+        this.username = name;
         this.email = mail;
         this.cities = cities;
         this.age = age;
     }
 
-    public User(Drawable image, String name, String mail, ArrayList<String> cities, int age) {
-        this.image = image;
-        this.name = name;
+    public User(String image, String name, String mail, ArrayList<String> cities, int age, int id) {
+        this.id = id;
+        this.imageUrl = image;
+        this.username = name;
         this.email = mail;
         this.cities = cities;
         this.age = age;
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
     public String getMail() {
@@ -47,7 +48,11 @@ public class User implements Serializable{
         return age;
     }
 
-    public Drawable getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public int getId() {
+        return id;
     }
 }
