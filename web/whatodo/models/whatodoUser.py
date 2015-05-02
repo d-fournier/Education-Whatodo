@@ -12,6 +12,7 @@ from .city import City
 from .event import Event
 from django.conf import settings
 
+fs = FileSystemStorage(location=settings.MEDIA_ROOT, base_url=settings.MEDIA_URL)
 
 class WhatodoUserManager(BaseUserManager):
 	def _create_user(self, email, password, is_admin, **extra_fields):
@@ -40,7 +41,7 @@ class WhatodoUser(AbstractBaseUser):
 	email = models.EmailField(max_length = 254, unique = True)
 	username = models.CharField(max_length=30)
 	age = models.IntegerField(default = 0)
-	imageUser = models.ImageField(upload_to = settings.IMAGES_URL, default='/static/images/jeanDujardin.jpg')
+	imageUser =  models.ImageField(storage=fs, default='/static/images/jeanDujardin.jpg')
 	is_admin = models.BooleanField(default=False,
 		help_text=_('Designates whether the user can log into this admin '
 					'site.'))
