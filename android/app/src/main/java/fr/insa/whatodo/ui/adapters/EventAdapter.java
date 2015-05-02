@@ -56,7 +56,7 @@ public class EventAdapter<T> extends ArrayAdapter {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        vh.textItemPrice.setText(event.getPrice());
+        vh.textItemPrice.setText(event.getPrice().replace(".",",")+" €");
         vh.textItemPlace.setText(event.getCity().getCode()+" "+event.getCity().getName());
         vh.textItemSummary.setText(event.getDescription());
 

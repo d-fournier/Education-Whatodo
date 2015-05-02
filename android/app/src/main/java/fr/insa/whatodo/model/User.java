@@ -1,38 +1,37 @@
 package fr.insa.whatodo.model;
 
-import android.graphics.drawable.Drawable;
-
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by William on 16/03/2015.
  */
 public class User implements Serializable{
 
-    protected Drawable image;
-    protected String name;
+    protected int id;
+    protected String imageUser;
+    protected String username;
     protected String email;
     protected ArrayList<String> cities;
+    protected ArrayList<String> categories;
+    protected ArrayList<String> events;
     protected int age;
 
-    public User(String name, String mail, ArrayList<String> cities, int age) {
-        this.name = name;
-        this.email = mail;
-        this.cities = cities;
-        this.age = age;
-    }
 
-    public User(Drawable image, String name, String mail, ArrayList<String> cities, int age) {
-        this.image = image;
-        this.name = name;
+    public User(String image, String name, String mail, ArrayList<String> cities, int age, int id, ArrayList<String> events, ArrayList<String> categories) {
+        this.id = id;
+        this.imageUser = image;
+        this.username = name;
         this.email = mail;
         this.cities = cities;
         this.age = age;
+        this.events = events;
+        this.categories = categories;
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
     public String getMail() {
@@ -47,7 +46,23 @@ public class User implements Serializable{
         return age;
     }
 
-    public Drawable getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUser;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public ArrayList<String> getEvents() {
+        return events;
+    }
+
+    public ArrayList<String> getCategories() {
+        return categories;
+    }
+
+    public void setImageUser(String imageUser) {
+        this.imageUser = imageUser;
     }
 }

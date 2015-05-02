@@ -142,5 +142,15 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/fourth_details_item"
+            android:layout_marginTop="10dp"
+            android:text="@string/favorites"
+            android:id="@+id/button_fav" />
+
+
     </RelativeLayout>
 </ScrollView>

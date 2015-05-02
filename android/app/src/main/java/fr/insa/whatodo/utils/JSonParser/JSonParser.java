@@ -75,5 +75,11 @@ public class JSonParser{
 
     }
 
+    public Event parseEvent(InputStream source){
+        Gson gson = new Gson();
+        Reader reader = new InputStreamReader(source);
+        return gson.fromJson(reader, Event.class);
+
+    }
 
 }

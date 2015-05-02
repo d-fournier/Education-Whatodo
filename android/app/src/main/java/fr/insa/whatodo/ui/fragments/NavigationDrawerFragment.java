@@ -88,7 +88,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        String[] sections = new String[]{getString(R.string.principal_view),getString(R.string.login)};
+        String[] sections = new String[]{getString(R.string.principal_view),getString(R.string.login),getString(R.string.create_event)};
 
         mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(), R.layout.drawer_item,R.id.text1,sections));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
