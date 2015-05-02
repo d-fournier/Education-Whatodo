@@ -154,6 +154,11 @@ public class DetailsActivity extends ActionBarActivity implements View.OnClickLi
                     User u = parser.parseUser(is_user);
 
                     MultipartUtility multipart = new MultipartUtility(USER_URL+u.getId()+"/", "UTF-8", "token "+prefs.getString("token",""), "PUT");
+                    for(String id : u.getEvents())
+                    {
+                        multipart.addFormField("events", id);
+                    }
+
                     multipart.addFormField("events", ""+event.getId());
                     multipart.addFormField("username", ""+u.getName());
                     multipart.addFormField("email", ""+u.getMail());
