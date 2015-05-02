@@ -10,6 +10,7 @@ from django.contrib.auth.models import (
 from .category import Category
 from .city import City 
 from .event import Event
+from django.conf import settings
 
 
 class WhatodoUserManager(BaseUserManager):
@@ -39,7 +40,7 @@ class WhatodoUser(AbstractBaseUser):
 	email = models.EmailField(max_length = 254, unique = True)
 	username = models.CharField(max_length=30)
 	age = models.IntegerField(default = 0)
-
+	imageUser = models.ImageField(upload_to = settings.IMAGES_URL, default='/static/images/jeanDujardin.jpg')
 	is_admin = models.BooleanField(default=False,
 		help_text=_('Designates whether the user can log into this admin '
 					'site.'))
