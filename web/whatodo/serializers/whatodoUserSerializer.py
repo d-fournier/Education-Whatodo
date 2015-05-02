@@ -14,5 +14,5 @@ class WhatodoUserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = WhatodoUser
-		fields = ('id', 'email', 'username', 'age', 'categories', 'cities', 'events')
+		fields = ('id', 'email', 'username', 'age', 'imageUser', 'categories', 'cities', 'events')
 
