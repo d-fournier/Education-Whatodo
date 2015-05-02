@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.utils.http import urlquote
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import (
 	BaseUserManager, AbstractBaseUser
 )
