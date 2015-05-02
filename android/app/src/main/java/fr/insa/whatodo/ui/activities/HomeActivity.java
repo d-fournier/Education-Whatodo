@@ -107,11 +107,11 @@ public class HomeActivity extends ActionBarActivity
             getWindow().setSharedElementExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.transition_home));
         }
 
-        mFiltersFragment = (FiltersFragment)
-                getSupportFragmentManager().findFragmentById(R.id.filters_drawer);
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+        mFiltersFragment = (FiltersFragment)
+                getSupportFragmentManager().findFragmentById(R.id.filters_drawer);
 
         mDbHelper = new EventDatabaseHelper(getApplicationContext());
 

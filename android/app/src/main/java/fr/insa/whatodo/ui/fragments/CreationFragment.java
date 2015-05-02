@@ -14,12 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.insa.whatodo.R;
@@ -49,6 +49,7 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
     EditText address;
     EditText city;
     EditText tags;
+    List<CheckBox> categories;
 
     protected EventDatabaseHelper mDbHelper;
     SQLiteDatabase read_db = null;
@@ -68,6 +69,7 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_creation, container, false);
+
         mDbHelper = new EventDatabaseHelper(getActivity());
         read_db = mDbHelper.getReadableDatabase();
         imageButton = (Button) rootView.findViewById(R.id.button_image);
@@ -84,6 +86,17 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
         address = (EditText) rootView.findViewById(R.id.edit_address);
         city = (EditText) rootView.findViewById(R.id.edit_city);
         tags = (EditText) rootView.findViewById(R.id.edit_tags);
+
+        categories = new ArrayList<>();
+        categories.add((CheckBox) rootView.findViewById(R.id.checkBoxSpectacle));
+        categories.add((CheckBox) rootView.findViewById(R.id.checkBoxConcert));
+        categories.add((CheckBox) rootView.findViewById(R.id.checkBoxTheatre));
+        categories.add((CheckBox) rootView.findViewById(R.id.checkBoxConference));
+        categories.add((CheckBox) rootView.findViewById(R.id.checkBoxDebat));
+        categories.add((CheckBox) rootView.findViewById(R.id.checkBoxExposition));
+        categories.add((CheckBox) rootView.findViewById(R.id.checkBoxSoiree));
+        categories.add((CheckBox) rootView.findViewById(R.id.checkBoxSport));
+
         imageButton.setOnClickListener(this);
         submitButton.setOnClickListener(this);
         return rootView;
@@ -142,8 +155,20 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
                             String cityName = city.getText().toString().substring(space+1, s_city.length());
                             String cityCode = city.getText().toString().substring(0, space);
                             multipart.addFormField("city", DatabaseServices.getCityId(cityName, cityCode, read_db));
-                            multipart.addFormField("categories", "2");
-                            multipart.addFormField("tags", "2");
+                            int i = 1;
+                            for(CheckBox cb : categories)
+                            {
+                                if(cb.isChecked())
+                                {
+                                    multipart.addFormField("categories", ""+i);
+                                }
+                                i++;
+                            }
+                            String[] t_tags = tags.getText().toString().split(",");
+                            for(String s : t_tags)
+                            {
+                                multipart.addFormField("tags", s);
+                            }
                             multipart.addFormField("latitude", "0");
                             multipart.addFormField("longitude", "0");
 

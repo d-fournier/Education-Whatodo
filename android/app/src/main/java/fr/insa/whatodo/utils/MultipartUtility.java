@@ -52,6 +52,27 @@ public class MultipartUtility {
                 true);
     }
 
+    public MultipartUtility(String requestURL, String charset, String token, String method)
+            throws IOException {
+        this.charset = charset;
+
+        // creates a unique boundary based on time stamp
+        boundary = "===" + System.currentTimeMillis() + "===";
+
+        URL url = new URL(requestURL);
+        httpConn = (HttpURLConnection) url.openConnection();
+        httpConn.setUseCaches(false);
+        httpConn.setDoOutput(true); // indicates POST method
+        httpConn.setRequestMethod(method);
+        httpConn.setDoInput(true);
+        httpConn.setRequestProperty("Content-Type",
+                "multipart/form-data; boundary=" + boundary);
+        httpConn.setRequestProperty("Authorization", token);
+        outputStream = httpConn.getOutputStream();
+        writer = new PrintWriter(new OutputStreamWriter(outputStream, charset),
+                true);
+    }
+
     /**
      * Adds a form field to the request
      * @param name field name
@@ -62,6 +83,17 @@ public class MultipartUtility {
         writer.append("Content-Disposition: form-data; name=\"" + name + "\"")
                 .append(LINE_FEED);
         writer.append("Content-Type: text/plain; charset=" + charset).append(
+                LINE_FEED);
+        writer.append(LINE_FEED);
+        writer.append(value).append(LINE_FEED);
+        writer.flush();
+    }
+
+    public void addFormField(String name, String value, String type) {
+        writer.append("--" + boundary).append(LINE_FEED);
+        writer.append("Content-Disposition: form-data; name=\"" + name + "\"")
+                .append(LINE_FEED);
+        writer.append("Content-Type: "+type+"; charset=" + charset).append(
                 LINE_FEED);
         writer.append(LINE_FEED);
         writer.append(value).append(LINE_FEED);

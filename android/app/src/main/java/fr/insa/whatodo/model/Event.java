@@ -126,4 +126,7 @@ public class Event implements Serializable {
         return tags;
     }
 
+    public void setImageEvent(String imageEvent) {
+        this.imageEvent = imageEvent;
+    }
 }

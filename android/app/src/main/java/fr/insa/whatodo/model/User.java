@@ -2,6 +2,7 @@ package fr.insa.whatodo.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by William on 16/03/2015.
@@ -9,27 +10,24 @@ import java.util.ArrayList;
 public class User implements Serializable{
 
     protected int id;
-    protected String imageUrl;
+    protected String imageUser;
     protected String username;
     protected String email;
     protected ArrayList<String> cities;
+    protected ArrayList<String> categories;
+    protected ArrayList<String> events;
     protected int age;
 
-    public User(String name, String mail, ArrayList<String> cities, int age, int id) {
-        this.id = id;
-        this.username = name;
-        this.email = mail;
-        this.cities = cities;
-        this.age = age;
-    }
 
-    public User(String image, String name, String mail, ArrayList<String> cities, int age, int id) {
+    public User(String image, String name, String mail, ArrayList<String> cities, int age, int id, ArrayList<String> events, ArrayList<String> categories) {
         this.id = id;
-        this.imageUrl = image;
+        this.imageUser = image;
         this.username = name;
         this.email = mail;
         this.cities = cities;
         this.age = age;
+        this.events = events;
+        this.categories = categories;
     }
 
     public String getName() {
@@ -49,10 +47,22 @@ public class User implements Serializable{
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUser;
     }
 
     public int getId() {
         return id;
+    }
+
+    public ArrayList<String> getEvents() {
+        return events;
+    }
+
+    public ArrayList<String> getCategories() {
+        return categories;
+    }
+
+    public void setImageUser(String imageUser) {
+        this.imageUser = imageUser;
     }
 }
