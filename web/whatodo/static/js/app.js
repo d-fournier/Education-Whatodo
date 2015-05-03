@@ -10,7 +10,12 @@ var showEvents = function(events) {
   var eventTemplate = $('#eventTemplate').html();
 
   var items = events.map(function(e) {
+    e.imageUrl = function () {
+      return "http://dfournier.ovh".concat(this.imageEvent.slice(21));
+    }
+
     return Mustache.render(eventTemplate, e);
+
   });
 
   grid.append(items);
@@ -80,6 +85,7 @@ var getEndpoint = function(endpoint) {
 };
 
 var getEvents = getEndpoint('/event/');
+
 // Mocked while CORS are not available
 /*var getEvents = function() {
   var results = {

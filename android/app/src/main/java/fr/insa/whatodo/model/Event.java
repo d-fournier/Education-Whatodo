@@ -125,4 +125,8 @@ public class Event implements Serializable {
     public List<Tag> getTags() {
         return tags;
     }
+
+    public void setImageEvent(String imageEvent) {
+        this.imageEvent = imageEvent;
+    }
 }

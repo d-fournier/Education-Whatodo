@@ -69,7 +69,11 @@ public class EventListFragment extends Fragment implements OnListChangedListener
 
         View rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
 
-        eventList = (ArrayList<Event>) getArguments().getSerializable("EventList");
+        if(!(getArguments() == null)) {
+            eventList = (ArrayList<Event>) getArguments().getSerializable("EventList");
+        }else{
+            eventList = new ArrayList<>();
+        }
 
         //Initialiser l'adapter
         adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, eventList);
@@ -110,6 +114,7 @@ public class EventListFragment extends Fragment implements OnListChangedListener
         if (newList == null) {
             adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, eventList);
         } else {
+            eventList = (ArrayList<Event>) newList;
             adapter = new EventAdapter<>(getActivity(), R.layout.event_list_item, newList);
         }
         eventListView.setAdapter(adapter);
