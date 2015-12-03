@@ -23,6 +23,7 @@
     <string name="parse">Traitement des événements</string>
     <string name="download_failed_txt">Aucun événement disponible</string>
     <string name="download_failed_btn">Réessayer</string>
+    <string name="download_profile">Récupération des données du profil</string>
     <string name="event_details_transition">details_transition</string>
     <string name="categories">Catégories</string>
     <string name="tags">Tags</string>
@@ -47,7 +48,7 @@
     <string name="no_user">Aucune information</string>
     <string name="create_event">Créer événement</string>
     <string name="select_image">Sélectionner image</string>
-    <string name="no_creation">L\'événement ne peut être créé</string>
+    <string name="no_creation">Evénement non créé, vérifiez les informations fournies.</string>
     <string name="favorites">Ajouter aux favoris</string>
     <string name="event_added">Evénement ajouté à vos favoris</string>
     <string name="event_no_added">Erreur lors de l\'ajout de l\'événement</string>

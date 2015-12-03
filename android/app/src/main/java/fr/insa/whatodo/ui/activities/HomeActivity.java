@@ -318,6 +318,7 @@ public class HomeActivity extends ActionBarActivity
                 write_db = mDbHelper.getWritableDatabase();
                 read_db = mDbHelper.getReadableDatabase();
             }
+
             if (Utils.checkConnectivity(getApplicationContext())) {
             } else {
                 //Pas de connexion internet

@@ -1,8 +1,8 @@
 package fr.insa.whatodo.ui.fragments;
 
 
-import android.app.ActionBar;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -90,7 +90,7 @@ public class ProfileViewFragment extends Fragment implements View.OnClickListene
             updateUser(user);
         } else {
             if (Utils.checkConnectivity(getActivity())) {
-                task.execute();
+                new ProfileTask().execute();
             } else {
                 Toast.makeText(getActivity(), getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
                 return rootView;
@@ -101,17 +101,32 @@ public class ProfileViewFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        new ProfileTask().execute();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.profile, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
 
-    AsyncTask<Void, Void, User> task = new AsyncTask<Void, Void, User>() {
+    public class ProfileTask extends AsyncTask<Void, Void, User> {
+
+        ProgressDialog dialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = ProgressDialog.show(getActivity(), null, getString(R.string.download_profile));
+        }
+
         @Override
         protected void onPostExecute(User u) {
             super.onPostExecute(u);
             updateUser(u);
+            dialog.dismiss();
         }
 
         @Override
@@ -181,6 +196,9 @@ public class ProfileViewFragment extends Fragment implements View.OnClickListene
                 }
                 cities = cities.substring(0, cities.length() - 2);
             } catch (NullPointerException e) {
+
+            }catch(StringIndexOutOfBoundsException e1)
+            {
 
             }
             textItemPlaces.setText(cities);

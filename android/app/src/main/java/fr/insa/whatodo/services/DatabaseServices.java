@@ -156,7 +156,7 @@ public class DatabaseServices {
             }
         }
 
-        db.execSQL("INSERT INTO City SELECT city_db.whatodo_city.name, city_db.whatodo_city.ZIPcode, city_db.whatodo_city.id FROM city_db.whatodo_city");
+        db.execSQL("INSERT INTO City SELECT city_db.whatodo_city.name, city_db.whatodo_city.ZIPcode, city_db.whatodo_city.id, city_db.whatodo_city.latitude, city_db.whatodo_city.longitude FROM city_db.whatodo_city");
 
     }
 
@@ -229,7 +229,6 @@ public class DatabaseServices {
        }else{
            c= db.rawQuery(query, null);
        }
-
        String id=null;
         if (c.moveToFirst()) {
             do {
@@ -240,6 +239,16 @@ public class DatabaseServices {
             } while (c.moveToNext());
         }
         return id;
+    }
+
+    public static String[] findCityCoordinatesById(int id, SQLiteDatabase db) {
+        String query = "SELECT * FROM City WHERE "+ EventDatabaseContract.CityTable.COLUMN_NAME_CITY_ID +" = "+id;
+        Cursor c = db.rawQuery(query, null);
+
+        if (c.moveToFirst()) {
+            return new String[]{c.getString(3),c.getString(4)};
+        }
+        return new String[]{"0","0"};
     }
 
     public static String findCityById(int id, SQLiteDatabase db) {

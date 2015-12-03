@@ -13,6 +13,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -47,7 +49,7 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
     EditText price;
     EditText minAge;
     EditText address;
-    EditText city;
+    AutoCompleteTextView city;
     EditText tags;
     List<CheckBox> categories;
 
@@ -84,8 +86,18 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
         price = (EditText) rootView.findViewById(R.id.edit_price);
         minAge = (EditText) rootView.findViewById(R.id.edit_age);
         address = (EditText) rootView.findViewById(R.id.edit_address);
-        city = (EditText) rootView.findViewById(R.id.edit_city);
+        city = (AutoCompleteTextView) rootView.findViewById(R.id.edit_city);
         tags = (EditText) rootView.findViewById(R.id.edit_tags);
+
+
+        List<String> existingTowns = ((HomeActivity)getActivity()).getCityNamesList();
+        ArrayAdapter<String> placeAdapter;
+        if(existingTowns!=null){
+            placeAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line,existingTowns);
+        }else{
+            placeAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line);
+        }
+        city.setAdapter(placeAdapter);
 
         categories = new ArrayList<>();
         categories.add((CheckBox) rootView.findViewById(R.id.checkBoxSpectacle));
@@ -104,7 +116,7 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
             filePath = uri.getPath();
             imageButton.setText("Fichier importé");
@@ -114,20 +126,17 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        switch(v.getId())
-        {
-            case(R.id.button_submit) :
+        switch (v.getId()) {
+            case (R.id.button_submit):
                 //On lance le service d'upload du fichier
                 AsyncTask<String, Void, List<String>> task = new AsyncTask<String, Void, List<String>>() {
                     @Override
                     protected void onPostExecute(List<String> response) {
                         super.onPostExecute(response);
-                        if(response == null)
-                        {
+                        if (response == null) {
                             Toast.makeText(getActivity(), getResources().getString(R.string.no_creation), Toast.LENGTH_SHORT).show();
-                        }else
-                        {
-                            ((HomeActivity)getActivity()).updateCreationFragment();
+                        } else {
+                            ((HomeActivity) getActivity()).updateCreationFragment();
                         }
 
                     }
@@ -138,7 +147,7 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         try {
 
-                            MultipartUtility multipart = new MultipartUtility("http://dfournier.ovh/api/event/", "UTF-8", "token "+prefs.getString("token",""));
+                            MultipartUtility multipart = new MultipartUtility("http://dfournier.ovh/api/event/", "UTF-8", "token " + prefs.getString("token", ""));
 
                             multipart.addFormField("name", title.getText().toString());
                             multipart.addFormField("description", description.getText().toString());
@@ -151,41 +160,61 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
                             multipart.addFormField("min_age", minAge.getText().toString());
                             multipart.addFormField("address", address.getText().toString());
                             String s_city = (city.getText().toString());
-                            int space = s_city.indexOf(" ");
-                            String cityName = city.getText().toString().substring(space+1, s_city.length());
-                            String cityCode = city.getText().toString().substring(0, space);
-                            multipart.addFormField("city", DatabaseServices.getCityId(cityName, cityCode, read_db));
+                            int space = s_city.lastIndexOf(" ");
+                            String cityCode = city.getText().toString().substring(space + 1, s_city.length());
+                            String cityName = city.getText().toString().substring(0, space);
+                            String id;
+                            try {
+                                Integer.parseInt(cityCode);
+                                id = DatabaseServices.getCityId(cityName, cityCode, read_db);
+                            } catch (Exception e) {
+                                id = DatabaseServices.getCityId(cityName, null, read_db);
+                            }
+                            multipart.addFormField("city", id);
+
+                            String[] coordinates = DatabaseServices.findCityCoordinatesById(Integer.parseInt(id),read_db);
+                            multipart.addFormField("latitude", coordinates[0]);
+                            multipart.addFormField("longitude", coordinates[1]);
+
                             int i = 1;
-                            for(CheckBox cb : categories)
-                            {
-                                if(cb.isChecked())
-                                {
-                                    multipart.addFormField("categories", ""+i);
+                            for (CheckBox cb : categories) {
+                                if (cb.isChecked()) {
+                                    multipart.addFormField("categories", "" + i);
                                 }
                                 i++;
                             }
+
                             String[] t_tags = tags.getText().toString().split(",");
-                            for(String s : t_tags)
-                            {
+                            boolean check = false;
+                            for (String s : t_tags) {
                                 multipart.addFormField("tags", s);
+                                check=true;
                             }
-                            multipart.addFormField("latitude", "0");
-                            multipart.addFormField("longitude", "0");
+                            if(!check)
+                            {
+                                multipart.addFormField("tags", "0");
+                            }
+
 
                             multipart.addFilePart("imageEvent", new File(filePath));
 
-                           List<String> response = multipart.finish();
-                           return response;
-                        }catch(Exception e)
-                        {
+                            List<String> response = multipart.finish();
+                            return response;
+                        } catch (Exception e) {
                             e.printStackTrace();
-                            return null;
+                            if (e.getMessage().contains("201")) {
+                                return new ArrayList<>();
+                            } else {
+                                return null;
+
+                            }
+
                         }
                     }
                 };
                 task.execute(filePath);
                 break;
-            case (R.id.button_image) :
+            case (R.id.button_image):
                 //On selectionne le fichier
                 Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
                 chooseFile.setType("file/*");
@@ -193,7 +222,6 @@ public class CreationFragment extends Fragment implements View.OnClickListener {
                 startActivityForResult(c, 1);
                 break;
         }
-
 
 
     }

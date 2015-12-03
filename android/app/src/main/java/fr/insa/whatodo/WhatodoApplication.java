@@ -25,6 +25,7 @@ public class WhatodoApplication extends Application {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .showImageOnFail(R.drawable.no_image)
+                .showImageOnLoading(R.drawable.abc_spinner_mtrl_am_alpha)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                 .threadPriority(Thread.NORM_PRIORITY - 2)

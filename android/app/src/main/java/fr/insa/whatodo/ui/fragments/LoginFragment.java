@@ -113,7 +113,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                         int code = urlConnection.getResponseCode();
                         System.out.println("CODE : " + code);
                         if (code != 200) {
-                            return null;
+                            return ""+code;
                         } else {
                             byte[] buffer = new byte[128];
                             InputStream is = urlConnection.getInputStream();

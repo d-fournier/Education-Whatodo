@@ -87,7 +87,7 @@ public class DetailsActivity extends ActionBarActivity implements View.OnClickLi
         }
         place.setText("Lieu : " + event.getFullAddress());
         summary.setText("Description : " + event.getDescription());
-        price.setText("Prix : " + event.getPrice());
+        price.setText("Prix : " + event.getPrice().replace(".",",")+" €");
         url.setText("Site : " + event.getUrl());
         agemin.setText("Age Minimum : " + event.getMinAge());
 
